@@ -6,9 +6,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import xyz.jhughes.laundry.LaundryParser.Constants;
+import xyz.jhughes.laundry.LaundryParser.Information;
 
 public class LaundryMainActivity extends AppCompatActivity {
 
@@ -32,6 +35,23 @@ public class LaundryMainActivity extends AppCompatActivity {
 
         Spinner s = (Spinner) findViewById(R.id.spinner);
         s.setAdapter(adapter);
+        s.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(final AdapterView<?> parent, View view, final int position, long id) {
+                //System.out.println(Constants.getURL((String) parent.getItemAtPosition(position)));
+                Thread t = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Information information = new Information((String) parent.getItemAtPosition(position));
+                    }
+                });
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
 

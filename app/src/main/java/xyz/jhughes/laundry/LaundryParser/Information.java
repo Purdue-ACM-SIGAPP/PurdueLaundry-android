@@ -1,5 +1,6 @@
 package xyz.jhughes.laundry.LaundryParser;
 
+import android.util.Log;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -8,11 +9,11 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Main {
+public class Information {
     ArrayList<Machine> machines;
 
-    public Main(){
-        getInformation(Constants.CARY_WEST);
+    public Information(String name){
+        getInformation(Constants.getURL(name));
     }
 
     public void getInformation(String location){
@@ -38,13 +39,8 @@ public class Main {
 
         for ( int i=0; i<machines.size(); i++ ){
             Machine m = machines.get(i);
-            System.out.println(m.getJSON());
+            Log.d("Debug", m.getJSON());
         }
 
     }
-
-    public static void main(String[] args) {
-	    new Main();
-    }
-
 }

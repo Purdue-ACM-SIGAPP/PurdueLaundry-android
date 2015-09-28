@@ -26,4 +26,39 @@ public class Constants {
     public static String[] getListOfRooms() {
         return LIST_OF_ROOMS;
     }
+    public static String getURL(String room) {
+        switch (room) {
+            case "Cary West":
+                return CARY_WEST;
+            case "Earhart":
+                return EARHART;
+            case "Harrison":
+                return HARRISON;
+            case "Hawkins":
+                return HAWKINS;
+            case "Hillenbrand":
+                return MCCUTCHEON;
+            case "Meredith Northwest":
+                return MEREDITH_NW;
+            case "Meredith Southeast":
+                return MEREDITH_SE;
+            case "Owen":
+                return OWEN;
+            case "Shreve":
+                return SHREVE;
+            case "Tarkington":
+                return TARKINGTON;
+            case "Third Street":
+                return THIRD_STREET;
+            case "Wiley":
+                return WILEY;
+            case "Windsor - Duhme":
+                return WINDSOR_DUHME;
+            case "Windsor - Warren":
+                return WINDSOR_WARREN;
+            default:
+                break;
+        }
+        return null;
+    }
 }
