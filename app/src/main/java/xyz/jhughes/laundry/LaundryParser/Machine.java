@@ -1,7 +1,6 @@
 package xyz.jhughes.laundry.LaundryParser;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 /*
  * Created by tylorgarrett on 8/24/15.
