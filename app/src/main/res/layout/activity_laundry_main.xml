@@ -6,6 +6,11 @@
 
     <include layout="@layout/toolbar_laundry_main"/>
 
-
+    <ListView
+            android:id="@+id/laundry_list"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="@dimen/abc_action_bar_default_height_material">
+    </ListView>
 
 </RelativeLayout>

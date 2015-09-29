@@ -11,22 +11,27 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Spinner;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Information;
 import xyz.jhughes.laundry.LaundryParser.Machine;
+import xyz.jhughes.laundry.ListViewAdapter.CustomMachineAdapter;
 
 import java.util.ArrayList;
 
 public class LaundryMainActivity extends AppCompatActivity {
 
-    ArrayList<Machine> classMachines;
+    private ArrayList<Machine> classMachines;
+    private ListView lv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_laundry_main);
+
+        lv = (ListView) findViewById(R.id.laundry_list);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -37,8 +42,7 @@ public class LaundryMainActivity extends AppCompatActivity {
             System.out.println("Action bar was null!");
         }
 
-
-        ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, Constants.getListOfRooms());
+        final ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, Constants.getListOfRooms());
 
         Spinner s = (Spinner) findViewById(R.id.spinner);
         s.setAdapter(adapter);
@@ -49,12 +53,11 @@ public class LaundryMainActivity extends AppCompatActivity {
                 GetMachineInfoAsyncTask task = new GetMachineInfoAsyncTask();
                 task.execute(Constants.getURL((String) parent.getItemAtPosition(position)));
                 if (classMachines == null) {
+                    System.out.println("NULL");
                     //TODO this is always true. Unsure why. Will fix later. Need to study. 
                     return;
                 }
-                for (Machine m : classMachines) {
-                    Log.d("Test code", m.toString());
-                }
+                lv.setAdapter(new CustomMachineAdapter(classMachines, LaundryMainActivity.this));
             }
 
             @Override
@@ -90,8 +93,7 @@ public class LaundryMainActivity extends AppCompatActivity {
             if (params[0] == null) {
                 params[0] = Constants.getURL("Cary West");
             }
-            ArrayList<Machine> machines = information.getInformation((String) params[0]);
-            return machines;
+            return information.getInformation((String) params[0]);
         }
 
         protected void onPostExecute(ArrayList<Machine> machines) {
