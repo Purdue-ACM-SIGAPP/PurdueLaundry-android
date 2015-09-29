@@ -37,6 +37,8 @@ public class Constants {
             case "Hawkins":
                 return HAWKINS;
             case "Hillenbrand":
+                return HILLENBRAND;
+            case "McCutcheon":
                 return MCCUTCHEON;
             case "Meredith Northwest":
                 return MEREDITH_NW;

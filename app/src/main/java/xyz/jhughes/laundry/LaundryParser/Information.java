@@ -12,11 +12,7 @@ import java.util.ArrayList;
 public class Information {
     ArrayList<Machine> machines;
 
-    public Information(String name){
-        getInformation(Constants.getURL(name));
-    }
-
-    public void getInformation(String location){
+    public ArrayList<Machine> getInformation(String location){
         machines = new ArrayList<Machine>();
         Document webpage = null;
         try{
@@ -37,10 +33,6 @@ public class Information {
             machines.add(m);
         }
 
-        for ( int i=0; i<machines.size(); i++ ){
-            Machine m = machines.get(i);
-            Log.d("Debug", m.getJSON());
-        }
-
+        return machines;
     }
 }
