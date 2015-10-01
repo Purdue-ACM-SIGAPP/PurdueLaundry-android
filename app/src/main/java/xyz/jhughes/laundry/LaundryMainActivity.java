@@ -33,6 +33,8 @@ public class LaundryMainActivity extends AppCompatActivity {
 
         lv = (ListView) findViewById(R.id.laundry_list);
 
+        classMachines = new ArrayList<>();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -88,20 +90,22 @@ public class LaundryMainActivity extends AppCompatActivity {
     /**
      * AsycTask designed to get information from
      */
-    public class GetMachineInfoAsyncTask extends AsyncTask {
+    public class GetMachineInfoAsyncTask extends AsyncTask<String, Integer, ArrayList<Machine>> {
+
         @Override
-        protected ArrayList<Machine> doInBackground(Object[] params) {
+        protected ArrayList<Machine> doInBackground(String[] params) {
             Information information = new Information();
-            System.out.println((String) params[0]);
+            //System.out.println(params[0]);
             if (params[0] == null) {
                 params[0] = Constants.getURL("Cary West");
             }
-            return information.getInformation((String) params[0]);
+            return information.getInformation(params[0]);
         }
 
+        @Override
         protected void onPostExecute(ArrayList<Machine> machines) {
             super.onPostExecute(machines);
-            classMachines = new ArrayList<>(machines);
+            classMachines = machines;
         }
     }
 }

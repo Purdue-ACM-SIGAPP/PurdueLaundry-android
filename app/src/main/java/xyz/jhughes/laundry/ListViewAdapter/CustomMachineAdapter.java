@@ -58,7 +58,7 @@ public class CustomMachineAdapter extends BaseAdapter {
         name.setText(m.getName());
         status.setText(m.getStatus());
 
-        System.out.println(convertView);
+        //System.out.println(convertView);
 
         return convertView;
     }
