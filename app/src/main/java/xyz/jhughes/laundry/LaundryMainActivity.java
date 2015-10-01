@@ -39,12 +39,6 @@ public class LaundryMainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        try {
-            //getSupportActionBar().setDisplayShowTitleEnabled(false);
-        } catch (NullPointerException e) {
-            System.out.println("Action bar was null!");
-        }
-
         final ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, Constants.getListOfRooms());
 
         Spinner s = (Spinner) findViewById(R.id.spinner);
@@ -58,8 +52,6 @@ public class LaundryMainActivity extends AppCompatActivity {
                 GetMachineInfoAsyncTask task = new GetMachineInfoAsyncTask();
                 task.execute(Constants.getURL((String) parent.getItemAtPosition(position)));
                 if (classMachines == null) {
-                    System.out.println("NULL");
-                    //TODO this is always true. Unsure why. Will fix later. Need to study. 
                     return;
                 }
                 lv.setAdapter(new CustomMachineAdapter(classMachines, LaundryMainActivity.this));
@@ -76,17 +68,15 @@ public class LaundryMainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_laundry_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+
+        //TODO add refresh button
 
         return super.onOptionsItemSelected(item);
     }
@@ -99,7 +89,6 @@ public class LaundryMainActivity extends AppCompatActivity {
         @Override
         protected ArrayList<Machine> doInBackground(String[] params) {
             Information information = new Information();
-            //System.out.println(params[0]);
             if (params[0] == null) {
                 params[0] = Constants.getURL("Cary West");
             }
