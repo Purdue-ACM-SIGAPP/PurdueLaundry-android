@@ -1,5 +1,6 @@
 package xyz.jhughes.laundry;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -39,7 +40,7 @@ public class LaundryMainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         try {
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            //getSupportActionBar().setDisplayShowTitleEnabled(false);
         } catch (NullPointerException e) {
             System.out.println("Action bar was null!");
         }
@@ -52,6 +53,8 @@ public class LaundryMainActivity extends AppCompatActivity {
         s.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ProgressDialog progressDialog = ProgressDialog.show(LaundryMainActivity.this, "",
+                        "Loading, please wait...", true);
                 GetMachineInfoAsyncTask task = new GetMachineInfoAsyncTask();
                 task.execute(Constants.getURL((String) parent.getItemAtPosition(position)));
                 if (classMachines == null) {
@@ -60,11 +63,12 @@ public class LaundryMainActivity extends AppCompatActivity {
                     return;
                 }
                 lv.setAdapter(new CustomMachineAdapter(classMachines, LaundryMainActivity.this));
+                progressDialog.cancel();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                //Do nothing! :D
+                System.out.println("Testing");
             }
         });
     }

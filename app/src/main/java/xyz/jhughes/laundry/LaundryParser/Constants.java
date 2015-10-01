@@ -19,6 +19,7 @@ public class Constants {
     static String WILEY = "http://wpvitassuds01.itap.purdue.edu/washalertweb/washalertweb.aspx?location=c29eba8b-63d1-4090-bd32-ea85c67f483c";
     static String WINDSOR_DUHME = "http://wpvitassuds01.itap.purdue.edu/washalertweb/washalertweb.aspx?location=b98170b6-c561-4ea5-8b2d-28ebf4f7cdda";
     static String WINDSOR_WARREN = "http://wpvitassuds01.itap.purdue.edu/washalertweb/washalertweb.aspx?location=da8165d6-7ff9-4311-80c7-2bc3e2da5e5e";
+
     static String[] LIST_OF_ROOMS = {"Cary West", "Earhart", "Harrison", "Hawkins", "Hillenbrand", "McCutcheon",
             "Meredith Northwest", "Meredith Southeast", "Owen", "Shreve", "Tarkington", "Third Street", "Wiley",
             "Windsor - Duhme", "Windsor - Warren"};
@@ -26,6 +27,7 @@ public class Constants {
     public static String[] getListOfRooms() {
         return LIST_OF_ROOMS;
     }
+
     public static String getURL(String room) {
         switch (room) {
             case "Cary West":
@@ -37,6 +39,8 @@ public class Constants {
             case "Hawkins":
                 return HAWKINS;
             case "Hillenbrand":
+                return HILLENBRAND;
+            case "McCutcheon":
                 return MCCUTCHEON;
             case "Meredith Northwest":
                 return MEREDITH_NW;

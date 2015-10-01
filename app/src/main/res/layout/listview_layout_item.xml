@@ -8,12 +8,10 @@
     <ImageView
             android:id="@+id/icon"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginRight="6dip"
-            android:contentDescription="TODO"
-            android:src="@drawable/ic_launcher" />
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/Status"
+            android:src="@drawable/ic_launcher"
+            android:layout_alignParentLeft="true"/>
 
     <TextView
             android:id="@+id/Status"
