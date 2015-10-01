@@ -58,7 +58,7 @@ public class Machine {
         System.out.println("");
     }
 
-    public String getJSON(){
+    public String toJson(){
         return new Gson().toJson(this);
     }
 }

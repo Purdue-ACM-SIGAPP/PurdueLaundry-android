@@ -85,6 +85,9 @@ public class LaundryMainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * AsycTask designed to get information from
+     */
     public class GetMachineInfoAsyncTask extends AsyncTask {
         @Override
         protected ArrayList<Machine> doInBackground(Object[] params) {
