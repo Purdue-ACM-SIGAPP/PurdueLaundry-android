@@ -56,7 +56,7 @@ public class CustomMachineAdapter extends BaseAdapter {
 
         Machine m = getItem(position);
 
-        System.out.println(m.getType());
+        //System.out.println(m.getType());
 
         name.setText(m.getName());
         status.setText(m.getStatus());
@@ -77,7 +77,7 @@ public class CustomMachineAdapter extends BaseAdapter {
                     imageView.setImageResource(R.drawable.dryer_end_cycle);
                     break;
                 default:
-                    imageView.setImageResource(R.drawable.ic_launcher);
+                    imageView.setImageResource(R.drawable.dryer_end_cycle);
             }
         }
         else if (m.getType().equals("Washer")) {
@@ -96,7 +96,7 @@ public class CustomMachineAdapter extends BaseAdapter {
                     imageView.setImageResource(R.drawable.washer_end_cycle);
                     break;
                 default:
-                    imageView.setImageResource(R.drawable.ic_launcher);
+                    imageView.setImageResource(R.drawable.washer_running);
             }
         }
 
