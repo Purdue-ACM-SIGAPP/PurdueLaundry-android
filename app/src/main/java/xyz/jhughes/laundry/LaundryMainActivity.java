@@ -49,19 +49,12 @@ public class LaundryMainActivity extends AppCompatActivity {
         s.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ProgressDialog progressDialog = ProgressDialog.show(LaundryMainActivity.this, "",
-                        "Loading, please wait...", true);
                 GetMachineInfoAsyncTask task = new GetMachineInfoAsyncTask();
                 try {
                     task.execute(Constants.getName((String) parent.getItemAtPosition(position)));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                if (classMachines == null) {
-                    return;
-                }
-                lv.setAdapter(new CustomMachineAdapter(classMachines, LaundryMainActivity.this));
-                progressDialog.cancel();
             }
 
             @Override
@@ -69,6 +62,13 @@ public class LaundryMainActivity extends AppCompatActivity {
                 System.out.println("Testing");
             }
         });
+
+        GetMachineInfoAsyncTask task = new GetMachineInfoAsyncTask();
+        try {
+            task.execute(Constants.getName(null));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -92,6 +92,14 @@ public class LaundryMainActivity extends AppCompatActivity {
      */
     public class GetMachineInfoAsyncTask extends AsyncTask<String, Integer, ArrayList<Machine>> {
 
+        private ProgressDialog progressDialog = new ProgressDialog(LaundryMainActivity.this);
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog.setMessage("Loading, please wait...");
+            progressDialog.show();
+        }
+
         @Override
         protected ArrayList<Machine> doInBackground(String[] params) {
             if (params[0] == null) {
@@ -104,7 +112,11 @@ public class LaundryMainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(ArrayList<Machine> machines) {
             super.onPostExecute(machines);
+            if (progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
             classMachines = machines;
+            lv.setAdapter(new CustomMachineAdapter(classMachines, LaundryMainActivity.this));
         }
     }
 }

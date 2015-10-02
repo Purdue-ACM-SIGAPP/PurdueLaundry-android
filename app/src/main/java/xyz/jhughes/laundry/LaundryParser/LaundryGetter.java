@@ -1,6 +1,7 @@
 package xyz.jhughes.laundry.LaundryParser;
 
 import retrofit.Call;
+import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 
 import java.io.IOException;
