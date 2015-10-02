@@ -69,7 +69,7 @@ public class LaundryMainActivity extends AppCompatActivity {
             }
         });
 
-        LaundryGetter laundryGetter = new LaundryGetter();
+        //LaundryGetter laundryGetter = new LaundryGetter();
     }
 
 
