@@ -1,6 +1,11 @@
 package xyz.jhughes.laundry;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -24,6 +29,8 @@ public class LaundryMainActivity extends AppCompatActivity implements SwipeRefre
     private ArrayList<Machine> classMachines;
     private ListView lv;
     private Spinner s;
+    private String currentlySelected;
+    private boolean isRefreshing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,23 +38,44 @@ public class LaundryMainActivity extends AppCompatActivity implements SwipeRefre
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_laundry_main);
 
-        lv = (ListView) findViewById(R.id.laundry_list);
+        if (!isOnline()) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder.setTitle("Connection Error");
+            alertDialogBuilder.setMessage("You have no internet connection");
+            alertDialogBuilder.setCancelable(false);
+            alertDialogBuilder.setPositiveButton("Okay",new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog,int id) {
+                    LaundryMainActivity.this.finish();
+                }
+            });
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
 
-        classMachines = new ArrayList<>();
+        } else {
+            lv = (ListView) findViewById(R.id.laundry_list);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+            classMachines = new ArrayList<>();
 
-        setUpSpinner();
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
 
-        GetMachineInfoAsyncTask task = new GetMachineInfoAsyncTask();
-        try {
-            task.execute(Constants.getName(null));
-        } catch (Exception e) {
-            e.printStackTrace();
+            setUpSpinner();
+
+            GetMachineInfoAsyncTask task = new GetMachineInfoAsyncTask();
+            try {
+                task.execute(Constants.getName(null));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            ((SwipeRefreshLayout) findViewById(R.id.swipe_layout)).setOnRefreshListener(this);
         }
+    }
 
-        ((SwipeRefreshLayout) findViewById(R.id.swipe_layout)).setOnRefreshListener(this);
+    public boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     public void setUpSpinner() {
@@ -63,6 +91,7 @@ public class LaundryMainActivity extends AppCompatActivity implements SwipeRefre
                 GetMachineInfoAsyncTask task = new GetMachineInfoAsyncTask();
                 try {
                     task.execute(Constants.getName((String) parent.getItemAtPosition(position)));
+                    currentlySelected = Constants.getName((String) parent.getItemAtPosition(position));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -70,20 +99,24 @@ public class LaundryMainActivity extends AppCompatActivity implements SwipeRefre
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                System.out.println("Testing");
+                //Do nothing!
             }
         });
     }
 
     @Override
     public void onRefresh() {
+        isRefreshing = true;
         refreshList();
-        ((SwipeRefreshLayout) findViewById(R.id.swipe_layout)).setRefreshing(false);
     }
 
     public void refreshList() {
-        System.out.println("NYI");
-        Toast.makeText(this, "Not Yet Implemented", Toast.LENGTH_LONG).show();
+        GetMachineInfoAsyncTask task = new GetMachineInfoAsyncTask();
+        try {
+            task.execute(currentlySelected);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -95,8 +128,10 @@ public class LaundryMainActivity extends AppCompatActivity implements SwipeRefre
 
         @Override
         protected void onPreExecute() {
-            progressDialog.setMessage("Loading, please wait...");
-            progressDialog.show();
+            if (!isRefreshing) {
+                progressDialog.setMessage("Loading, please wait...");
+                progressDialog.show();
+            }
         }
 
         @Override
@@ -114,6 +149,8 @@ public class LaundryMainActivity extends AppCompatActivity implements SwipeRefre
             if (progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
+            ((SwipeRefreshLayout) findViewById(R.id.swipe_layout)).setRefreshing(false);
+            isRefreshing = false;
             classMachines = machines;
             lv.setAdapter(new CustomMachineAdapter(classMachines, LaundryMainActivity.this));
         }

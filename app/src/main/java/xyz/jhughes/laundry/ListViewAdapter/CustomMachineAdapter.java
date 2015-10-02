@@ -50,11 +50,13 @@ public class CustomMachineAdapter extends BaseAdapter {
 
         TextView name = (TextView) convertView.findViewById(R.id.Name);
         TextView status = (TextView) convertView.findViewById(R.id.Status);
+        TextView time = (TextView) convertView.findViewById(R.id.time);
 
         Machine m = getItem(position);
 
         name.setText(m.getName());
         status.setText(m.getStatus());
+        time.setText(m.getTime());
 
         if (m.getType().equals("Dryer")) {
             ImageView imageView = (ImageView) convertView.findViewById(R.id.icon);

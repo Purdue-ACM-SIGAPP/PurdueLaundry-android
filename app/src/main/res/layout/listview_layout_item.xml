@@ -30,4 +30,10 @@
             android:singleLine="true"
             android:textSize="16sp" />
 
+    <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/time"
+            android:layout_alignParentEnd="true"/>
+
 </RelativeLayout>
