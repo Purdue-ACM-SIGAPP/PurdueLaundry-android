@@ -7,16 +7,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import org.w3c.dom.Text;
-import xyz.jhughes.laundry.LaundryMainActivity;
-import xyz.jhughes.laundry.LaundryParser.Information;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.R;
 
 import java.util.ArrayList;
 
 /**
- * Created by jeff on 9/29/15.
+ * Created by hughesjeff
  */
 public class CustomMachineAdapter extends BaseAdapter {
 

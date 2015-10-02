@@ -4,14 +4,14 @@ import retrofit.Call;
 import retrofit.http.GET;
 import retrofit.http.Path;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
- * Created by jeff on 10/1/15.
+ * Created by hughesjeff
  */
-public interface Machines {
+public interface MachineRetrofitInterface {
     @GET("/Laundry/{location}")
-    Call<List<Machine>> machines(
+    Call<ArrayList<Machine>> machines(
             @Path("location") String location
     );
 }

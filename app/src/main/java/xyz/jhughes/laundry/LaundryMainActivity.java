@@ -3,10 +3,8 @@ package xyz.jhughes.laundry;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,12 +13,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import xyz.jhughes.laundry.LaundryParser.Constants;
-import xyz.jhughes.laundry.LaundryParser.Information;
 import xyz.jhughes.laundry.LaundryParser.LaundryGetter;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.ListViewAdapter.CustomMachineAdapter;
 
 import java.util.ArrayList;
+
+/**
+ * Created by hughesjeff
+ */
 
 public class LaundryMainActivity extends AppCompatActivity {
 
@@ -52,7 +53,7 @@ public class LaundryMainActivity extends AppCompatActivity {
                         "Loading, please wait...", true);
                 GetMachineInfoAsyncTask task = new GetMachineInfoAsyncTask();
                 try {
-                    task.execute(Constants.getURL((String) parent.getItemAtPosition(position)));
+                    task.execute(Constants.getName((String) parent.getItemAtPosition(position)));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -68,8 +69,6 @@ public class LaundryMainActivity extends AppCompatActivity {
                 System.out.println("Testing");
             }
         });
-
-        //LaundryGetter laundryGetter = new LaundryGetter();
     }
 
 
@@ -95,11 +94,11 @@ public class LaundryMainActivity extends AppCompatActivity {
 
         @Override
         protected ArrayList<Machine> doInBackground(String[] params) {
-            Information information = new Information();
             if (params[0] == null) {
-                params[0] = Constants.getURL("Cary West");
+                params[0] = Constants.getName("Cary West");
             }
-            return information.getInformation(params[0]);
+            LaundryGetter laundryGetter = new LaundryGetter(params[0]);
+            return laundryGetter.getMachines();
         }
 
         @Override

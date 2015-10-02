@@ -1,21 +1,24 @@
 package xyz.jhughes.laundry.LaundryParser;
 
-import retrofit.*;
+import retrofit.Call;
+import retrofit.Retrofit;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Created by jeff on 10/1/15.
+ * Created by hughesjeff
  */
 public class LaundryGetter {
 
-    public LaundryGetter() {
-        Retrofit retroFit = new Retrofit.Builder().baseUrl("http://api.tylorgarrett.com/").build();
-        Machines machines = retroFit.create(Machines.class);
-        Call<List<Machine>> call = machines.machines("Hillenbrand");
-        List<Machine> machineArrayList = null;
+    private ArrayList<Machine> machines;
+
+    public LaundryGetter(String building) {
+        Retrofit retroFit = new Retrofit.Builder().baseUrl("http://api.tylorgarrett.com/")
+                .addConverterFactory(GsonConverterFactory.create()).build();
+        MachineRetrofitInterface retrofitInterface = retroFit.create(MachineRetrofitInterface.class);
+        Call<ArrayList<Machine>> call = retrofitInterface.machines(building);
+        ArrayList<Machine> machineArrayList = null;
         try {
             machineArrayList = call.execute().body();
         } catch (IOException e) {
@@ -23,11 +26,14 @@ public class LaundryGetter {
         }
 
         if (machineArrayList == null) {
+            System.out.println("Yo, I'm in here");
             return;
         }
 
-        for (Machine m : machineArrayList) {
-            m.printDetails();
-        }
+        machines = machineArrayList;
+    }
+
+    public ArrayList<Machine> getMachines() {
+        return machines;
     }
 }
