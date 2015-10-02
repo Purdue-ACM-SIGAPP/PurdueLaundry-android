@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import org.w3c.dom.Text;
 import xyz.jhughes.laundry.LaundryMainActivity;
@@ -55,10 +56,49 @@ public class CustomMachineAdapter extends BaseAdapter {
 
         Machine m = getItem(position);
 
+        System.out.println(m.getType());
+
         name.setText(m.getName());
         status.setText(m.getStatus());
 
-        //System.out.println(convertView);
+        if (m.getType().equals("Dryer")) {
+            ImageView imageView = (ImageView) convertView.findViewById(R.id.icon);
+            switch (m.getStatus()) {
+                case "Available":
+                    imageView.setImageResource(R.drawable.dryer_available);
+                    break;
+                case "In use":
+                    imageView.setImageResource(R.drawable.dryer_running);
+                    break;
+                case "Almost done":
+                    imageView.setImageResource(R.drawable.dryer_almost_done);
+                    break;
+                case "End of cycle":
+                    imageView.setImageResource(R.drawable.dryer_end_cycle);
+                    break;
+                default:
+                    imageView.setImageResource(R.drawable.ic_launcher);
+            }
+        }
+        else if (m.getType().equals("Washer")) {
+            ImageView imageView = (ImageView) convertView.findViewById(R.id.icon);
+            switch (m.getStatus()) {
+                case "Available":
+                    imageView.setImageResource(R.drawable.washer_available);
+                    break;
+                case "In use":
+                    imageView.setImageResource(R.drawable.washer_running);
+                    break;
+                case "Almost done":
+                    imageView.setImageResource(R.drawable.washer_almost_done);
+                    break;
+                case "End of cycle":
+                    imageView.setImageResource(R.drawable.washer_end_cycle);
+                    break;
+                default:
+                    imageView.setImageResource(R.drawable.ic_launcher);
+            }
+        }
 
         return convertView;
     }
