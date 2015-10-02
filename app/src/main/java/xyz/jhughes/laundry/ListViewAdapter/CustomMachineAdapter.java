@@ -45,8 +45,8 @@ public class CustomMachineAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if(convertView == null)
-        {
+
+        if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.listview_layout_item, parent, false);
         }
@@ -55,8 +55,6 @@ public class CustomMachineAdapter extends BaseAdapter {
         TextView status = (TextView) convertView.findViewById(R.id.Status);
 
         Machine m = getItem(position);
-
-        //System.out.println(m.getType());
 
         name.setText(m.getName());
         status.setText(m.getStatus());
@@ -77,7 +75,7 @@ public class CustomMachineAdapter extends BaseAdapter {
                     imageView.setImageResource(R.drawable.dryer_end_cycle);
                     break;
                 default:
-                    imageView.setImageResource(R.drawable.dryer_end_cycle);
+                    imageView.setImageResource(R.drawable.dryer_running);
             }
         }
         else if (m.getType().equals("Washer")) {

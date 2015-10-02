@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Information;
+import xyz.jhughes.laundry.LaundryParser.LaundryGetter;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.ListViewAdapter.CustomMachineAdapter;
 
@@ -50,7 +51,11 @@ public class LaundryMainActivity extends AppCompatActivity {
                 ProgressDialog progressDialog = ProgressDialog.show(LaundryMainActivity.this, "",
                         "Loading, please wait...", true);
                 GetMachineInfoAsyncTask task = new GetMachineInfoAsyncTask();
-                task.execute(Constants.getURL((String) parent.getItemAtPosition(position)));
+                try {
+                    task.execute(Constants.getURL((String) parent.getItemAtPosition(position)));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 if (classMachines == null) {
                     return;
                 }
@@ -63,6 +68,8 @@ public class LaundryMainActivity extends AppCompatActivity {
                 System.out.println("Testing");
             }
         });
+
+        LaundryGetter laundryGetter = new LaundryGetter();
     }
 
 
