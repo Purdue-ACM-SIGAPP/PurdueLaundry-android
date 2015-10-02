@@ -78,6 +78,8 @@ public class LaundryMainActivity extends AppCompatActivity implements SwipeRefre
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
+    int prevPosition = 0;
+
     public void setUpSpinner() {
 
         ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, Constants.getListOfRooms());
@@ -87,13 +89,28 @@ public class LaundryMainActivity extends AppCompatActivity implements SwipeRefre
 
         s.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                GetMachineInfoAsyncTask task = new GetMachineInfoAsyncTask();
-                try {
-                    task.execute(Constants.getName((String) parent.getItemAtPosition(position)));
-                    currentlySelected = Constants.getName((String) parent.getItemAtPosition(position));
-                } catch (Exception e) {
-                    e.printStackTrace();
+            public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
+                if (!isOnline()) {
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(LaundryMainActivity.this);
+                    alertDialogBuilder.setTitle("Connection Error");
+                    alertDialogBuilder.setMessage("You have no internet connection");
+                    alertDialogBuilder.setCancelable(false);
+                    alertDialogBuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            s.setSelection(prevPosition);
+                        }
+                    });
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
+                } else {
+                    GetMachineInfoAsyncTask task = new GetMachineInfoAsyncTask();
+                    try {
+                        task.execute(Constants.getName((String) parent.getItemAtPosition(position)));
+                        currentlySelected = Constants.getName((String) parent.getItemAtPosition(position));
+                        prevPosition = position;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
