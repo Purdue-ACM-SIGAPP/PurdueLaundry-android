@@ -1,0 +1,22 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="xyz.jhughes.laundry.TypeFragments.DryerFragment">
+
+    <android.support.v4.widget.SwipeRefreshLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/toolbar"
+            android:id="@+id/dryer_list_layout">
+
+        <ListView
+                android:id="@+id/dryer_list"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_below="@id/toolbar">
+        </ListView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+</FrameLayout>

@@ -54,12 +54,7 @@ public class CustomMachineAdapter extends BaseAdapter {
 
         Machine m = getItem(position);
 
-        if (m.getName().endsWith(" ADA")) {
-            name.setText(m.getName().replace(" ADA", ""));
-        } else {
-            name.setText(m.getName());
-        }
-
+        name.setText(m.getName().replace(" ADA", ""));
         status.setText(m.getStatus());
         time.setText(m.getTime());
 
