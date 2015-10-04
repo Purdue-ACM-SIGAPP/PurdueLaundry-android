@@ -123,11 +123,11 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             s = (String) parent.getItemAtPosition(position);
 
-            WasherFragment washerFragment = (WasherFragment) getSupportFragmentManager().findFragmentByTag("WasherFragment");
+            /*WasherFragment washerFragment = (WasherFragment) getSupportFragmentManager().findFragmentByTag("WasherFragment");
             washerFragment.refreshList();
 
             DryerFragment dryerFragment = (DryerFragment) getSupportFragmentManager().findFragmentByTag("DryerFragment");
-            dryerFragment.refreshList();
+            dryerFragment.refreshList();*/
 
             mDrawerLayout.closeDrawer(mDrawerList);
         }
