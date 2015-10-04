@@ -15,9 +15,8 @@ import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import xyz.jhughes.laundry.FragmentPagerAdapter.AppSectionsPagerAdapter;
 import xyz.jhughes.laundry.LaundryParser.Constants;
-import xyz.jhughes.laundry.MachineFragments.DryerFragment;
-import xyz.jhughes.laundry.MachineFragments.WasherFragment;
 
 public class MainActivity extends AppCompatActivity implements ActionBar.TabListener {
 
@@ -152,39 +151,4 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
         return s;
     }
 
-    public class AppSectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public AppSectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int i) {
-            switch (i) {
-                case 0:
-                    return new WasherFragment();
-                case 1:
-                    return new DryerFragment();
-                default:
-                    return null;
-            }
-        }
-
-        @Override
-        public int getCount() {
-            return 2;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "Washers";
-                case 1:
-                    return "Dryers";
-                default:
-                    return Integer.toString(position);
-            }
-        }
-    }
 }
