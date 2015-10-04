@@ -1,5 +1,4 @@
-package xyz.jhughes.laundry.TypeFragments;
-
+package xyz.jhughes.laundry.MachineFragments;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
@@ -15,15 +14,15 @@ import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.LaundryGetter;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.ListViewAdapter.CustomMachineAdapter;
+import xyz.jhughes.laundry.MainActivity;
 import xyz.jhughes.laundry.R;
 
 import java.util.ArrayList;
 
-
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DryerFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class WasherFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private ArrayList<Machine> classMachines;
     private ListView lv;
@@ -33,7 +32,7 @@ public class DryerFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     private View rootView;
 
-    public DryerFragment() {
+    public WasherFragment() {
         // Required empty public constructor
     }
 
@@ -42,20 +41,17 @@ public class DryerFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        rootView = inflater.inflate(R.layout.fragment_dryer, container, false);
+        //getFragmentManager().beginTransaction().remove(this).add(R.id.washer_fragment, this).commit();
 
-        lv = (ListView) rootView.findViewById(R.id.dryer_list);
+        rootView = inflater.inflate(R.layout.fragment_washer, container, false);
+
+        lv = (ListView) rootView.findViewById(R.id.washer_list);
 
         classMachines = new ArrayList<>();
 
-        GetMachineInfoAsyncTask task = new GetMachineInfoAsyncTask();
-        try {
-            task.execute(Constants.getName(null));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        refreshList();
 
-        ((SwipeRefreshLayout) rootView.findViewById(R.id.dryer_list_layout)).setOnRefreshListener(this);
+        ((SwipeRefreshLayout) rootView.findViewById(R.id.washer_list_layout)).setOnRefreshListener(this);
 
         return rootView;
     }
@@ -69,7 +65,7 @@ public class DryerFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     public void refreshList() {
         GetMachineInfoAsyncTask task = new GetMachineInfoAsyncTask();
         try {
-            task.execute(currentlySelected);
+            task.execute(Constants.getName(MainActivity.getSelected()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -85,6 +81,7 @@ public class DryerFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 progressDialog.setMessage("Loading, please wait...");
                 progressDialog.show();
             }
+            progressDialog.setCanceledOnTouchOutside(false);
         }
 
         @Override
@@ -102,11 +99,10 @@ public class DryerFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             if (progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
-            ((SwipeRefreshLayout) rootView.findViewById(R.id.dryer_list_layout)).setRefreshing(false);
+            ((SwipeRefreshLayout) rootView.findViewById(R.id.washer_list_layout)).setRefreshing(false);
             isRefreshing = false;
             classMachines = machines;
             lv.setAdapter(new CustomMachineAdapter(classMachines, rootView.getContext()));
         }
     }
-
 }

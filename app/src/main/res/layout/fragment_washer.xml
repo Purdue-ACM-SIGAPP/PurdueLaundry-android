@@ -2,19 +2,18 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context="xyz.jhughes.laundry.TypeFragments.WasherFragment">
+             tools:context="xyz.jhughes.laundry.MachineFragments.WasherFragment"
+             android:id="@+id/washer_fragment">
 
     <android.support.v4.widget.SwipeRefreshLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/toolbar"
             android:id="@+id/washer_list_layout">
 
         <ListView
                 android:id="@+id/washer_list"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_below="@id/toolbar">
+                android:layout_height="fill_parent">
         </ListView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
