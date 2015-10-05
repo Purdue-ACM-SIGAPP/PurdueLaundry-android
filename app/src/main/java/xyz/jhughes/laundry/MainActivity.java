@@ -119,11 +119,12 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
 
         //We use this if to determine if we can set the color of the status
         //It is only supported on Lollipop or higher.
-        if (Build.VERSION.SDK_INT < 21) {
+        if (Build.VERSION.SDK_INT >= 21) {
             Window window = getWindow();
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(Color.parseColor("#b1810b"));
+            window.setStatusBarColor(Color.parseColor("#b1810b")); //This color is the main Purdue gold
+            window.setNavigationBarColor(Color.parseColor("#b1810b"));
         }
     }
 

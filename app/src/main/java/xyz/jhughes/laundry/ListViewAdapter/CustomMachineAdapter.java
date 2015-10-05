@@ -20,8 +20,22 @@ public class CustomMachineAdapter extends BaseAdapter {
     ArrayList<Machine> machines;
     Context c;
 
-    public CustomMachineAdapter(ArrayList<Machine> machines, Context c) {
-        this.machines = machines;
+    public CustomMachineAdapter(ArrayList<Machine> machines, Context c, boolean dryers) {
+        this.machines = new ArrayList<>();
+        if (dryers) {
+            for (Machine m : machines) {
+                if (m.getType().equals("Dryer")) {
+                    this.machines.add(m);
+                }
+            }
+        } else {
+            for (Machine m : machines) {
+                if (m.getType().equals("Washer")) {
+                    this.machines.add(m);
+                }
+            }
+        }
+        //this.machines = machines;
         this.c = c;
     }
 
@@ -76,8 +90,7 @@ public class CustomMachineAdapter extends BaseAdapter {
                 default:
                     imageView.setImageResource(R.drawable.dryer_running);
             }
-        }
-        else if (m.getType().equals("Washer")) {
+        } else if (m.getType().equals("Washer")) {
             ImageView imageView = (ImageView) convertView.findViewById(R.id.icon);
             switch (m.getStatus()) {
                 case "Available":

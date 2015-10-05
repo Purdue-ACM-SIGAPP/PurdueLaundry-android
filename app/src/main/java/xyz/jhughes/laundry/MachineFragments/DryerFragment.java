@@ -104,7 +104,7 @@ public class DryerFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             ((SwipeRefreshLayout) rootView.findViewById(R.id.dryer_list_layout)).setRefreshing(false);
             isRefreshing = false;
             classMachines = machines;
-            lv.setAdapter(new CustomMachineAdapter(classMachines, rootView.getContext()));
+            lv.setAdapter(new CustomMachineAdapter(classMachines, rootView.getContext(), true));
         }
     }
 

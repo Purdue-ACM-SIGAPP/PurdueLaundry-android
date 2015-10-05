@@ -102,7 +102,7 @@ public class WasherFragment extends Fragment implements SwipeRefreshLayout.OnRef
             ((SwipeRefreshLayout) rootView.findViewById(R.id.washer_list_layout)).setRefreshing(false);
             isRefreshing = false;
             classMachines = machines;
-            lv.setAdapter(new CustomMachineAdapter(classMachines, rootView.getContext()));
+            lv.setAdapter(new CustomMachineAdapter(classMachines, rootView.getContext(), false));
         }
     }
 }
