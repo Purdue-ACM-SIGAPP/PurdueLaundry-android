@@ -27,6 +27,11 @@ public class AppSectionsPagerAdapter extends FragmentPagerAdapter {
         }
     }
 
+    // This is used to allow the view page to refresh when an item is chosen from the drawer
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
+    }
+
     @Override
     public int getCount() {
         return 2;
