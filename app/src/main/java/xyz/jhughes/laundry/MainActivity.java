@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
 
     private AppSectionsPagerAdapter appSectionsPagerAdapter;
 
+    private  Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -55,7 +57,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        s = "Cary West";
+
+         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(s);
 
         setSupportActionBar(toolbar);
 
@@ -82,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
             public void onDrawerClosed(View view) {
                 mDrawerToggle.setDrawerIndicatorEnabled(true);
-                toolbar.setTitle("Purdue Laundry");
+                toolbar.setTitle(s);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu
             }
 
@@ -131,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             s = (String) parent.getItemAtPosition(position);
+            toolbar.setTitle(s);
             appSectionsPagerAdapter.notifyDataSetChanged();
 
 
