@@ -4,15 +4,23 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
+
 import xyz.jhughes.laundry.MachineFragments.MachineFragment;
 
 /**
  * Created by jeff on 10/4/15.
  */
 public class AppSectionsPagerAdapter extends FragmentPagerAdapter {
+    private String selected;
 
-    public AppSectionsPagerAdapter(FragmentManager fm) {
+    public AppSectionsPagerAdapter(FragmentManager fm, String selected) {
         super(fm);
+        this.selected = selected;
+    }
+
+    public void setSelected(String selected){
+        this.selected = selected;
     }
 
     @Override

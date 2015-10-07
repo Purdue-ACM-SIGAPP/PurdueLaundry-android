@@ -56,6 +56,24 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
 
     }
 
+    public void setMachines(ArrayList<Machine> machines, Boolean dryers){
+        this.currentMachines.clear();
+        if (dryers)
+            for (Machine m : machines) {
+                if (m.getType().equals("Dryer")) {
+                    this.currentMachines.add(m);
+                }
+            }
+        else {
+            for (Machine m : machines) {
+                if (m.getType().equals("Washer")) {
+                    this.currentMachines.add(m);
+                }
+            }
+        }
+
+    }
+
     // Create new views (invoked by the layout manager)
     @Override
     public MachineAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
