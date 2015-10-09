@@ -12,12 +12,21 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import java.util.ArrayList;
+
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 import xyz.jhughes.laundry.FragmentPagerAdapter.AppSectionsPagerAdapter;
 import xyz.jhughes.laundry.LaundryParser.Constants;
+import xyz.jhughes.laundry.LaundryParser.Machine;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -48,14 +57,19 @@ public class MainActivity extends AppCompatActivity {
 
     private AppSectionsPagerAdapter appSectionsPagerAdapter;
 
+    private  Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        
         //Normal onCreate method calls.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        s = "Cary West";
+
+         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(s);
 
         setSupportActionBar(toolbar);
 
@@ -82,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
             public void onDrawerClosed(View view) {
                 mDrawerToggle.setDrawerIndicatorEnabled(true);
-                toolbar.setTitle("Purdue Laundry");
+                toolbar.setTitle(s);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu
             }
 
@@ -101,14 +115,14 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
 
-        appSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager());
+        s = "Cary West";
+
+        appSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager(),s);
         viewPager.setAdapter(appSectionsPagerAdapter);
 
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
-
-        s = "Cary West";
 
     }
 
@@ -131,6 +145,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             s = (String) parent.getItemAtPosition(position);
+            toolbar.setTitle(s);
+            appSectionsPagerAdapter.setSelected(s);
             appSectionsPagerAdapter.notifyDataSetChanged();
 
 
