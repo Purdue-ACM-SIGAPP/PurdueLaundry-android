@@ -17,7 +17,14 @@ import java.util.ArrayList;
  */
 public class CustomMachineAdapter extends BaseAdapter {
 
+    /**
+     * The ArrayList of Machines that we adapt from
+     */
     ArrayList<Machine> machines;
+
+    /**
+     * The current Application's context. This allows us to use the Layout Inflater Service
+     */
     Context c;
 
     public CustomMachineAdapter(ArrayList<Machine> machines, Context c, boolean dryers) {

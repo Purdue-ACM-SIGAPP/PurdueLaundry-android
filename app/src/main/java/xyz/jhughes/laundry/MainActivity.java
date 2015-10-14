@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
         s = "Cary West";
 
-         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(s);
 
         setSupportActionBar(toolbar);

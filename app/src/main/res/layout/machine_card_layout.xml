@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/machine_time_left_text_view"
                 android:layout_below="@+id/icon"
-                android:paddingTop="5dp"
+                android:paddingTop="10dp"
                 android:paddingLeft="30dp"
                 android:text="99 Minutes Left"/>
 
