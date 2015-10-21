@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
+        /*
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Laundry Status");
         builder.setMessage("ITaP's site is currently broken. We apologize for the inconvenience.")
@@ -126,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
                 });
         builder.create();
         builder.show();
+        */
     }
 
     /**
