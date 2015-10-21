@@ -11,3 +11,5 @@ Modified for more color by Jeff Hughes.
 **All rights reserved.**
 
 Everything is uncommented and undocumented for right now. I will go back and comment/document everything once I get an initial build out. 
+
+Part of the [Official Purdue App](https://github.com/purdue-acm-sigapp/Purdue) for Android. 
