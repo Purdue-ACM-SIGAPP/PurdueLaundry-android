@@ -13,3 +13,5 @@ Modified for more color by Jeff Hughes.
 Everything is uncommented and undocumented for right now. I will go back and comment/document everything once I get an initial build out. 
 
 Part of the [Official Purdue App](https://github.com/purdue-acm-sigapp/Purdue) for Android. 
+
+The Purdue Laundry package is simply here for backup purposes and is not used in any way. 
