@@ -1,8 +1,8 @@
 package xyz.jhughes.laundry;
 
 
-import android.graphics.Color;
-import android.os.Build;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
@@ -12,21 +12,13 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import java.util.ArrayList;
-
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
 import xyz.jhughes.laundry.FragmentPagerAdapter.AppSectionsPagerAdapter;
 import xyz.jhughes.laundry.LaundryParser.Constants;
-import xyz.jhughes.laundry.LaundryParser.Machine;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
 
     /**
-     * Managing whether it's open or closed
+     * Managing whether it'currentRoom open or closed
      */
     private ActionBarDrawerToggle mDrawerToggle;
 
@@ -53,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * The current room
      */
-    private static String s;
+    private static String currentRoom;
 
     private AppSectionsPagerAdapter appSectionsPagerAdapter;
 
@@ -66,10 +58,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        s = "Cary West";
+        currentRoom = "Cary West";
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(s);
+        toolbar.setTitle(currentRoom);
 
         setSupportActionBar(toolbar);
 
@@ -96,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
             public void onDrawerClosed(View view) {
                 mDrawerToggle.setDrawerIndicatorEnabled(true);
-                toolbar.setTitle(s);
+                toolbar.setTitle(currentRoom);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu
             }
 
@@ -115,15 +107,25 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
 
-        s = "Cary West";
+        currentRoom = "Cary West";
 
-        appSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager(),s);
+        appSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager(), currentRoom);
         viewPager.setAdapter(appSectionsPagerAdapter);
 
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Laundry Status");
+        builder.setMessage("ITaP's site is currently broken. We apologize for the inconvenience.")
+                .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //Do nothing
+                    }
+                });
+        builder.create();
+        builder.show();
     }
 
     /**
@@ -144,9 +146,9 @@ public class MainActivity extends AppCompatActivity {
          */
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            s = (String) parent.getItemAtPosition(position);
-            toolbar.setTitle(s);
-            appSectionsPagerAdapter.setSelected(s);
+            currentRoom = (String) parent.getItemAtPosition(position);
+            toolbar.setTitle(currentRoom);
+            appSectionsPagerAdapter.setSelected(currentRoom);
             appSectionsPagerAdapter.notifyDataSetChanged();
 
 
@@ -155,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static String getSelected() {
-        return s;
+        return currentRoom;
     }
 
 
