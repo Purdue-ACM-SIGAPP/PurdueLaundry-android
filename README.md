@@ -2,7 +2,7 @@
 
 Laundry App for Purude. 
 
-Uses parsing code courtesy of Tylor Garrett.
+Uses parsing code courtesy of Tylor Garrett, SIGAPP's amazing Vice President.
 
 Icon used is Washing Machine by Adji Herdanto from the Noun Project
 Modified for more color by Jeff Hughes.
