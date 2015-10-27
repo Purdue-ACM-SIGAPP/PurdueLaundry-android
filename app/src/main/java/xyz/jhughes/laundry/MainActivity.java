@@ -115,19 +115,6 @@ public class MainActivity extends AppCompatActivity {
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
-
-        /*
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Laundry Status");
-        builder.setMessage("ITaP's site is currently broken. We apologize for the inconvenience.")
-                .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        //Do nothing
-                    }
-                });
-        builder.create();
-        builder.show();
-        */
     }
 
     /**
