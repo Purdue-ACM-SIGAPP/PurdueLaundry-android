@@ -3,7 +3,9 @@ package xyz.jhughes.laundry;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -58,7 +60,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        currentRoom = "Cary West";
+        SharedPreferences sharedPreferences = getSharedPreferences("xyz.jhughes.laundry", MODE_PRIVATE);
+
+        currentRoom = sharedPreferences.getString("lastRoom", "Cary West");
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(currentRoom);
@@ -140,6 +144,9 @@ public class MainActivity extends AppCompatActivity {
             appSectionsPagerAdapter.setSelected(currentRoom);
             appSectionsPagerAdapter.notifyDataSetChanged();
 
+            SharedPreferences.Editor e = getSharedPreferences("xyz.jhughes.laundry", MODE_PRIVATE).edit();
+            e.putString("lastRoom", currentRoom);
+            e.apply();
 
             mDrawerLayout.closeDrawer(mDrawerList);
         }
