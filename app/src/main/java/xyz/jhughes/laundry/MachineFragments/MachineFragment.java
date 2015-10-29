@@ -40,7 +40,7 @@ public class MachineFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private boolean isRefreshing;
     private boolean isDryers;
     private String selected;
-    private  ProgressDialog progressDialog;
+    private ProgressDialog progressDialog;
 
     private View rootView;
 
@@ -62,8 +62,6 @@ public class MachineFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
     }
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -73,12 +71,10 @@ public class MachineFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
         rootView = inflater.inflate(R.layout.fragment_dryer, container, false);
 
-
         recyclerView = (RecyclerView) rootView.findViewById(R.id.dryer_machines_recycler_view);
 
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this.getContext(),2);
         recyclerView.setLayoutManager(layoutManager);
-
 
         classMachines = new ArrayList<>();
 

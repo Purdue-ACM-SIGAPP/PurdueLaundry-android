@@ -81,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
 
-
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
@@ -110,8 +109,6 @@ public class MainActivity extends AppCompatActivity {
         //Setting up the ViewPager so that we can properly respond to what tab is selected and when we change.
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
-
-        currentRoom = "Cary West";
 
         appSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager(), currentRoom);
         viewPager.setAdapter(appSectionsPagerAdapter);
