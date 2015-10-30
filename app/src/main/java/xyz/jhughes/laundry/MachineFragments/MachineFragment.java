@@ -110,8 +110,4 @@ public class MachineFragment extends Fragment implements SwipeRefreshLayout.OnRe
             }
         });
     }
-
-    public void onClick() {
-        System.out.println("Yo");
-    }
 }

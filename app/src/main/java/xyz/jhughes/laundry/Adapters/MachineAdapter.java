@@ -1,6 +1,9 @@
 package xyz.jhughes.laundry.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +13,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import xyz.jhughes.laundry.InfromationActivity;
 import xyz.jhughes.laundry.LaundryParser.Machine;
+import xyz.jhughes.laundry.MachineFragments.MachineFragment;
 import xyz.jhughes.laundry.R;
 
 
@@ -27,12 +32,15 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         public TextView statusTextView;
         private TextView timeLeftTextView;
         private ImageView iconView;
+        public CardView cardView;
+
         public ViewHolder(View v) {
             super(v);
             nameTextView = (TextView)v.findViewById(R.id.machine_name_text_view);
             statusTextView = (TextView)v.findViewById(R.id.machine_status_text_view);
             timeLeftTextView = (TextView)v.findViewById(R.id.machine_time_left_text_view);
             iconView = (ImageView)v.findViewById(R.id.icon);
+            cardView = (CardView) v.findViewById(R.id.card_view);
         }
     }
 
@@ -93,10 +101,18 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
 
-        Machine m = currentMachines.get(position);
+        final Machine m = currentMachines.get(position);
         holder.nameTextView.setText(m.getName());
         holder.statusTextView.setText(m.getStatus());
         holder.timeLeftTextView.setText(m.getTime());
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(c, InfromationActivity.class);
+                i.putExtra("machine", m);
+                c.startActivity(i);
+            }
+        });
 
         if (m.getType().equals("Dryer")) {
             ImageView imageView = holder.iconView;
@@ -135,8 +151,6 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                     imageView.setImageResource(R.drawable.washer_running);
             }
         }
-
-
     }
 
     // Return the size of your dataset (invoked by the layout manager)

@@ -2,10 +2,12 @@ package xyz.jhughes.laundry.LaundryParser;
 
 import com.google.gson.Gson;
 
+import java.io.Serializable;
+
 /*
  * Created by tylorgarrett on 8/24/15.
  */
-public class Machine {
+public class Machine implements Serializable {
     private String name;
     private String type;
     private String status;
