@@ -1,6 +1,5 @@
 package xyz.jhughes.laundry.MachineFragments;
 
-
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,8 +23,6 @@ import xyz.jhughes.laundry.MainActivity;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.Adapters.MachineAdapter;
 import java.util.ArrayList;
-
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -114,5 +111,7 @@ public class MachineFragment extends Fragment implements SwipeRefreshLayout.OnRe
         });
     }
 
-
+    public void onClick() {
+        System.out.println("Yo");
+    }
 }
