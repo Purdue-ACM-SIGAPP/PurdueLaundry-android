@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 
 public class InformationActivity extends AppCompatActivity {
@@ -32,6 +33,9 @@ public class InformationActivity extends AppCompatActivity {
 
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        ImageView imageView = (ImageView) findViewById(R.id.machineImage);
+        imageView.setImageResource(R.drawable.ic_launcher);
     }
 
     @Override

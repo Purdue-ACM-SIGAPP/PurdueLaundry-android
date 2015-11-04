@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context="xyz.jhughes.laundry.InformationActivity" android:orientation="horizontal">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              tools:context="xyz.jhughes.laundry.InformationActivity" android:orientation="horizontal">
 
     <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
                                        xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -13,12 +13,17 @@
                                        android:background="?attr/colorPrimary"
                                        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                                        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:layout_below="@+id/toolbar">
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/machineImage"
+                android:layout_gravity="center_horizontal|top"
+                android:contentDescription="@string/MachineImageInformation"/>
+    </LinearLayout>
 
-    <TextView
-            android:text="@string/hello_world"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:layout_below="@+id/toolbar"
-            android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
-            android:layout_marginTop="35dp"/>
 
 </RelativeLayout>
