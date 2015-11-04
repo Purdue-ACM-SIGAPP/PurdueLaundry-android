@@ -10,6 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import retrofit.Call;
 import retrofit.Callback;
@@ -31,11 +33,14 @@ public class LocationActivity extends AppCompatActivity {
 
     private LinearLayoutManager layoutManager;
 
+    private HashMap<String,Integer[]> locationHashMap;
+
     private LocationAdapter adapter;
 
     private boolean isDryers;
 
-    private String selected;
+    private String select;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,31 +49,60 @@ public class LocationActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
 
         mContext = this;
 
+        int[] laundryCount = new int[Constants.getListOfRooms().length];
+        int[] dryerCount = new int[Constants.getListOfRooms().length];
+
         for (String name : Constants.getListOfRooms()) {
-            Call<ArrayList<Machine>> call = MachineService.getService().getMachineStatus("hawkins");
-
-            call.enqueue(new Callback<ArrayList<Machine>>() {
-                @Override
-                public void onResponse(Response<ArrayList<Machine>> response, Retrofit retrofit) {
-
-                    ArrayList<Machine> classMachines = response.body();
-                    adapter = new LocationAdapter(classMachines, mContext);
-                    recyclerView.setAdapter(adapter);
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-                    Log.d("LocationActivity", t.getMessage());
-                }
-            });
-
+            Integer[] array = getLaundryCall(Constants.getName(name));
+            locationHashMap.put(name, array);
         }
+        adapter = new LocationAdapter(classMachines, mContext);
+        recyclerView.setAdapter(adapter);
 
     }
 
+    protected Integer[] getLaundryCall(String name) {
+        final Integer[] countArray = new Integer[4];
+        Call<ArrayList<Machine>> call = MachineService.getService().getMachineStatus(name);
+
+        call.enqueue(new Callback<ArrayList<Machine>>() {
+            @Override
+            public void onResponse(Response<ArrayList<Machine>> response, Retrofit retrofit) {
+                setUpAdapter(response.body());
+                ArrayList<Machine> classMachines = response.body();
+                for (Machine machine : classMachines) {
+                    if (machine.getType().equals("Dryer")) {
+                        //Increments Total Dryer Count For Specific Place
+                        countArray[0]++;
+                        if (machine.getStatus().equals("Available")) {
+                            //Increments Total Dryer Count For Specific Place
+                            countArray[1]++;
+                        }
+                    } else {
+                        //Increments Total Washer Count For Specific Place
+                        countArray[2]++;
+                        if (machine.getStatus().equals("Available")) {
+                            //Increments Total Dryer Count For Specific Place
+                            countArray[3]++;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Log.d("LocationActivity", t.getMessage());
+            }
+        });
+        return countArray;
+    }
+
+
+    public void setUpAdapter(List<Machine> machines){
+
+    }
 
 }
