@@ -8,7 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 
-public class InfromationActivity extends AppCompatActivity {
+public class InformationActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

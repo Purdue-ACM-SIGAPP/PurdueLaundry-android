@@ -2,7 +2,6 @@ package xyz.jhughes.laundry.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,9 +12,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import xyz.jhughes.laundry.InfromationActivity;
+import xyz.jhughes.laundry.InformationActivity;
 import xyz.jhughes.laundry.LaundryParser.Machine;
-import xyz.jhughes.laundry.MachineFragments.MachineFragment;
 import xyz.jhughes.laundry.R;
 
 
@@ -108,7 +106,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(c, InfromationActivity.class);
+                Intent i = new Intent(c, InformationActivity.class);
                 i.putExtra("machine", m);
                 c.startActivity(i);
             }
