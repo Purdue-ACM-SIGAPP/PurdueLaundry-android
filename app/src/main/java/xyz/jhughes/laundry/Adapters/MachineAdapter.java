@@ -21,8 +21,6 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     private ArrayList<Machine> currentMachines;
     private Context c;
 
-    public static final int ONLY_AVAILABLE = 0;
-
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
@@ -45,44 +43,22 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MachineAdapter(ArrayList<Machine> machines, Context c, Boolean dryers) {
+    public MachineAdapter(ArrayList<Machine> machines, Context c, Boolean dryers, String options) {
         this.c = c;
         currentMachines = new ArrayList<Machine>();
-        if (dryers) {
-            for (Machine m : machines) {
-                if (m.getType().equals("Dryer")) {
-                    this.currentMachines.add(m);
-                }
-            }
-        } else {
-            for (Machine m : machines) {
-                if (m.getType().equals("Washer")) {
-                    this.currentMachines.add(m);
-                }
-            }
+
+        for (Machine m : machines) {
+            String status = m.getStatus();
+//                (options.contains(status) ||
+//                 (! "Available|In use|Almost done|End of cycle".contains(status) && options.contains("In use")))) {
+            boolean isCorrectType = dryers == m.getType().equals("Dryer");
+            boolean matchesParameters = options.contains(status);
+            System.out.println("STATUS: " + status + " ||| PARAMETERS: " + options + " ||| Matches: " + matchesParameters);
+            boolean isStillAllowed = true;
+
+            if (isCorrectType && matchesParameters)
+                currentMachines.add(m);
         }
-
-    }
-
-    public MachineAdapter(ArrayList<Machine> machines, Context c, Boolean dryers, boolean[] options) {
-        this.c = c;
-        currentMachines = new ArrayList<Machine>();
-        if (dryers) {
-            for (Machine m : machines) {
-                if (m.getType().equals("Dryer") &&
-                    (! options[ONLY_AVAILABLE] || m.getStatus().equals("Available"))) {
-                    this.currentMachines.add(m);
-                }
-            }
-        } else {
-            for (Machine m : machines) {
-                if (m.getType().equals("Washer") &&
-                    (! options[ONLY_AVAILABLE] || m.getStatus().equals("Available"))) {
-                    this.currentMachines.add(m);
-                }
-            }
-        }
-
     }
 
     public void setMachines(ArrayList<Machine> machines, Boolean dryers){

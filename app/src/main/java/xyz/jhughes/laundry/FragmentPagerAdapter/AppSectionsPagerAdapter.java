@@ -12,11 +12,12 @@ import xyz.jhughes.laundry.MachineFragments.MachineFragment;
  * Created by jeff on 10/4/15.
  */
 public class AppSectionsPagerAdapter extends FragmentPagerAdapter {
-    private boolean[] options;
+    private String options;
     private String selected;
+    private MachineFragment fragment;
 
     public AppSectionsPagerAdapter(FragmentManager fm, String selected,
-                                   boolean[] options) {
+                                   String options) {
         super(fm);
         this.selected = selected;
         this.options = options;
@@ -26,15 +27,11 @@ public class AppSectionsPagerAdapter extends FragmentPagerAdapter {
         this.selected = selected;
     }
 
-    public void setOptions(boolean[] options) {
-        this.options = options;
-    }
-
     @Override
     public Fragment getItem(int i) {
-        MachineFragment fragment = new MachineFragment();
-        fragment.setOptions(options);
+        fragment = new MachineFragment();
         Bundle b = new Bundle();
+        b.putString("options", options);
         switch (i) {
             case 0:
                 b.putBoolean("isDryers",false);

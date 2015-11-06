@@ -57,8 +57,8 @@ public class MainActivity extends AppCompatActivity {
     private AppSectionsPagerAdapter appSectionsPagerAdapter;
 
     private  Toolbar toolbar;
-    private boolean[] options = {false};
-    private boolean[] tempOptions;
+
+    private String options;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("xyz.jhughes.laundry", MODE_PRIVATE);
 
         currentRoom = sharedPreferences.getString("lastRoom", "Cary West");
-        options[0] = sharedPreferences.getBoolean("onlyAvailable", false);
+        options = sharedPreferences.getString("options", "Available|In use|Almost done|End of cycle");
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(currentRoom);
@@ -127,13 +127,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void createDialog() {
-        tempOptions = options;
+        final boolean[] tempOptions = transformOptions(options);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // Set the dialog title
         builder.setTitle(R.string.select_options)
                 // Specify the list array, the items to be selected by default (null for none),
                 // and the listener through which to receive callbacks when items are selected
-                .setMultiChoiceItems(R.array.options, options,
+                .setMultiChoiceItems(R.array.options, tempOptions,
                                      new DialogInterface.OnMultiChoiceClickListener() {
                                          @Override
                                          public void onClick(DialogInterface dialog, int which,
@@ -147,14 +147,14 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         // User clicked OK, so save the mSelectedItems results somewhere
                         // or return them to the component that opened the dialog
-                        options = tempOptions;
-                        appSectionsPagerAdapter.setOptions(options);
+                        options = transformOptions(tempOptions);
+                        appSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager(), currentRoom, options);
                         appSectionsPagerAdapter.notifyDataSetChanged();
 
                         SharedPreferences.Editor e =
                                 getSharedPreferences("xyz.jhughes.laundry", MODE_PRIVATE)
                                         .edit();
-                        e.putBoolean("onlyAvailable", options[0]);
+                        e.putString("options", options);
                         e.apply();
                     }
                 })
@@ -167,6 +167,41 @@ public class MainActivity extends AppCompatActivity {
                                    });
 
         builder.create().show();
+    }
+
+    private String transformOptions(boolean[] options) {
+        String result = "";
+        boolean hasFirst = false;
+
+        if (options[0]) {
+            result += "Available";
+            hasFirst = true;
+        }
+
+        if (options[1]) {
+            result += hasFirst ? "|In use" : "In use";
+            hasFirst = true;
+        }
+
+        if (options[2]) {
+            result += hasFirst ? "|Almost done" : "Almost done";
+            hasFirst = true;
+        }
+
+        if (options[3]) {
+            result += hasFirst ? "|End of cycle" : "End of cycle";
+        }
+
+        return result;
+    }
+
+    private boolean[] transformOptions(String options) {
+        return new boolean[] {
+                options.contains("Available"),
+                options.contains("In use"),
+                options.contains("Almost done"),
+                options.contains("End of cycle")
+        };
     }
 
     @Override
