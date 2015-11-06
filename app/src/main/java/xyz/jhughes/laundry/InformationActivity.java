@@ -35,7 +35,45 @@ public class InformationActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         ImageView imageView = (ImageView) findViewById(R.id.machineImage);
-        imageView.setImageResource(R.drawable.ic_launcher);
+        setImage(imageView, machine);
+    }
+
+    public void setImage(ImageView imageView, Machine m) {
+        if (m.getType().equals("Dryer")) {
+            switch (m.getStatus()) {
+                case "Available":
+                    imageView.setImageResource(R.drawable.dryer_available);
+                    break;
+                case "In use":
+                    imageView.setImageResource(R.drawable.dryer_running);
+                    break;
+                case "Almost done":
+                    imageView.setImageResource(R.drawable.dryer_almost_done);
+                    break;
+                case "End of cycle":
+                    imageView.setImageResource(R.drawable.dryer_end_cycle);
+                    break;
+                default:
+                    imageView.setImageResource(R.drawable.dryer_running);
+            }
+        } else if (m.getType().equals("Washer")) {
+            switch (m.getStatus()) {
+                case "Available":
+                    imageView.setImageResource(R.drawable.washer_available);
+                    break;
+                case "In use":
+                    imageView.setImageResource(R.drawable.washer_running);
+                    break;
+                case "Almost done":
+                    imageView.setImageResource(R.drawable.washer_almost_done);
+                    break;
+                case "End of cycle":
+                    imageView.setImageResource(R.drawable.washer_end_cycle);
+                    break;
+                default:
+                    imageView.setImageResource(R.drawable.washer_running);
+            }
+        }
     }
 
     @Override
