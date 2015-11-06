@@ -19,8 +19,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import xyz.jhughes.laundry.FragmentPagerAdapter.AppSectionsPagerAdapter;
 import xyz.jhughes.laundry.LaundryParser.Constants;
+import xyz.jhughes.laundry.LaundryParser.Machine;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -147,6 +151,16 @@ public class MainActivity extends AppCompatActivity {
 
             mDrawerLayout.closeDrawer(mDrawerList);
         }
+    }
+
+    private void alert(Machine machine) {
+        Timer timer = new Timer(machine.getName(), true);
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+
+            }
+        }, Integer.parseInt(machine.getTime()));
     }
 
     public static String getSelected() {
