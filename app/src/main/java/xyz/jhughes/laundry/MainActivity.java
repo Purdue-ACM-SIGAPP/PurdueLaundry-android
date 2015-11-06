@@ -2,6 +2,7 @@ package xyz.jhughes.laundry;
 
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -56,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
     private AppSectionsPagerAdapter appSectionsPagerAdapter;
 
     private  Toolbar toolbar;
+    private boolean[] options = {false};
+    private boolean[] tempOptions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("xyz.jhughes.laundry", MODE_PRIVATE);
 
         currentRoom = sharedPreferences.getString("lastRoom", "Cary West");
+        options[0] = sharedPreferences.getBoolean("onlyAvailable", false);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(currentRoom);
@@ -114,12 +118,73 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
 
-        appSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager(), currentRoom);
+        appSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager(), currentRoom, options);
         viewPager.setAdapter(appSectionsPagerAdapter);
 
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
+    }
+
+    public void createDialog() {
+        tempOptions = options;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Set the dialog title
+        builder.setTitle(R.string.select_options)
+                // Specify the list array, the items to be selected by default (null for none),
+                // and the listener through which to receive callbacks when items are selected
+                .setMultiChoiceItems(R.array.options, options,
+                                     new DialogInterface.OnMultiChoiceClickListener() {
+                                         @Override
+                                         public void onClick(DialogInterface dialog, int which,
+                                                             boolean isChecked) {
+                                                 tempOptions[which] = isChecked;
+                                         }
+                                     })
+                        // Set the action buttons
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked OK, so save the mSelectedItems results somewhere
+                        // or return them to the component that opened the dialog
+                        options = tempOptions;
+                        appSectionsPagerAdapter.setOptions(options);
+                        appSectionsPagerAdapter.notifyDataSetChanged();
+
+                        SharedPreferences.Editor e =
+                                getSharedPreferences("xyz.jhughes.laundry", MODE_PRIVATE)
+                                        .edit();
+                        e.putBoolean("onlyAvailable", options[0]);
+                        e.apply();
+                    }
+                })
+                .setNegativeButton(R.string.cancel,
+                                   new DialogInterface.OnClickListener() {
+                                       @Override public void onClick(
+                                               DialogInterface dialog, int id) {
+                                           // Do nothing
+                                       }
+                                   });
+
+        builder.create().show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.display_parameters:
+                createDialog();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     /**
@@ -133,19 +198,22 @@ public class MainActivity extends AppCompatActivity {
          * We use this method in order to update the String of what is selected, to tell the Fragments to refresh their
          * data, and to close the drawer.
          *
-         * @param parent - The AdapterView that contains a list of the rooms.
-         * @param view - The View of the AdapterView
+         * @param parent   - The AdapterView that contains a list of the rooms.
+         * @param view     - The View of the AdapterView
          * @param position - The int representation in the ListView that was clicked (0-based, as with all arrays, etc)
-         * @param id - The row ID of the item clicked. We have no use for this right now.
+         * @param id       - The row ID of the item clicked. We have no use for this right now.
          */
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        @Override public void onItemClick(AdapterView<?> parent, View view,
+                                          int position, long id) {
+
             currentRoom = (String) parent.getItemAtPosition(position);
             toolbar.setTitle(currentRoom);
             appSectionsPagerAdapter.setSelected(currentRoom);
             appSectionsPagerAdapter.notifyDataSetChanged();
 
-            SharedPreferences.Editor e = getSharedPreferences("xyz.jhughes.laundry", MODE_PRIVATE).edit();
+            SharedPreferences.Editor e =
+                    getSharedPreferences("xyz.jhughes.laundry", MODE_PRIVATE)
+                            .edit();
             e.putString("lastRoom", currentRoom);
             e.apply();
 

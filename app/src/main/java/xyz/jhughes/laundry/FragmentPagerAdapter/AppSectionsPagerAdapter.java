@@ -12,20 +12,28 @@ import xyz.jhughes.laundry.MachineFragments.MachineFragment;
  * Created by jeff on 10/4/15.
  */
 public class AppSectionsPagerAdapter extends FragmentPagerAdapter {
+    private boolean[] options;
     private String selected;
 
-    public AppSectionsPagerAdapter(FragmentManager fm, String selected) {
+    public AppSectionsPagerAdapter(FragmentManager fm, String selected,
+                                   boolean[] options) {
         super(fm);
         this.selected = selected;
+        this.options = options;
     }
 
     public void setSelected(String selected){
         this.selected = selected;
     }
 
+    public void setOptions(boolean[] options) {
+        this.options = options;
+    }
+
     @Override
     public Fragment getItem(int i) {
         MachineFragment fragment = new MachineFragment();
+        fragment.setOptions(options);
         Bundle b = new Bundle();
         switch (i) {
             case 0:

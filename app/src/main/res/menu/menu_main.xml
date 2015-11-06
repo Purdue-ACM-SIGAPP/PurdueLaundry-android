@@ -4,5 +4,6 @@
       tools:context="xyz.jhughes.laundry.MainActivity">
       <item
             android:title="@string/display_parameters"
-            app:showAsAction="never"/>
+            app:showAsAction="never"
+              android:id="@+id/display_parameters"/>
 </menu>

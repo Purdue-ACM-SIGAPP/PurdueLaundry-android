@@ -47,6 +47,10 @@ public class MachineFragment extends Fragment implements SwipeRefreshLayout.OnRe
         // Required empty public constructor
     }
 
+    public void setOptions(boolean[] options) {
+        this.options = options;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {

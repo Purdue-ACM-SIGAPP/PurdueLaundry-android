@@ -12,4 +12,11 @@
     <string name="title_activity_infromation">InfromationActivity</string>
     <string name="MachineImageInformation">Image for Machine</string>
     <string name="display_parameters">Display Parameters</string>
+    <string name="select_options">Select Options</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+
+    <array name="options">
+        <item>Only Available</item>
+    </array>
 </resources>
