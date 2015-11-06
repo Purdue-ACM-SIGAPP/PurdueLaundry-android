@@ -41,6 +41,8 @@ public class MachineFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private View rootView;
 
+    private boolean[] options = {false};
+
     public MachineFragment() {
         // Required empty public constructor
     }
@@ -101,7 +103,7 @@ public class MachineFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 ((SwipeRefreshLayout) rootView.findViewById(R.id.dryer_list_layout)).setRefreshing(false);
                 isRefreshing = false;
                 classMachines = response.body();
-                recyclerView.setAdapter(new MachineAdapter(classMachines, rootView.getContext(),isDryers));
+                recyclerView.setAdapter(new MachineAdapter(classMachines, rootView.getContext(),isDryers,options));
             }
 
             @Override

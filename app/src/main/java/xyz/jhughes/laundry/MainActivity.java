@@ -153,16 +153,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void alert(Machine machine) {
-        Timer timer = new Timer(machine.getName(), true);
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-
-            }
-        }, Integer.parseInt(machine.getTime()));
-    }
-
     public static String getSelected() {
         return currentRoom;
     }

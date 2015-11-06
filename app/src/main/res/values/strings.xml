@@ -11,4 +11,5 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_infromation">InfromationActivity</string>
     <string name="MachineImageInformation">Image for Machine</string>
+    <string name="display_parameters">Display Parameters</string>
 </resources>

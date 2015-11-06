@@ -21,6 +21,8 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     private ArrayList<Machine> currentMachines;
     private Context c;
 
+    public static final int ONLY_AVAILABLE = 0;
+
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
@@ -55,6 +57,27 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         } else {
             for (Machine m : machines) {
                 if (m.getType().equals("Washer")) {
+                    this.currentMachines.add(m);
+                }
+            }
+        }
+
+    }
+
+    public MachineAdapter(ArrayList<Machine> machines, Context c, Boolean dryers, boolean[] options) {
+        this.c = c;
+        currentMachines = new ArrayList<Machine>();
+        if (dryers) {
+            for (Machine m : machines) {
+                if (m.getType().equals("Dryer") &&
+                    (! options[ONLY_AVAILABLE] || m.getStatus().equals("Available"))) {
+                    this.currentMachines.add(m);
+                }
+            }
+        } else {
+            for (Machine m : machines) {
+                if (m.getType().equals("Washer") &&
+                    (! options[ONLY_AVAILABLE] || m.getStatus().equals("Available"))) {
                     this.currentMachines.add(m);
                 }
             }
