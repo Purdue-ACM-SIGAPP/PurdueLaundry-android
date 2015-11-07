@@ -49,7 +49,7 @@ public class LocationActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-
+        locationHashMap = new HashMap<>();
         mContext = this;
 
         int[] laundryCount = new int[Constants.getListOfRooms().length];
@@ -59,7 +59,7 @@ public class LocationActivity extends AppCompatActivity {
             Integer[] array = getLaundryCall(Constants.getName(name));
             locationHashMap.put(name, array);
         }
-        adapter = new LocationAdapter(classMachines, mContext);
+        adapter = new LocationAdapter(locationHashMap, mContext);
         recyclerView.setAdapter(adapter);
 
     }
@@ -78,14 +78,14 @@ public class LocationActivity extends AppCompatActivity {
                         //Increments Total Dryer Count For Specific Place
                         countArray[0]++;
                         if (machine.getStatus().equals("Available")) {
-                            //Increments Total Dryer Count For Specific Place
+                            //Increments Available Dryer Count For Specific Place
                             countArray[1]++;
                         }
                     } else {
                         //Increments Total Washer Count For Specific Place
                         countArray[2]++;
                         if (machine.getStatus().equals("Available")) {
-                            //Increments Total Dryer Count For Specific Place
+                            //Increments Available Washer Count For Specific Place
                             countArray[3]++;
                         }
                     }

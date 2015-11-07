@@ -1,6 +1,8 @@
 package xyz.jhughes.laundry.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,10 +11,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.crypto.Mac;
 
+import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
+import xyz.jhughes.laundry.MainActivity;
 import xyz.jhughes.laundry.R;
 
 /**
@@ -22,40 +27,18 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
 
     private Context mContext;
 
-    private ArrayList<Machine> mDataset;
+    private HashMap<String,Integer[]> mDataset;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public LocationAdapter(ArrayList<Machine> machines, Context mContext) {
+    public LocationAdapter(HashMap<String,Integer[]> mDataset, Context mContext) {
         this.mContext = mContext;
-        mDataset = new ArrayList<Machine>();
-        for (Machine m : machines) {
-            if (m.getType().equals("Dryer")) {
-                this.mDataset.add(m);
-            }
-        }
-        for (Machine m : machines) {
-            if (m.getType().equals("Washer")) {
-                this.mDataset.add(m);
-            }
-        }
+        this.mDataset = mDataset;
     }
 
-    public void setMachines(ArrayList<Machine> machines, Boolean dryers) {
+    public void setMachines(HashMap<String,Integer[]> mDataset) {
         this.mDataset.clear();
-        if (dryers)
-            for (Machine m : machines) {
-                if (m.getType().equals("Dryer")) {
-                    this.mDataset.add(m);
-                }
-            }
-        else {
-            for (Machine m : machines) {
-                if (m.getType().equals("Washer")) {
-                    this.mDataset.add(m);
-                }
-            }
-        }
-
+        this.mDataset = mDataset;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -69,22 +52,38 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Machine machine = mDataset.get(position);
-        //holder.textView.setText(machine.getName());
+        String location = Constants.getListOfRooms()[position];
+        Integer[] count = mDataset.get(location);
+        holder.location.setText(location);
+        holder.dryerCount.setText(count[0] + "/" + count[1]);
+        holder.washerCount.setText(count[2] + "/" + count[3]);
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, MainActivity.class);
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return 9;
+        return mDataset.keySet().size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        public TextView textView;
+        public CardView cardView;
+        public ImageView imageView;
+        public TextView location, dryerCount, washerCount;
 
         public ViewHolder(View v) {
             super(v);
-            textView = (TextView) v.findViewById(R.id.textview);
+            cardView = (CardView) v.findViewById(R.id.card_view);
+            imageView = (ImageView) v.findViewById(R.id.image_view_location);
+            location = (TextView) v.findViewById(R.id.text_view_location_name);
+            dryerCount = (TextView) v.findViewById(R.id.text_view_dryer_count);
+            washerCount = (TextView) v.findViewById(R.id.text_view_washer_count);
         }
     }
 
