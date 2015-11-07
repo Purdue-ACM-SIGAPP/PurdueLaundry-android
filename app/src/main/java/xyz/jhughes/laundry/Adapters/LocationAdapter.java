@@ -2,6 +2,7 @@ package xyz.jhughes.laundry.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -52,7 +53,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String location = Constants.getListOfRooms()[position];
+        final String location = Constants.getListOfRooms()[position];
         Integer[] count = mDataset.get(location);
         holder.location.setText(location);
         holder.dryerCount.setText(count[0] + "/" + count[1]);
@@ -61,6 +62,9 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, MainActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("location",location);
+                intent.putExtras(bundle);
                 mContext.startActivity(intent);
             }
         });
