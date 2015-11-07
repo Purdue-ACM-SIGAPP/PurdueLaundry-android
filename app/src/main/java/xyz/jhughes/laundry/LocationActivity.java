@@ -66,6 +66,9 @@ public class LocationActivity extends AppCompatActivity {
 
     protected Integer[] getLaundryCall(String name) {
         final Integer[] countArray = new Integer[4];
+        for (int i = 0; i < countArray.length; i++) {
+            countArray[i] = 0;
+        }
         Call<ArrayList<Machine>> call = MachineService.getService().getMachineStatus(name);
 
         call.enqueue(new Callback<ArrayList<Machine>>() {

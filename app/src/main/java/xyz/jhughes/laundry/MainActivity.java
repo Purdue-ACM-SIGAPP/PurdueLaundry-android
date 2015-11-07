@@ -60,9 +60,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        currentRoom = getIntent().getExtras().getString("location");
+
         SharedPreferences sharedPreferences = getSharedPreferences("xyz.jhughes.laundry", MODE_PRIVATE);
 
-        currentRoom = sharedPreferences.getString("lastRoom", "Cary West");
+        //currentRoom = sharedPreferences.getString("lastRoom", "Cary West");
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(currentRoom);
