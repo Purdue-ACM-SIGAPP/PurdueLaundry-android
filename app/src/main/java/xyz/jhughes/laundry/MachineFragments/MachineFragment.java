@@ -41,7 +41,7 @@ public class MachineFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private View rootView;
 
-    private String options = "Available|In use|Almost done|End of cycle";
+    public static String options = "Available|In use|Almost done|End of cycle";
 
     public MachineFragment() {
         // Required empty public constructor
@@ -66,7 +66,6 @@ public class MachineFragment extends Fragment implements SwipeRefreshLayout.OnRe
                              Bundle savedInstanceState) {
 
         isDryers = getArguments().getBoolean("isDryers");
-        options = getArguments().getString("options");
         selected = Constants.getName(MainActivity.getSelected());
 
         rootView = inflater.inflate(R.layout.fragment_dryer, container, false);

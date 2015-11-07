@@ -23,9 +23,11 @@ import android.widget.ListView;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import xyz.jhughes.laundry.Adapters.MachineAdapter;
 import xyz.jhughes.laundry.FragmentPagerAdapter.AppSectionsPagerAdapter;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
+import xyz.jhughes.laundry.MachineFragments.MachineFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -58,8 +60,6 @@ public class MainActivity extends AppCompatActivity {
 
     private  Toolbar toolbar;
 
-    private String options;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("xyz.jhughes.laundry", MODE_PRIVATE);
 
         currentRoom = sharedPreferences.getString("lastRoom", "Cary West");
-        options = sharedPreferences.getString("options", "Available|In use|Almost done|End of cycle");
+        MachineFragment.options = sharedPreferences.getString("options", "Available|In use|Almost done|End of cycle");
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(currentRoom);
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
 
-        appSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager(), currentRoom, options);
+        appSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager(), currentRoom);
         viewPager.setAdapter(appSectionsPagerAdapter);
 
         // Give the TabLayout the ViewPager
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void createDialog() {
-        final boolean[] tempOptions = transformOptions(options);
+        final boolean[] tempOptions = transformOptions(MachineFragment.options);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // Set the dialog title
         builder.setTitle(R.string.select_options)
@@ -141,14 +141,11 @@ public class MainActivity extends AppCompatActivity {
                                                  tempOptions[which] = isChecked;
                                          }
                                      })
-                        // Set the action buttons
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        // User clicked OK, so save the mSelectedItems results somewhere
-                        // or return them to the component that opened the dialog
-                        options = transformOptions(tempOptions);
-                        appSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager(), currentRoom, options);
+                        String options = transformOptions(tempOptions);
+                        MachineFragment.options = options;
                         appSectionsPagerAdapter.notifyDataSetChanged();
 
                         SharedPreferences.Editor e =

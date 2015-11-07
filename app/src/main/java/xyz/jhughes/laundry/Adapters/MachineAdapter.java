@@ -49,34 +49,32 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
 
         for (Machine m : machines) {
             String status = m.getStatus();
-//                (options.contains(status) ||
-//                 (! "Available|In use|Almost done|End of cycle".contains(status) && options.contains("In use")))) {
             boolean isCorrectType = dryers == m.getType().equals("Dryer");
             boolean matchesParameters = options.contains(status);
-            System.out.println("STATUS: " + status + " ||| PARAMETERS: " + options + " ||| Matches: " + matchesParameters);
-            boolean isStillAllowed = true;
+            boolean isStillAllowed = ! matchesParameters
+                    && ! "Available|In use|Almost done|End of cycle".contains(status)
+                    && options.contains("In use");
 
-            if (isCorrectType && matchesParameters)
+            if (isCorrectType && (matchesParameters || isStillAllowed)) {
                 currentMachines.add(m);
+            }
         }
     }
 
-    public void setMachines(ArrayList<Machine> machines, Boolean dryers){
+    public void setMachines(ArrayList<Machine> machines, Boolean dryers, String options){
         this.currentMachines.clear();
-        if (dryers)
-            for (Machine m : machines) {
-                if (m.getType().equals("Dryer")) {
-                    this.currentMachines.add(m);
-                }
-            }
-        else {
-            for (Machine m : machines) {
-                if (m.getType().equals("Washer")) {
-                    this.currentMachines.add(m);
-                }
+        for (Machine m : machines) {
+            String status = m.getStatus();
+            boolean isCorrectType = dryers == m.getType().equals("Dryer");
+            boolean matchesParameters = options.contains(status);
+            boolean isStillAllowed = ! matchesParameters
+                    && ! "Available|In use|Almost done|End of cycle".contains(status)
+                    && options.contains("In use");
+
+            if (isCorrectType && (matchesParameters || isStillAllowed)) {
+                currentMachines.add(m);
             }
         }
-
     }
 
     // Create new views (invoked by the layout manager)
