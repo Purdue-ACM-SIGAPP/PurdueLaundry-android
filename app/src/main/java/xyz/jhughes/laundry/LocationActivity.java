@@ -63,7 +63,7 @@ public class LocationActivity extends AppCompatActivity {
 
     protected Integer[] getLaundryCall(String name) {
         final Integer[] countArray = new Integer[4];
-        for (int i = 0; i < countArray.length; i++) {
+        for ( int i=0; i<4; i++ ){
             countArray[i] = 0;
         }
         Call<ArrayList<Machine>> call = MachineService.getService().getMachineStatus(name);
@@ -76,17 +76,17 @@ public class LocationActivity extends AppCompatActivity {
                 for (Machine machine : classMachines) {
                     if (machine.getType().equals("Dryer")) {
                         //Increments Total Dryer Count For Specific Place
-                        countArray[0]++;
+                        countArray[0] = countArray[0] + 1;
                         if (machine.getStatus().equals("Available")) {
                             //Increments Available Dryer Count For Specific Place
-                            countArray[1]++;
+                            countArray[1] = countArray[1] + 1;
                         }
                     } else {
                         //Increments Total Washer Count For Specific Place
-                        countArray[2]++;
+                        countArray[2] = countArray[2] + 1;
                         if (machine.getStatus().equals("Available")) {
                             //Increments Available Washer Count For Specific Place
-                            countArray[3]++;
+                            countArray[3] = countArray[3] + 1;
                         }
                     }
                 }

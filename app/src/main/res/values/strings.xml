@@ -8,6 +8,6 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 
-    <string name="washer_available">Washers Available</string>
-    <string name="dryers_available">Dryers Available</string>
+    <string name="washers_available">Washers\nAvailable</string>
+    <string name="dryers_available">Dryers\nAvailable</string>
 </resources>
