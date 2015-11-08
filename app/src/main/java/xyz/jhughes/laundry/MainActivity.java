@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         //Set up being able to open and close the drawer
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);*/
-        
+
 
         //Setting up the ViewPager so that we can properly respond to what tab is selected and when we change.
 

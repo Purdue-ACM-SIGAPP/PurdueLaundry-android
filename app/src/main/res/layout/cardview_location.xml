@@ -30,7 +30,6 @@
                 android:id="@+id/text_view_location_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
                 style="@style/Location_TextView"/>
         <RelativeLayout
             android:id="@+id/washer_layout"
