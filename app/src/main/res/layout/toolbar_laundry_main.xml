@@ -9,12 +9,12 @@
         app:contentInsetStart="0dp"
         android:background="@android:color/holo_orange_dark">
 
-    <Spinner
+    <!--Spinner
             android:id="@+id/spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="24sp"
-            android:layout_gravity="right|center_vertical" />
+            android:layout_gravity="right|center_vertical" /-->
 
 </android.support.v7.widget.Toolbar>
 

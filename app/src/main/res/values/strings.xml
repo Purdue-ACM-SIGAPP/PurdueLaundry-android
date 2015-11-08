@@ -8,5 +8,6 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="washer_available">Washers Available</string>
+    <string name="dryers_available">Dryers Available</string>
 </resources>

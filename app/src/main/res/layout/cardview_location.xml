@@ -11,8 +11,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:weightSum="3"
-        android:background="@color/PurdueGoldDark">
+        android:weightSum="3">
 
         <ImageView android:id="@+id/image_view_location"
             android:layout_width="0dp"
@@ -26,22 +25,44 @@
             android:layout_weight="2">
             <TextView
                 android:id="@+id/text_view_location_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                style="@style/Location_TextView"/>
-
-            <TextView android:id="@+id/text_view_dryer_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
+                android:layout_centerHorizontal="true"
                 style="@style/Location_TextView"/>
 
             <TextView android:id="@+id/text_view_washer_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/text_view_location_name"
+                android:layout_alignParentLeft="true"
+                android:textColor="#00ffff"
+                style="@style/Amount_TextView"/>
+
+            <TextView android:id="@+id/washer_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_view_washer_count"
+                android:layout_alignLeft="@id/text_view_washer_count"
+                android:layout_alignRight="@id/text_view_washer_count"
+                android:text="@string/dryers_available"/>
+
+            <TextView android:id="@+id/text_view_dryer_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_view_location_name"
                 android:layout_alignParentRight="true"
-                style="@style/Location_TextView"/>
+                android:textColor="#ff0d00"
+                style="@style/Amount_TextView"/>
+
+            <TextView android:id="@+id/text_view_dryer_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_view_dryer_count"
+                android:layout_alignLeft="@id/text_view_dryer_count"
+                android:ellipsize="marquee"
+                android:text="@string/washer_available"/>
+
+
         </RelativeLayout>
 
     </LinearLayout>

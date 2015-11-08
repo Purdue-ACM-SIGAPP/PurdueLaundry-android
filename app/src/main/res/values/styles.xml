@@ -9,6 +9,11 @@
     </style>
 
     <style name="Location_TextView">
+        <item name="android:textSize">14pt</item>
+        <item name="android:layout_margin">12dp</item>
+    </style>
+
+    <style name="Amount_TextView">
         <item name="android:textSize">18pt</item>
         <item name="android:layout_margin">12dp</item>
     </style>

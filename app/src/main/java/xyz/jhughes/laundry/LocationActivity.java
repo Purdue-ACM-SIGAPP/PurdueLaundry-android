@@ -2,11 +2,9 @@ package xyz.jhughes.laundry;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -18,7 +16,6 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 import xyz.jhughes.laundry.Adapters.LocationAdapter;
-import xyz.jhughes.laundry.Adapters.MachineAdapter;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 
@@ -45,7 +42,7 @@ public class LocationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_location);
+        setContentView(R.layout.activity_location);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -97,7 +94,7 @@ public class LocationActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Throwable t) {
-                Log.d("LocationActivity", t.getMessage());
+                Log.d("LocationActivity", "API Fail " + t.getMessage());
             }
         });
         return countArray;

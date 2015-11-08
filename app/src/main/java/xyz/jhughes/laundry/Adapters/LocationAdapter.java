@@ -2,6 +2,7 @@ package xyz.jhughes.laundry.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -56,15 +57,15 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         final String location = Constants.getListOfRooms()[position];
         Integer[] count = mDataset.get(location);
         holder.location.setText(location);
-        holder.dryerCount.setText(count[0] + "/" + count[1]);
-        holder.washerCount.setText(count[2] + "/" + count[3]);
+        holder.dryerCount.setText(count[1] + "/" + count[0]);
+        holder.washerCount.setText(count[3] + "/" + count[2]);
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SharedPreferences.Editor sharedPreferenceEditor = mContext.getSharedPreferences("xyz.jhughes.laundry", mContext.MODE_PRIVATE).edit();
+                sharedPreferenceEditor.putString("lastRoom",location);
+                sharedPreferenceEditor.apply();
                 Intent intent = new Intent(mContext, MainActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("location",location);
-                intent.putExtras(bundle);
                 mContext.startActivity(intent);
             }
         });
