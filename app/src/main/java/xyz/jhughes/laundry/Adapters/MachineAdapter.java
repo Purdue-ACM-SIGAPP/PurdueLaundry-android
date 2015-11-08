@@ -43,41 +43,38 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MachineAdapter(ArrayList<Machine> machines, Context c, Boolean dryers) {
+    public MachineAdapter(ArrayList<Machine> machines, Context c, Boolean dryers, String options) {
         this.c = c;
         currentMachines = new ArrayList<Machine>();
-        if (dryers) {
-            for (Machine m : machines) {
-                if (m.getType().equals("Dryer")) {
-                    this.currentMachines.add(m);
-                }
-            }
-        } else {
-            for (Machine m : machines) {
-                if (m.getType().equals("Washer")) {
-                    this.currentMachines.add(m);
-                }
+
+        for (Machine m : machines) {
+            String status = m.getStatus();
+            boolean isCorrectType = dryers == m.getType().equals("Dryer");
+            boolean matchesParameters = options.contains(status);
+            boolean isStillAllowed = ! matchesParameters
+                    && ! "Available|In use|Almost done|End of cycle".contains(status)
+                    && options.contains("In use");
+
+            if (isCorrectType && (matchesParameters || isStillAllowed)) {
+                currentMachines.add(m);
             }
         }
-
     }
 
-    public void setMachines(ArrayList<Machine> machines, Boolean dryers){
+    public void setMachines(ArrayList<Machine> machines, Boolean dryers, String options){
         this.currentMachines.clear();
-        if (dryers)
-            for (Machine m : machines) {
-                if (m.getType().equals("Dryer")) {
-                    this.currentMachines.add(m);
-                }
-            }
-        else {
-            for (Machine m : machines) {
-                if (m.getType().equals("Washer")) {
-                    this.currentMachines.add(m);
-                }
+        for (Machine m : machines) {
+            String status = m.getStatus();
+            boolean isCorrectType = dryers == m.getType().equals("Dryer");
+            boolean matchesParameters = options.contains(status);
+            boolean isStillAllowed = ! matchesParameters
+                    && ! "Available|In use|Almost done|End of cycle".contains(status)
+                    && options.contains("In use");
+
+            if (isCorrectType && (matchesParameters || isStillAllowed)) {
+                currentMachines.add(m);
             }
         }
-
     }
 
     // Create new views (invoked by the layout manager)
