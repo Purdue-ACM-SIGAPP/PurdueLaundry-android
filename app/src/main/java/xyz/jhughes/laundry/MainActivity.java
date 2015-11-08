@@ -58,11 +58,11 @@ public class MainActivity extends AppCompatActivity {
 
     private AppSectionsPagerAdapter appSectionsPagerAdapter;
 
-    private  Toolbar toolbar;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        
+
         //Normal onCreate method calls.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -134,13 +134,13 @@ public class MainActivity extends AppCompatActivity {
                 // Specify the list array, the items to be selected by default (null for none),
                 // and the listener through which to receive callbacks when items are selected
                 .setMultiChoiceItems(R.array.options, tempOptions,
-                                     new DialogInterface.OnMultiChoiceClickListener() {
-                                         @Override
-                                         public void onClick(DialogInterface dialog, int which,
-                                                             boolean isChecked) {
-                                                 tempOptions[which] = isChecked;
-                                         }
-                                     })
+                        new DialogInterface.OnMultiChoiceClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which,
+                                                boolean isChecked) {
+                                tempOptions[which] = isChecked;
+                            }
+                        })
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
@@ -148,21 +148,17 @@ public class MainActivity extends AppCompatActivity {
                         MachineFragment.options = options;
                         appSectionsPagerAdapter.notifyDataSetChanged();
 
-                        SharedPreferences.Editor e =
-                                getSharedPreferences("xyz.jhughes.laundry", MODE_PRIVATE)
-                                        .edit();
+                        SharedPreferences.Editor e = getSharedPreferences("xyz.jhughes.laundry", MODE_PRIVATE).edit();
                         e.putString("options", options);
                         e.apply();
                     }
                 })
-                .setNegativeButton(R.string.cancel,
-                                   new DialogInterface.OnClickListener() {
-                                       @Override public void onClick(
-                                               DialogInterface dialog, int id) {
-                                           // Do nothing
-                                       }
-                                   });
-
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                // Do nothing
+                            }
+                        });
         builder.create().show();
     }
 
@@ -193,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean[] transformOptions(String options) {
-        return new boolean[] {
+        return new boolean[]{
                 options.contains("Available"),
                 options.contains("In use"),
                 options.contains("Almost done"),
@@ -226,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
 
         /**
          * This method is called when we click on something in the drawer.
-         *
+         * <p/>
          * We use this method in order to update the String of what is selected, to tell the Fragments to refresh their
          * data, and to close the drawer.
          *
@@ -235,17 +231,16 @@ public class MainActivity extends AppCompatActivity {
          * @param position - The int representation in the ListView that was clicked (0-based, as with all arrays, etc)
          * @param id       - The row ID of the item clicked. We have no use for this right now.
          */
-        @Override public void onItemClick(AdapterView<?> parent, View view,
-                                          int position, long id) {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view,
+                                int position, long id) {
 
             currentRoom = (String) parent.getItemAtPosition(position);
             toolbar.setTitle(currentRoom);
             appSectionsPagerAdapter.setSelected(currentRoom);
             appSectionsPagerAdapter.notifyDataSetChanged();
 
-            SharedPreferences.Editor e =
-                    getSharedPreferences("xyz.jhughes.laundry", MODE_PRIVATE)
-                            .edit();
+            SharedPreferences.Editor e = getSharedPreferences("xyz.jhughes.laundry", MODE_PRIVATE).edit();
             e.putString("lastRoom", currentRoom);
             e.apply();
 
@@ -256,7 +251,6 @@ public class MainActivity extends AppCompatActivity {
     public static String getSelected() {
         return currentRoom;
     }
-
 
 
 }
