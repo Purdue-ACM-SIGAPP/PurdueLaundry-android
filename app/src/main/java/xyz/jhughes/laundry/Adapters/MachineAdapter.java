@@ -100,14 +100,14 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         holder.nameTextView.setText(m.getName());
         holder.statusTextView.setText(m.getStatus());
         holder.timeLeftTextView.setText(m.getTime());
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
+        /*holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(c, InformationActivity.class);
                 i.putExtra("machine", m);
                 c.startActivity(i);
             }
-        });
+        });*/
 
         if (m.getType().equals("Dryer")) {
             ImageView imageView = holder.iconView;
