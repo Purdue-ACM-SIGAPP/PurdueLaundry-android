@@ -1,9 +1,14 @@
 package xyz.jhughes.laundry.MachineFragments;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,6 +27,7 @@ import xyz.jhughes.laundry.MachineService;
 import xyz.jhughes.laundry.MainActivity;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.Adapters.MachineAdapter;
+
 import java.util.ArrayList;
 
 /**
@@ -48,8 +54,7 @@ public class MachineFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         progressDialog = new ProgressDialog(this.getContext());
         {
@@ -72,7 +77,7 @@ public class MachineFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.dryer_machines_recycler_view);
 
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this.getContext(),2);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this.getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
 
         classMachines = new ArrayList<>();
@@ -90,26 +95,47 @@ public class MachineFragment extends Fragment implements SwipeRefreshLayout.OnRe
         refreshList();
     }
 
-    public void refreshList() {
-        Call<ArrayList<Machine>> call = MachineService.getService().getMachineStatus(selected);
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 
-        call.enqueue(new Callback<ArrayList<Machine>>() {
-            @Override
-            public void onResponse(Response<ArrayList<Machine>> response, Retrofit retrofit) {
-                if (progressDialog.isShowing()) {
-                    progressDialog.dismiss();
+    public void refreshList() {
+        if (isNetworkAvailable()) {
+            Call<ArrayList<Machine>> call = MachineService.getService().getMachineStatus(selected);
+
+            call.enqueue(new Callback<ArrayList<Machine>>() {
+                @Override
+                public void onResponse(Response<ArrayList<Machine>> response, Retrofit retrofit) {
+                    if (progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
+
+                    ((SwipeRefreshLayout) rootView.findViewById(R.id.dryer_list_layout)).setRefreshing(false);
+                    isRefreshing = false;
+                    classMachines = response.body();
+                    recyclerView.setAdapter(new MachineAdapter(classMachines, rootView.getContext(), isDryers, options));
                 }
 
-                ((SwipeRefreshLayout) rootView.findViewById(R.id.dryer_list_layout)).setRefreshing(false);
-                isRefreshing = false;
-                classMachines = response.body();
-                recyclerView.setAdapter(new MachineAdapter(classMachines, rootView.getContext(),isDryers,options));
-            }
+                @Override
+                public void onFailure(Throwable t) {
 
-            @Override
-            public void onFailure(Throwable t) {
-
-            }
-        });
+                }
+            });
+        } else {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+            alertDialogBuilder.setTitle("Connection Error");
+            alertDialogBuilder.setMessage("You have no internet connection");
+            alertDialogBuilder.setCancelable(false);
+            alertDialogBuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    getActivity().finish();
+                }
+            });
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+        }
     }
 }
