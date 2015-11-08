@@ -9,4 +9,7 @@
     <string name="drawer_close">Close navigation drawer</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="washers_available">Washers\nAvailable</string>
+    <string name="dryers_available">Dryers\nAvailable</string>
 </resources>

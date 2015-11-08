@@ -56,8 +56,8 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         final String location = Constants.getListOfRooms()[position];
         Integer[] count = mDataset.get(location);
         holder.location.setText(location);
-        holder.dryerCount.setText(count[0] + "/" + count[1]);
-        holder.washerCount.setText(count[2] + "/" + count[3]);
+        holder.dryerCount.setText(count[1] + "/" + count[0]);
+        holder.washerCount.setText(count[3] + "/" + count[2]);
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
