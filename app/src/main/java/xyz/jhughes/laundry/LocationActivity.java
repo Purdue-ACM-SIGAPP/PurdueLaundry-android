@@ -34,10 +34,6 @@ public class LocationActivity extends AppCompatActivity {
 
     private LocationAdapter adapter;
 
-    private boolean isDryers;
-
-    private String select;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +67,6 @@ public class LocationActivity extends AppCompatActivity {
         call.enqueue(new Callback<ArrayList<Machine>>() {
             @Override
             public void onResponse(Response<ArrayList<Machine>> response, Retrofit retrofit) {
-                setUpAdapter(response.body());
                 ArrayList<Machine> classMachines = response.body();
                 for (Machine machine : classMachines) {
                     if (machine.getType().equals("Dryer")) {
@@ -90,6 +85,7 @@ public class LocationActivity extends AppCompatActivity {
                         }
                     }
                 }
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -98,11 +94,6 @@ public class LocationActivity extends AppCompatActivity {
             }
         });
         return countArray;
-    }
-
-
-    public void setUpAdapter(List<Machine> machines){
-
     }
 
 }
