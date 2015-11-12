@@ -7,4 +7,14 @@
             <!-- The rest of your attributes -->
     </style>
 
+    <style name="Location_TextView">
+        <item name="android:textSize">24sp</item>
+        <item name="android:layout_marginLeft">4dp</item>
+    </style>
+
+    <style name="Amount_TextView">
+        <item name="android:textSize">18pt</item>
+        <item name="android:layout_margin">12dp</item>
+    </style>
+
 </resources>

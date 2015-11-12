@@ -83,7 +83,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                                                    int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.machine_card_layout, parent, false);
+                .inflate(R.layout.cardview_machine, parent, false);
         // set the view's size, margins, paddings and layout parameters
 
         ViewHolder vh = new ViewHolder(v);

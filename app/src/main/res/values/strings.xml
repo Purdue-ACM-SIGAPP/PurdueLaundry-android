@@ -22,4 +22,8 @@
         <item>Almost Done</item>
         <item>End Of Cycle</item>
     </array>
+
+    <string name="washers_available">Washers\nAvailable</string>
+    <string name="dryers_available">Dryers\nAvailable</string>
+
 </resources>
