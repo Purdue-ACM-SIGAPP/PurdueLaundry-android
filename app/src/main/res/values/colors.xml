@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="PurdueGoldDark">#6A4D07</color>
-    <color name="PurdueGoldLight">#B1810B</color>
+    <color name="PurdueGoldDark">#556E79</color>
+    <color name="PurdueGoldLight">#617D8A</color>
+    <color name="PurdueGoldDark2">#6A4D07</color>
+    <color name="PurdueGoldLight2">#B1810B</color>
 </resources>

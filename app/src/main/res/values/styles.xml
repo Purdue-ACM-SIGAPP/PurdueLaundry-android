@@ -4,7 +4,6 @@
             <!-- Set AppCompat’s color theming attrs -->
             <item name="colorPrimary">@color/PurdueGoldLight</item>
             <item name="colorPrimaryDark">@color/PurdueGoldDark</item>
-            <item name="android:navigationBarColor">@color/PurdueGoldLight</item>
             <!-- The rest of your attributes -->
     </style>
 
