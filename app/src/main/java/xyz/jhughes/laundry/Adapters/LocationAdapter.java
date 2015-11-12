@@ -46,8 +46,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.cardview_location, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_location, parent, false);
         // set the view's size, margins, paddings and layout parameters
         return new ViewHolder(v);
     }

@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,6 +57,9 @@ public class LocationActivity extends AppCompatActivity {
         adapter = new LocationAdapter(locationHashMap, mContext);
         recyclerView.setAdapter(adapter);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.location_activity_toolbar);
+        setSupportActionBar(toolbar);
+
     }
 
     protected Integer[] getLaundryCall(String name) {
@@ -96,4 +101,9 @@ public class LocationActivity extends AppCompatActivity {
         return countArray;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.clear();
+        return super.onCreateOptionsMenu(menu);
+    }
 }
