@@ -31,33 +31,12 @@ import xyz.jhughes.laundry.MachineFragments.MachineFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    /**
-     * Managing our tabs
-     */
     private ViewPager viewPager;
-
-    /**
-     * The layout we use for the drawer, which is simply a ListView in our case.
-     */
     private DrawerLayout mDrawerLayout;
-
-    /**
-     * Managing whether it'currentRoom open or closed
-     */
     private ActionBarDrawerToggle mDrawerToggle;
-
-    /**
-     * The list of rooms available
-     */
     private ListView mDrawerList;
-
-    /**
-     * The current room
-     */
     private static String currentRoom;
-
     private AppSectionsPagerAdapter appSectionsPagerAdapter;
-
     private Toolbar toolbar;
 
     @Override
@@ -78,9 +57,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         final ActionBar actionBar = getSupportActionBar();
-        //We can't really do anything if the ActionBar is null.
-        //This should never happen though, so we shouldn't worry too much about it.
-        //Maybe someone can find a case where this does happen and we can fix it.
         if (actionBar == null) {
             return;
         }
