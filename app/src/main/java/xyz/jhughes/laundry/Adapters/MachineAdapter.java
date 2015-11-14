@@ -43,38 +43,41 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MachineAdapter(ArrayList<Machine> machines, Context c, Boolean dryers, String options) {
+    public MachineAdapter(ArrayList<Machine> machines, Context c, Boolean dryers) {
         this.c = c;
         currentMachines = new ArrayList<Machine>();
-
-        for (Machine m : machines) {
-            String status = m.getStatus();
-            boolean isCorrectType = dryers == m.getType().equals("Dryer");
-            boolean matchesParameters = options.contains(status);
-            boolean isStillAllowed = ! matchesParameters
-                    && ! "Available|In use|Almost done|End of cycle".contains(status)
-                    && options.contains("In use");
-
-            if (isCorrectType && (matchesParameters || isStillAllowed)) {
-                currentMachines.add(m);
+        if (dryers) {
+            for (Machine m : machines) {
+                if (m.getType().equals("Dryer")) {
+                    this.currentMachines.add(m);
+                }
+            }
+        } else {
+            for (Machine m : machines) {
+                if (m.getType().equals("Washer")) {
+                    this.currentMachines.add(m);
+                }
             }
         }
+
     }
 
-    public void setMachines(ArrayList<Machine> machines, Boolean dryers, String options){
+    public void setMachines(ArrayList<Machine> machines, Boolean dryers){
         this.currentMachines.clear();
-        for (Machine m : machines) {
-            String status = m.getStatus();
-            boolean isCorrectType = dryers == m.getType().equals("Dryer");
-            boolean matchesParameters = options.contains(status);
-            boolean isStillAllowed = ! matchesParameters
-                    && ! "Available|In use|Almost done|End of cycle".contains(status)
-                    && options.contains("In use");
-
-            if (isCorrectType && (matchesParameters || isStillAllowed)) {
-                currentMachines.add(m);
+        if (dryers)
+            for (Machine m : machines) {
+                if (m.getType().equals("Dryer")) {
+                    this.currentMachines.add(m);
+                }
+            }
+        else {
+            for (Machine m : machines) {
+                if (m.getType().equals("Washer")) {
+                    this.currentMachines.add(m);
+                }
             }
         }
+
     }
 
     // Create new views (invoked by the layout manager)
@@ -100,14 +103,14 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         holder.nameTextView.setText(m.getName());
         holder.statusTextView.setText(m.getStatus());
         holder.timeLeftTextView.setText(m.getTime());
-        /*holder.cardView.setOnClickListener(new View.OnClickListener() {
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(c, InformationActivity.class);
                 i.putExtra("machine", m);
                 c.startActivity(i);
             }
-        });*/
+        });
 
         if (m.getType().equals("Dryer")) {
             ImageView imageView = holder.iconView;
