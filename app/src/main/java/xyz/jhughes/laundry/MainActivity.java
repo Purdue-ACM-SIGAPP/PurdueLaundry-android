@@ -2,6 +2,7 @@ package xyz.jhughes.laundry;
 
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -19,8 +20,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
+import xyz.jhughes.laundry.Adapters.MachineAdapter;
 import xyz.jhughes.laundry.FragmentPagerAdapter.AppSectionsPagerAdapter;
 import xyz.jhughes.laundry.LaundryParser.Constants;
+import xyz.jhughes.laundry.LaundryParser.Machine;
+import xyz.jhughes.laundry.MachineFragments.MachineFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -51,11 +58,11 @@ public class MainActivity extends AppCompatActivity {
 
     private AppSectionsPagerAdapter appSectionsPagerAdapter;
 
-    private  Toolbar toolbar;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        
+
         //Normal onCreate method calls.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -63,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("xyz.jhughes.laundry", MODE_PRIVATE);
 
         currentRoom = sharedPreferences.getString("lastRoom", "Cary West");
+        MachineFragment.options = sharedPreferences.getString("options", "Available|In use|Almost done|End of cycle");
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(currentRoom);
@@ -118,6 +126,95 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
     }
 
+    public void createDialog() {
+        final boolean[] tempOptions = transformOptions(MachineFragment.options);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Set the dialog title
+        builder.setTitle(R.string.select_options)
+                // Specify the list array, the items to be selected by default (null for none),
+                // and the listener through which to receive callbacks when items are selected
+                .setMultiChoiceItems(R.array.options, tempOptions,
+                        new DialogInterface.OnMultiChoiceClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which,
+                                                boolean isChecked) {
+                                tempOptions[which] = isChecked;
+                            }
+                        })
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        String options = transformOptions(tempOptions);
+                        MachineFragment.options = options;
+                        appSectionsPagerAdapter.notifyDataSetChanged();
+
+                        SharedPreferences.Editor e = getSharedPreferences("xyz.jhughes.laundry", MODE_PRIVATE).edit();
+                        e.putString("options", options);
+                        e.apply();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                // Do nothing
+                            }
+                        });
+        builder.create().show();
+    }
+
+    private String transformOptions(boolean[] options) {
+        String result = "";
+        boolean hasFirst = false;
+
+        if (options[0]) {
+            result += "Available";
+            hasFirst = true;
+        }
+
+        if (options[1]) {
+            result += hasFirst ? "|In use" : "In use";
+            hasFirst = true;
+        }
+
+        if (options[2]) {
+            result += hasFirst ? "|Almost done" : "Almost done";
+            hasFirst = true;
+        }
+
+        if (options[3]) {
+            result += hasFirst ? "|End of cycle" : "End of cycle";
+        }
+
+        return result;
+    }
+
+    private boolean[] transformOptions(String options) {
+        return new boolean[]{
+                options.contains("Available"),
+                options.contains("In use"),
+                options.contains("Almost done"),
+                options.contains("End of cycle")
+        };
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.display_parameters:
+                createDialog();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     /**
      * This method is called when we click on a room in the Drawer.
      */
@@ -125,17 +222,19 @@ public class MainActivity extends AppCompatActivity {
 
         /**
          * This method is called when we click on something in the drawer.
-         *
+         * <p/>
          * We use this method in order to update the String of what is selected, to tell the Fragments to refresh their
          * data, and to close the drawer.
          *
-         * @param parent - The AdapterView that contains a list of the rooms.
-         * @param view - The View of the AdapterView
+         * @param parent   - The AdapterView that contains a list of the rooms.
+         * @param view     - The View of the AdapterView
          * @param position - The int representation in the ListView that was clicked (0-based, as with all arrays, etc)
-         * @param id - The row ID of the item clicked. We have no use for this right now.
+         * @param id       - The row ID of the item clicked. We have no use for this right now.
          */
         @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        public void onItemClick(AdapterView<?> parent, View view,
+                                int position, long id) {
+
             currentRoom = (String) parent.getItemAtPosition(position);
             toolbar.setTitle(currentRoom);
             appSectionsPagerAdapter.setSelected(currentRoom);
@@ -152,7 +251,6 @@ public class MainActivity extends AppCompatActivity {
     public static String getSelected() {
         return currentRoom;
     }
-
 
 
 }

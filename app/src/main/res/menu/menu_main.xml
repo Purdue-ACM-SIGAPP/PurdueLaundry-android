@@ -1,5 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
-      xmlns:tools="http://schemas.android.com/tools"
-      tools:context="xyz.jhughes.laundry.MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="xyz.jhughes.laundry.MainActivity">
+    <item
+        android:title="@string/display_parameters"
+        app:showAsAction="always"
+        android:icon="@drawable/filter_icon"
+        android:id="@+id/display_parameters"/>
 </menu>
