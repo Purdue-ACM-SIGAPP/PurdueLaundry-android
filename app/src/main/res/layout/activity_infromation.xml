@@ -20,13 +20,47 @@
         <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5sp"
+                android:layout_marginTop="15sp"
                 android:maxWidth="150dip"
                 android:scaleType="centerCrop"
                 android:adjustViewBounds ="true"
                 android:id="@+id/machineImage"
                 android:layout_gravity="center_horizontal|top"
                 android:contentDescription="@string/MachineImageInformation"/>
+
+        <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="30sp"
+                android:gravity="center_horizontal"
+                android:id="@+id/MachineID"
+                android:text="@string/MachineID"/>
+
+        <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:paddingTop="5sp"
+                android:paddingBottom="30sp"
+                android:id="@+id/MachineTime"
+                android:text="@string/Time"/>
+
+        <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/time_end"
+                android:layout_marginBottom="10sp"
+                android:gravity="center_horizontal"
+                android:onClick="onClick"
+                android:text="@string/Finished"/>
+
+        <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/time_five_left"
+                android:gravity="center_horizontal"
+                android:onClick="onClick"
+                android:text="@string/five_until_fin"/>
     </LinearLayout>
 
 

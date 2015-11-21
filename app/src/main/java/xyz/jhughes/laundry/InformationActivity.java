@@ -1,15 +1,22 @@
 package xyz.jhughes.laundry;
 
+import android.content.DialogInterface;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 
 public class InformationActivity extends AppCompatActivity {
+
+    Machine classMachine;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,6 +24,7 @@ public class InformationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_infromation);
 
         Machine machine = (Machine) getIntent().getSerializableExtra("machine");
+        classMachine = machine;
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(machine.getName());
@@ -24,10 +32,8 @@ public class InformationActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         final ActionBar actionBar = getSupportActionBar();
-        //We can't really do anything if the ActionBar is null.
-        //This should never happen though, so we shouldn't worry too much about it.
-        //Maybe someone can find a case where this does happen and we can fix it.
         if (actionBar == null) {
+            //If null, just return because all things are broke.
             return;
         }
 
@@ -36,6 +42,14 @@ public class InformationActivity extends AppCompatActivity {
 
         ImageView imageView = (ImageView) findViewById(R.id.machineImage);
         setImage(imageView, machine);
+
+        ((TextView) findViewById(R.id.MachineID)).setText(machine.getName());
+
+        if (machine.getTime().hashCode() == 160) {
+            ((TextView) findViewById(R.id.MachineTime)).setText("Available");
+        } else {
+            ((TextView) findViewById(R.id.MachineTime)).setText(machine.getTime());
+        }
     }
 
     public void setImage(ImageView imageView, Machine m) {
@@ -93,5 +107,27 @@ public class InformationActivity extends AppCompatActivity {
         finish();
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onClick(View v) {
+        if (classMachine.getTime().hashCode() == 160) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder.setTitle("Machine Error");
+            alertDialogBuilder.setMessage("Machine is not running!");
+            alertDialogBuilder.setCancelable(false);
+            alertDialogBuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                }
+            });
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+        } else if (v.getId() == R.id.time_end) {
+            System.out.println("NYI");
+        } else if (v.getId() == R.id.time_five_left) {
+            System.out.println("NYI");
+        } else {
+
+        }
     }
 }
