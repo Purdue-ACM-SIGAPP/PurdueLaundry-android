@@ -15,6 +15,10 @@
     <string name="select_options">Select Parameters</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="MachineID">Machine XXX</string>
+    <string name="Time">0 Minutes Remaining</string>
+    <string name="Finished">Set an alarm for when finished</string>
+    <string name="five_until_fin">Set an alarm for 5 minutes before finished</string>
 
     <array name="options">
         <item>Available</item>
@@ -22,8 +26,4 @@
         <item>Almost Done</item>
         <item>End Of Cycle</item>
     </array>
-
-    <string name="washers_available">Washers\nAvailable</string>
-    <string name="dryers_available">Dryers\nAvailable</string>
-
 </resources>
