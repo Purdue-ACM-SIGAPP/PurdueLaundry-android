@@ -1,7 +1,14 @@
 package xyz.jhughes.laundry;
 
+import android.app.AlarmManager;
+import android.app.Dialog;
+import android.app.Notification;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +18,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import xyz.jhughes.laundry.Helpers.NotificationPublisher;
 import xyz.jhughes.laundry.LaundryParser.Machine;
+
+import java.util.Scanner;
 
 public class InformationActivity extends AppCompatActivity {
 
@@ -122,11 +132,32 @@ public class InformationActivity extends AppCompatActivity {
             AlertDialog alertDialog = alertDialogBuilder.create();
             alertDialog.show();
         } else if (v.getId() == R.id.time_end) {
-            System.out.println("NYI");
+            int index = classMachine.getTime().indexOf(' ');
+            int delay = Integer.parseInt(classMachine.getTime().substring(0, index));
+            delay *= 60 * 1000; //60 seconds per minute, 1000 milliseconds per second
+            Notification n = getNotification(classMachine.getName() + " is ready!");
+            scheduleNotification(n, delay);
         } else if (v.getId() == R.id.time_five_left) {
             System.out.println("NYI");
-        } else {
-
         }
+    }
+
+    private void scheduleNotification(Notification notification, int delay) {
+        Intent notificationIntent = new Intent(this, NotificationPublisher.class);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        long futureInMillis = SystemClock.elapsedRealtime() + delay;
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
+    }
+
+    private Notification getNotification(String content) {
+        Notification.Builder builder = new Notification.Builder(this);
+        builder.setContentTitle("Laundry is ready!");
+        builder.setContentText(content);
+        builder.setSmallIcon(R.drawable.ic_launcher);
+        return builder.build();
     }
 }
