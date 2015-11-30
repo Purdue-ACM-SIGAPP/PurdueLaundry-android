@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.squareup.picasso.Picasso;
 import xyz.jhughes.laundry.InformationActivity;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.R;
@@ -112,37 +113,47 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
             ImageView imageView = holder.iconView;
             switch (m.getStatus()) {
                 case "Available":
-                    imageView.setImageResource(R.drawable.dryer_available);
+                    Picasso.with(c).load(R.drawable.dryer_available).resize(200, 261).centerInside().into(imageView);
+                    //imageView.setImageResource(R.drawable.dryer_available);
                     break;
                 case "In use":
-                    imageView.setImageResource(R.drawable.dryer_running);
+                    Picasso.with(c).load(R.drawable.dryer_running).resize(200, 261).centerInside().into(imageView);
+                    //imageView.setImageResource(R.drawable.dryer_running);
                     break;
                 case "Almost done":
-                    imageView.setImageResource(R.drawable.dryer_almost_done);
+                    Picasso.with(c).load(R.drawable.dryer_almost_done).resize(200, 261).centerInside().into(imageView);
+                    //imageView.setImageResource(R.drawable.dryer_almost_done);
                     break;
                 case "End of cycle":
-                    imageView.setImageResource(R.drawable.dryer_end_cycle);
+                    Picasso.with(c).load(R.drawable.dryer_end_cycle).resize(200, 261).centerInside().into(imageView);
+                    //imageView.setImageResource(R.drawable.dryer_end_cycle);
                     break;
                 default:
-                    imageView.setImageResource(R.drawable.dryer_running);
+                    Picasso.with(c).load(R.drawable.dryer_running).resize(200, 261).centerInside().into(imageView);
+                    //imageView.setImageResource(R.drawable.dryer_running);
             }
         } else if (m.getType().equals("Washer")) {
             ImageView imageView = holder.iconView;
             switch (m.getStatus()) {
                 case "Available":
-                    imageView.setImageResource(R.drawable.washer_available);
+                    Picasso.with(c).load(R.drawable.washer_available).resize(200, 276).centerInside().into(imageView);
+                    //imageView.setImageResource(R.drawable.washer_available);
                     break;
                 case "In use":
-                    imageView.setImageResource(R.drawable.washer_running);
+                    Picasso.with(c).load(R.drawable.washer_running).resize(200, 276).centerInside().into(imageView);
+                    //imageView.setImageResource(R.drawable.washer_running);
                     break;
                 case "Almost done":
-                    imageView.setImageResource(R.drawable.washer_almost_done);
+                    Picasso.with(c).load(R.drawable.washer_almost_done).resize(200, 276).centerInside().into(imageView);
+                    //imageView.setImageResource(R.drawable.washer_almost_done);
                     break;
                 case "End of cycle":
-                    imageView.setImageResource(R.drawable.washer_end_cycle);
+                    Picasso.with(c).load(R.drawable.washer_end_cycle).resize(200, 276).centerInside().into(imageView);
+                    //imageView.setImageResource(R.drawable.washer_end_cycle);
                     break;
                 default:
-                    imageView.setImageResource(R.drawable.washer_running);
+                    Picasso.with(c).load(R.drawable.washer_running).resize(200, 276).centerInside().into(imageView);
+                    //imageView.setImageResource(R.drawable.washer_running);
             }
         }
     }
