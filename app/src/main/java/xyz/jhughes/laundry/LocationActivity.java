@@ -8,11 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
@@ -20,6 +15,9 @@ import retrofit.Retrofit;
 import xyz.jhughes.laundry.Adapters.LocationAdapter;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by vieck on 10/27/15.
