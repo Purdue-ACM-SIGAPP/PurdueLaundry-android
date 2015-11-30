@@ -1,6 +1,5 @@
 package xyz.jhughes.laundry;
 
-
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
