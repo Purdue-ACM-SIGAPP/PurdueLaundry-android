@@ -1,4 +1,4 @@
-package xyz.jhughes.laundry.interfaces;
+package xyz.jhughes.laundry.Interfaces;
 
 import retrofit.Call;
 import retrofit.http.GET;

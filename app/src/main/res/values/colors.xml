@@ -4,4 +4,11 @@
     <color name="PurdueGoldLight">#617D8A</color>
     <color name="PurdueGoldDark2">#6A4D07</color>
     <color name="PurdueGoldLight2">#B1810B</color>
+    <color name="Available">#4caf50</color>
+    <color name="InUse">#f44336</color>
+    <color name="AlmostDone">#ffab40</color>
+    <color name="Finished">#c5e1a5</color>
+    <color name="gray">#eaeaea</color>
+    <color name="bgGray">#cfd8dc</color>
+    <color name="white">#ffffff</color>
 </resources>

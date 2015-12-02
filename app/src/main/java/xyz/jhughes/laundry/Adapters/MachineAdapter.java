@@ -2,14 +2,13 @@ package xyz.jhughes.laundry.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-import com.squareup.picasso.Picasso;
 import xyz.jhughes.laundry.InformationActivity;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.R;
@@ -29,7 +28,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         public TextView nameTextView;
         public TextView statusTextView;
         private TextView timeLeftTextView;
-        private ImageView iconView;
+        //private ImageView iconView;
         public CardView cardView;
 
         public ViewHolder(View v) {
@@ -37,7 +36,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
             nameTextView = (TextView)v.findViewById(R.id.machine_name_text_view);
             statusTextView = (TextView)v.findViewById(R.id.machine_status_text_view);
             timeLeftTextView = (TextView)v.findViewById(R.id.machine_time_left_text_view);
-            iconView = (ImageView)v.findViewById(R.id.icon);
+            //iconView = (ImageView)v.findViewById(R.id.icon);
             cardView = (CardView) v.findViewById(R.id.card_view);
         }
     }
@@ -110,49 +109,59 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         });
 
         if (m.getType().equals("Dryer")) {
-            ImageView imageView = holder.iconView;
+            //ImageView imageView = holder.iconView;
             switch (m.getStatus()) {
                 case "Available":
-                    Picasso.with(c).load(R.drawable.dryer_available).resize(200, 261).centerInside().into(imageView);
+                    holder.cardView.setBackgroundColor(ContextCompat.getColor(c, R.color.Available));
+                    //Picasso.with(c).load(R.drawable.dryer_available).resize(200, 261).centerInside().into(imageView);
                     //imageView.setImageResource(R.drawable.dryer_available);
                     break;
                 case "In use":
-                    Picasso.with(c).load(R.drawable.dryer_running).resize(200, 261).centerInside().into(imageView);
+                    holder.cardView.setBackgroundColor(ContextCompat.getColor(c, R.color.InUse));
+                    //Picasso.with(c).load(R.drawable.dryer_running).resize(200, 261).centerInside().into(imageView);
                     //imageView.setImageResource(R.drawable.dryer_running);
                     break;
                 case "Almost done":
-                    Picasso.with(c).load(R.drawable.dryer_almost_done).resize(200, 261).centerInside().into(imageView);
+                    holder.cardView.setBackgroundColor(ContextCompat.getColor(c, R.color.AlmostDone));
+                    //Picasso.with(c).load(R.drawable.dryer_almost_done).resize(200, 261).centerInside().into(imageView);
                     //imageView.setImageResource(R.drawable.dryer_almost_done);
                     break;
                 case "End of cycle":
-                    Picasso.with(c).load(R.drawable.dryer_end_cycle).resize(200, 261).centerInside().into(imageView);
+                    holder.cardView.setBackgroundColor(ContextCompat.getColor(c, R.color.Finished));
+                    //Picasso.with(c).load(R.drawable.dryer_end_cycle).resize(200, 261).centerInside().into(imageView);
                     //imageView.setImageResource(R.drawable.dryer_end_cycle);
                     break;
                 default:
-                    Picasso.with(c).load(R.drawable.dryer_running).resize(200, 261).centerInside().into(imageView);
+                    holder.cardView.setBackgroundColor(ContextCompat.getColor(c, R.color.InUse));
+                    //Picasso.with(c).load(R.drawable.dryer_running).resize(200, 261).centerInside().into(imageView);
                     //imageView.setImageResource(R.drawable.dryer_running);
             }
         } else if (m.getType().equals("Washer")) {
-            ImageView imageView = holder.iconView;
+            //ImageView imageView = holder.iconView;
             switch (m.getStatus()) {
                 case "Available":
-                    Picasso.with(c).load(R.drawable.washer_available).resize(200, 276).centerInside().into(imageView);
+                    holder.cardView.setBackgroundColor(ContextCompat.getColor(c, R.color.Available));
+                    //Picasso.with(c).load(R.drawable.washer_available).resize(200, 276).centerInside().into(imageView);
                     //imageView.setImageResource(R.drawable.washer_available);
                     break;
                 case "In use":
-                    Picasso.with(c).load(R.drawable.washer_running).resize(200, 276).centerInside().into(imageView);
+                    holder.cardView.setBackgroundColor(ContextCompat.getColor(c, R.color.InUse));
+                    //Picasso.with(c).load(R.drawable.washer_running).resize(200, 276).centerInside().into(imageView);
                     //imageView.setImageResource(R.drawable.washer_running);
                     break;
                 case "Almost done":
-                    Picasso.with(c).load(R.drawable.washer_almost_done).resize(200, 276).centerInside().into(imageView);
+                    holder.cardView.setBackgroundColor(ContextCompat.getColor(c, R.color.AlmostDone));
+                    //Picasso.with(c).load(R.drawable.washer_almost_done).resize(200, 276).centerInside().into(imageView);
                     //imageView.setImageResource(R.drawable.washer_almost_done);
                     break;
                 case "End of cycle":
-                    Picasso.with(c).load(R.drawable.washer_end_cycle).resize(200, 276).centerInside().into(imageView);
+                    holder.cardView.setBackgroundColor(ContextCompat.getColor(c, R.color.Finished));
+                    //Picasso.with(c).load(R.drawable.washer_end_cycle).resize(200, 276).centerInside().into(imageView);
                     //imageView.setImageResource(R.drawable.washer_end_cycle);
                     break;
                 default:
-                    Picasso.with(c).load(R.drawable.washer_running).resize(200, 276).centerInside().into(imageView);
+                    holder.cardView.setBackgroundColor(ContextCompat.getColor(c, R.color.InUse));
+                    //Picasso.with(c).load(R.drawable.washer_running).resize(200, 276).centerInside().into(imageView);
                     //imageView.setImageResource(R.drawable.washer_running);
             }
         }

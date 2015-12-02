@@ -1,7 +1,6 @@
 package xyz.jhughes.laundry;
 
 import android.app.AlarmManager;
-import android.app.Dialog;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -20,8 +19,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import xyz.jhughes.laundry.Helpers.NotificationPublisher;
 import xyz.jhughes.laundry.LaundryParser.Machine;
-
-import java.util.Scanner;
 
 public class InformationActivity extends AppCompatActivity {
 

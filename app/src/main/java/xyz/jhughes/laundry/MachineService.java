@@ -2,7 +2,7 @@ package xyz.jhughes.laundry;
 
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
-import xyz.jhughes.laundry.interfaces.MachineAPI;
+import xyz.jhughes.laundry.Interfaces.MachineAPI;
 
 
 /**
