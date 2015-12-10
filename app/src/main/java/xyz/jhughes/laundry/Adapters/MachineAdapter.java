@@ -33,9 +33,9 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
 
         public ViewHolder(View v) {
             super(v);
-            nameTextView = (TextView)v.findViewById(R.id.machine_name_text_view);
-            statusTextView = (TextView)v.findViewById(R.id.machine_status_text_view);
-            timeLeftTextView = (TextView)v.findViewById(R.id.machine_time_left_text_view);
+            nameTextView = (TextView) v.findViewById(R.id.machine_name_text_view);
+            statusTextView = (TextView) v.findViewById(R.id.machine_status_text_view);
+            timeLeftTextView = (TextView) v.findViewById(R.id.machine_time_left_text_view);
             //iconView = (ImageView)v.findViewById(R.id.icon);
             cardView = (CardView) v.findViewById(R.id.card_view);
         }
@@ -47,39 +47,34 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         currentMachines = new ArrayList<Machine>();
 
         for (Machine m : machines) {
-            String status = m.getStatus();
-            boolean isCorrectType = dryers == m.getType().equals("Dryer");
-            boolean matchesParameters = options.contains(status);
-            boolean isStillAllowed = ! matchesParameters
-                    && ! "Available|In use|Almost done|End of cycle".contains(status)
-                    && options.contains("In use");
-
-            if (isCorrectType && (matchesParameters || isStillAllowed)) {
-                currentMachines.add(m);
-            }
+            machineHelper(m, dryers, options);
         }
     }
 
-    public void setMachines(ArrayList<Machine> machines, Boolean dryers, String options){
+    public void setMachines(ArrayList<Machine> machines, Boolean dryers, String options) {
         this.currentMachines.clear();
         for (Machine m : machines) {
-            String status = m.getStatus();
-            boolean isCorrectType = dryers == m.getType().equals("Dryer");
-            boolean matchesParameters = options.contains(status);
-            boolean isStillAllowed = ! matchesParameters
-                    && ! "Available|In use|Almost done|End of cycle".contains(status)
-                    && options.contains("In use");
+            machineHelper(m, dryers, options);
+        }
+    }
 
-            if (isCorrectType && (matchesParameters || isStillAllowed)) {
-                currentMachines.add(m);
-            }
+    private void machineHelper(Machine m, Boolean dryers, String options) {
+        String status = m.getStatus();
+        boolean isCorrectType = dryers == m.getType().equals("Dryer");
+        boolean matchesParameters = options.contains(status);
+        boolean isStillAllowed = !matchesParameters
+                && !"Available|In use|Almost done|End of cycle".contains(status)
+                && options.contains("In use");
+
+        if (isCorrectType && (matchesParameters || isStillAllowed)) {
+            currentMachines.add(m);
         }
     }
 
     // Create new views (invoked by the layout manager)
     @Override
     public MachineAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                   int viewType) {
+                                                        int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.cardview_machine, parent, false);
@@ -108,62 +103,21 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
             }
         });
 
-        if (m.getType().equals("Dryer")) {
-            //ImageView imageView = holder.iconView;
-            switch (m.getStatus()) {
-                case "Available":
-                    holder.cardView.setBackgroundColor(ContextCompat.getColor(c, R.color.Available));
-                    //Picasso.with(c).load(R.drawable.dryer_available).resize(200, 261).centerInside().into(imageView);
-                    //imageView.setImageResource(R.drawable.dryer_available);
-                    break;
-                case "In use":
-                    holder.cardView.setBackgroundColor(ContextCompat.getColor(c, R.color.InUse));
-                    //Picasso.with(c).load(R.drawable.dryer_running).resize(200, 261).centerInside().into(imageView);
-                    //imageView.setImageResource(R.drawable.dryer_running);
-                    break;
-                case "Almost done":
-                    holder.cardView.setBackgroundColor(ContextCompat.getColor(c, R.color.AlmostDone));
-                    //Picasso.with(c).load(R.drawable.dryer_almost_done).resize(200, 261).centerInside().into(imageView);
-                    //imageView.setImageResource(R.drawable.dryer_almost_done);
-                    break;
-                case "End of cycle":
-                    holder.cardView.setBackgroundColor(ContextCompat.getColor(c, R.color.Finished));
-                    //Picasso.with(c).load(R.drawable.dryer_end_cycle).resize(200, 261).centerInside().into(imageView);
-                    //imageView.setImageResource(R.drawable.dryer_end_cycle);
-                    break;
-                default:
-                    holder.cardView.setBackgroundColor(ContextCompat.getColor(c, R.color.InUse));
-                    //Picasso.with(c).load(R.drawable.dryer_running).resize(200, 261).centerInside().into(imageView);
-                    //imageView.setImageResource(R.drawable.dryer_running);
-            }
-        } else if (m.getType().equals("Washer")) {
-            //ImageView imageView = holder.iconView;
-            switch (m.getStatus()) {
-                case "Available":
-                    holder.cardView.setBackgroundColor(ContextCompat.getColor(c, R.color.Available));
-                    //Picasso.with(c).load(R.drawable.washer_available).resize(200, 276).centerInside().into(imageView);
-                    //imageView.setImageResource(R.drawable.washer_available);
-                    break;
-                case "In use":
-                    holder.cardView.setBackgroundColor(ContextCompat.getColor(c, R.color.InUse));
-                    //Picasso.with(c).load(R.drawable.washer_running).resize(200, 276).centerInside().into(imageView);
-                    //imageView.setImageResource(R.drawable.washer_running);
-                    break;
-                case "Almost done":
-                    holder.cardView.setBackgroundColor(ContextCompat.getColor(c, R.color.AlmostDone));
-                    //Picasso.with(c).load(R.drawable.washer_almost_done).resize(200, 276).centerInside().into(imageView);
-                    //imageView.setImageResource(R.drawable.washer_almost_done);
-                    break;
-                case "End of cycle":
-                    holder.cardView.setBackgroundColor(ContextCompat.getColor(c, R.color.Finished));
-                    //Picasso.with(c).load(R.drawable.washer_end_cycle).resize(200, 276).centerInside().into(imageView);
-                    //imageView.setImageResource(R.drawable.washer_end_cycle);
-                    break;
-                default:
-                    holder.cardView.setBackgroundColor(ContextCompat.getColor(c, R.color.InUse));
-                    //Picasso.with(c).load(R.drawable.washer_running).resize(200, 276).centerInside().into(imageView);
-                    //imageView.setImageResource(R.drawable.washer_running);
-            }
+        switch (m.getStatus()) {
+            case "Available":
+                holder.cardView.setBackgroundColor(ContextCompat.getColor(c, R.color.Available));
+                break;
+            case "In use":
+                holder.cardView.setBackgroundColor(ContextCompat.getColor(c, R.color.InUse));
+                break;
+            case "Almost done":
+                holder.cardView.setBackgroundColor(ContextCompat.getColor(c, R.color.AlmostDone));
+                break;
+            case "End of cycle":
+                holder.cardView.setBackgroundColor(ContextCompat.getColor(c, R.color.Finished));
+                break;
+            default:
+                holder.cardView.setBackgroundColor(ContextCompat.getColor(c, R.color.InUse));
         }
     }
 
