@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.squareup.picasso.Picasso;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.MainActivity;
 import xyz.jhughes.laundry.R;
@@ -52,6 +53,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         holder.location.setText(location);
         holder.dryerCount.setText(count[1] + "/" + count[0]);
         holder.washerCount.setText(count[3] + "/" + count[2]);
+        setImage(holder.imageView, position);
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,6 +84,64 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
             location = (TextView) v.findViewById(R.id.text_view_location_name);
             dryerCount = (TextView) v.findViewById(R.id.text_view_dryer_count);
             washerCount = (TextView) v.findViewById(R.id.text_view_washer_count);
+        }
+    }
+
+    public void setImage(ImageView image, int position) {
+        switch (Constants.getListOfRooms()[position]) {
+            case "Cary West":
+                Picasso.with(mContext).load(R.drawable.image_cary).resize(185, 110).centerCrop().into(image);
+                //image.setImageResource(R.drawable.image_cary);
+                break;
+            case "Earhart":
+                Picasso.with(mContext).load(R.drawable.image_earhart).resize(185, 110).centerInside().into(image);
+                //image.setImageResource(R.drawable.image_earhart);
+                break;
+            case "Harrison":
+                Picasso.with(mContext).load(R.drawable.image_harrison).resize(185, 110).centerInside().into(image);
+                //image.setImageResource(R.drawable.image_harrison);
+                break;
+            case "Hawkins":
+                Picasso.with(mContext).load(R.drawable.image_hawkins).resize(185, 110).centerInside().into(image);
+                //image.setImageResource(R.drawable.image_hawkins);
+                break;
+            case "Hillenbrand":
+                Picasso.with(mContext).load(R.drawable.image_hillenbrand).resize(185, 110).centerInside().into(image);
+                //image.setImageResource(R.drawable.image_hillenbrand);
+                break;
+            case "McCutcheon":
+                Picasso.with(mContext).load(R.drawable.image_mccutcheon).resize(185, 110).centerInside().into(image);
+                //image.setImageResource(R.drawable.image_mccutcheon);
+                break;
+            case "Meredith Northwest": case "Meredith Southeast":
+                Picasso.with(mContext).load(R.drawable.image_meredith).resize(185, 110).centerInside().into(image);
+                //image.setImageResource(R.drawable.image_meredith);
+                break;
+            case "Owen":
+                Picasso.with(mContext).load(R.drawable.image_owen).resize(185, 110).centerInside().into(image);
+                //image.setImageResource(R.drawable.image_owen);
+                break;
+            case "Shreve":
+                Picasso.with(mContext).load(R.drawable.image_shreve).resize(185, 110).centerInside().into(image);
+                //image.setImageResource(R.drawable.image_shreve);
+                break;
+            case "Tarkington":
+                Picasso.with(mContext).load(R.drawable.image_tarkington).resize(185, 110).centerInside().into(image);
+                //image.setImageResource(R.drawable.image_tarkington);
+                break;
+            case "Third Street":
+                Picasso.with(mContext).load(R.drawable.image_tss).resize(185, 110).centerInside().into(image);
+                //image.setImageResource(R.drawable.image_tss);
+                break;
+            case "Wiley":
+                Picasso.with(mContext).load(R.drawable.image_wiley).resize(185, 110).centerInside().into(image);
+                //image.setImageResource(R.drawable.image_wiley);
+                break;
+            case "Windsor - Duhme":case "Windsor - Warren":
+                Picasso.with(mContext).load(R.drawable.image_windsor).resize(185, 110).centerInside().into(image);
+                //image.setImageResource(R.drawable.image_windsor);
+                break;
+
         }
     }
 
