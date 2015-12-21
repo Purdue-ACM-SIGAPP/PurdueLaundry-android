@@ -1,20 +1,21 @@
 package xyz.jhughes.laundry.Adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import xyz.jhughes.laundry.InformationActivity;
+import android.widget.Toast;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.R;
 
 import java.util.ArrayList;
-
 
 public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHolder> {
     private ArrayList<Machine> currentMachines;
@@ -25,13 +26,14 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        public TextView nameTextView;
-        public TextView statusTextView;
+        private TextView nameTextView;
+        private TextView statusTextView;
         private TextView timeLeftTextView;
         //private ImageView iconView;
-        public CardView cardView;
+        private CardView cardView;
+        private boolean alarmSet = false;
 
-        public ViewHolder(View v) {
+        private ViewHolder(View v) {
             super(v);
             nameTextView = (TextView) v.findViewById(R.id.machine_name_text_view);
             statusTextView = (TextView) v.findViewById(R.id.machine_status_text_view);
@@ -86,7 +88,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
 
@@ -97,9 +99,14 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(c, InformationActivity.class);
-                i.putExtra("machine", m);
-                c.startActivity(i);
+                try {
+                    Machine m = new Machine("Test", "Dryer", "Running", "25 Minutes Left");
+
+                    //this is a hack if I've ever seen one before...
+                    fireNotificationInFuture(Integer.parseInt(m.getTime().split(" ")[0]) * 60 * 1000, holder);
+                } catch (NumberFormatException e) {
+                    Toast.makeText(c, "Machine not running", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -125,5 +132,33 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     @Override
     public int getItemCount() {
         return currentMachines.size();
+    }
+
+    //Set and Fire Notification
+    public void fireNotificationInFuture(int milliInFuture, final ViewHolder holder) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(c);
+        alertDialogBuilder.setTitle("Alarm");
+        alertDialogBuilder.setMessage("Would you like to set an alarm for when the machine is finished?");
+        alertDialogBuilder.setCancelable(true);
+        alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                if (!holder.alarmSet) {
+                    holder.alarmSet = true;
+                    dialog.cancel();
+                    Toast.makeText(c, "Not Implemented", Toast.LENGTH_LONG).show();
+                } else {
+                    dialog.cancel();
+                    Toast.makeText(c, "You already have an alarm set for this machine", Toast.LENGTH_LONG).show();
+                }
+            }
+        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+                Toast.makeText(c, "No Alarm Set", Toast.LENGTH_LONG).show();
+            }
+        });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 }
