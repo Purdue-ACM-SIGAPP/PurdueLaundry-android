@@ -20,7 +20,7 @@ import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
-import xyz.jhughes.laundry.Adapters.MachineAdapter;
+import xyz.jhughes.laundry.adapters.MachineAdapter;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.MachineService;

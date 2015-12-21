@@ -1,4 +1,4 @@
-package xyz.jhughes.laundry.Adapters;
+package xyz.jhughes.laundry.adapters;
 
 import android.content.Context;
 import android.content.Intent;

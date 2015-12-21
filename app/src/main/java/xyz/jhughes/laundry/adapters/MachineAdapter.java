@@ -1,8 +1,7 @@
-package xyz.jhughes.laundry.Adapters;
+package xyz.jhughes.laundry.adapters;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -135,7 +134,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     }
 
     //Set and Fire Notification
-    public void fireNotificationInFuture(int milliInFuture, final ViewHolder holder) {
+    private void fireNotificationInFuture(final int milliInFuture, final ViewHolder holder) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(c);
         alertDialogBuilder.setTitle("Alarm");
         alertDialogBuilder.setMessage("Would you like to set an alarm for when the machine is finished?");
@@ -143,6 +142,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 if (!holder.alarmSet) {
+                    fire(milliInFuture);
                     holder.alarmSet = true;
                     dialog.cancel();
                     Toast.makeText(c, "Not Implemented", Toast.LENGTH_LONG).show();
@@ -160,5 +160,9 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         });
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    private void fire(int timeInFuture) {
+
     }
 }

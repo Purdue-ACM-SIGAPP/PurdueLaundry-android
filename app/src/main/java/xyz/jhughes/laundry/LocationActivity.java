@@ -12,7 +12,7 @@ import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
-import xyz.jhughes.laundry.Adapters.LocationAdapter;
+import xyz.jhughes.laundry.adapters.LocationAdapter;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 

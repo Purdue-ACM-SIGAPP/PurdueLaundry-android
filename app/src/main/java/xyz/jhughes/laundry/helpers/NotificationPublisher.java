@@ -1,4 +1,4 @@
-package xyz.jhughes.laundry.Helpers;
+package xyz.jhughes.laundry.helpers;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -12,8 +12,6 @@ public class NotificationPublisher extends BroadcastReceiver {
     public static String NOTIFICATION = "notification";
 
     public void onReceive(Context context, Intent intent) {
-
-        System.out.println("In here");
         NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         Notification notification = intent.getParcelableExtra(NOTIFICATION);
