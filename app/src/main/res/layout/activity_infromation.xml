@@ -23,7 +23,7 @@
                 android:layout_marginTop="15sp"
                 android:maxWidth="150dip"
                 android:scaleType="centerCrop"
-                android:adjustViewBounds ="true"
+                android:adjustViewBounds="true"
                 android:id="@+id/machineImage"
                 android:layout_gravity="center_horizontal|top"
                 android:contentDescription="@string/MachineImageInformation"/>

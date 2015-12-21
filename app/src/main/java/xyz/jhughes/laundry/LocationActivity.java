@@ -12,9 +12,9 @@ import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
-import xyz.jhughes.laundry.adapters.LocationAdapter;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
+import xyz.jhughes.laundry.adapters.LocationAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +30,7 @@ public class LocationActivity extends AppCompatActivity {
 
     private LinearLayoutManager layoutManager;
 
-    private HashMap<String,Integer[]> locationHashMap;
+    private HashMap<String, Integer[]> locationHashMap;
 
     private LocationAdapter adapter;
 
@@ -62,7 +62,7 @@ public class LocationActivity extends AppCompatActivity {
 
     protected Integer[] getLaundryCall(String name) {
         final Integer[] countArray = new Integer[4];
-        for ( int i=0; i<4; i++ ){
+        for (int i = 0; i < 4; i++) {
             countArray[i] = 0;
         }
         Call<ArrayList<Machine>> call = MachineService.getService().getMachineStatus(name);

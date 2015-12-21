@@ -17,7 +17,7 @@ public class AppSectionsPagerAdapter extends FragmentPagerAdapter {
         this.selected = selected;
     }
 
-    public void setSelected(String selected){
+    public void setSelected(String selected) {
         this.selected = selected;
     }
 
@@ -27,11 +27,11 @@ public class AppSectionsPagerAdapter extends FragmentPagerAdapter {
         Bundle b = new Bundle();
         switch (i) {
             case 0:
-                b.putBoolean("isDryers",false);
+                b.putBoolean("isDryers", false);
                 fragment.setArguments(b);
                 return fragment;
             case 1:
-                b.putBoolean("isDryers",true);
+                b.putBoolean("isDryers", true);
                 fragment.setArguments(b);
                 return fragment;
             default:

@@ -1,7 +1,12 @@
 package xyz.jhughes.laundry.adapters;
 
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.SystemClock;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -13,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.R;
+import xyz.jhughes.laundry.helpers.NotificationPublisher;
 
 import java.util.ArrayList;
 
@@ -99,11 +105,10 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
             @Override
             public void onClick(View v) {
                 try {
-                    Machine m = new Machine("Test", "Dryer", "Running", "25 Minutes Left");
-
-                    //this is a hack if I've ever seen one before...
-                    fireNotificationInFuture(Integer.parseInt(m.getTime().split(" ")[0]) * 60 * 1000, holder);
-                } catch (NumberFormatException e) {
+                    int minutesInFuture = Integer.parseInt(m.getTime().substring(0, m.getTime().indexOf(' ')));
+                    int millisInFuture = minutesInFuture * 60000; //60 seconds * 1000 milliseconds
+                    fireNotificationInFuture(millisInFuture, holder);
+                } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
                     Toast.makeText(c, "Machine not running", Toast.LENGTH_LONG).show();
                 }
             }
@@ -142,10 +147,9 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 if (!holder.alarmSet) {
-                    fire(milliInFuture);
+                    scheduleNotification(getNotification("Laundry machine is finished!"), milliInFuture);
                     holder.alarmSet = true;
                     dialog.cancel();
-                    Toast.makeText(c, "Not Implemented", Toast.LENGTH_LONG).show();
                 } else {
                     dialog.cancel();
                     Toast.makeText(c, "You already have an alarm set for this machine", Toast.LENGTH_LONG).show();
@@ -162,7 +166,24 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         alertDialog.show();
     }
 
-    private void fire(int timeInFuture) {
+    private void scheduleNotification(Notification notification, int delay) {
 
+        Intent notificationIntent = new Intent(c, NotificationPublisher.class);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(c, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        long futureInMillis = SystemClock.elapsedRealtime() + delay;
+        AlarmManager alarmManager = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
+    }
+
+    private Notification getNotification(String content) {
+        Notification.Builder builder = new Notification.Builder(c);
+        builder.setContentTitle("Purdue Laundry");
+        builder.setContentText(content);
+        builder.setSmallIcon(R.drawable.ic_launcher);
+        builder.setVibrate(new long[]{1000, 1000, 1000});
+        return builder.build();
     }
 }

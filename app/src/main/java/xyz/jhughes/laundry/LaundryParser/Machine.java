@@ -52,7 +52,7 @@ public class Machine implements Serializable {
         this.time = time;
     }
 
-    public void printDetails(){
+    public void printDetails() {
         System.out.println("Name: " + getName());
         System.out.println("Type: " + getType());
         System.out.println("Status: " + getStatus());
@@ -60,7 +60,7 @@ public class Machine implements Serializable {
         System.out.println("");
     }
 
-    public String toJson(){
+    public String toJson() {
         return new Gson().toJson(this);
     }
 }

@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/icon"
-            android:textSize="22sp" />
+            android:textSize="22sp"/>
 
     <TextView
             android:id="@+id/Status"
