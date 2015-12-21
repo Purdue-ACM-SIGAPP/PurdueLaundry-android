@@ -32,12 +32,6 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         this.mDataset = mDataset;
     }
 
-    public void setMachines(HashMap<String, Integer[]> mDataset) {
-        this.mDataset.clear();
-        this.mDataset = mDataset;
-        notifyDataSetChanged();
-    }
-
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
@@ -50,9 +44,13 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         final String location = Constants.getListOfRooms()[position];
         Integer[] count = mDataset.get(location);
+        int totalDryers = count[0];
+        int availableDryers = count[1];
+        int totalWashers = count[2];
+        int availableWashers = count[3];
         holder.location.setText(location);
-        holder.dryerCount.setText(count[1] + "/" + count[0]);
-        holder.washerCount.setText(count[3] + "/" + count[2]);
+        holder.dryerCount.setText(availableDryers + "/" + totalDryers);
+        holder.washerCount.setText(availableWashers + "/" + totalWashers);
         setImage(holder.imageView, position);
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,51 +86,9 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
     }
 
     public void setImage(ImageView image, int position) {
-        switch (Constants.getListOfRooms()[position]) {
-            case "Cary West":
-                System.out.println(image.getWidth() + " " + image.getHeight());
-                Picasso.with(mContext).load(R.drawable.image_cary).resize(223, 185).centerCrop().into(image);
-                break;
-            case "Earhart":
-                Picasso.with(mContext).load(R.drawable.image_earhart).resize(223, 185).centerCrop().into(image);
-                break;
-            case "Harrison":
-                Picasso.with(mContext).load(R.drawable.image_harrison).resize(223, 185).centerCrop().into(image);
-                break;
-            case "Hawkins":
-                Picasso.with(mContext).load(R.drawable.image_hawkins).resize(223, 185).centerCrop().into(image);
-                break;
-            case "Hillenbrand":
-                Picasso.with(mContext).load(R.drawable.image_hillenbrand).resize(223, 185).centerCrop().into(image);
-                break;
-            case "McCutcheon":
-                Picasso.with(mContext).load(R.drawable.image_mccutcheon).resize(223, 185).centerCrop().into(image);
-                break;
-            case "Meredith Northwest":
-            case "Meredith Southeast":
-                Picasso.with(mContext).load(R.drawable.image_meredith).resize(223, 185).centerCrop().into(image);
-                break;
-            case "Owen":
-                Picasso.with(mContext).load(R.drawable.image_owen).resize(223, 185).centerCrop().into(image);
-                break;
-            case "Shreve":
-                Picasso.with(mContext).load(R.drawable.image_shreve).resize(223, 185).centerCrop().into(image);
-                break;
-            case "Tarkington":
-                Picasso.with(mContext).load(R.drawable.image_tarkington).resize(223, 185).centerCrop().into(image);
-                break;
-            case "Third Street":
-                Picasso.with(mContext).load(R.drawable.image_tss).resize(223, 185).centerCrop().into(image);
-                break;
-            case "Wiley":
-                Picasso.with(mContext).load(R.drawable.image_wiley).resize(223, 185).centerCrop().into(image);
-                break;
-            case "Windsor - Duhme":
-            case "Windsor - Warren":
-                Picasso.with(mContext).load(R.drawable.image_windsor).resize(223, 185).centerCrop().into(image);
-                break;
-
-        }
+        String roomName = Constants.getListOfRooms()[position];
+        int resourceId = Constants.getLocationImageResource(roomName);
+        Picasso.with(mContext).load(resourceId).resize(223, 185).centerCrop().into(image);
     }
 
 }
