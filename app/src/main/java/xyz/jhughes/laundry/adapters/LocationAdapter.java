@@ -17,9 +17,6 @@ import xyz.jhughes.laundry.R;
 
 import java.util.HashMap;
 
-/**
- * Created by vieck on 10/29/15.
- */
 public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHolder> {
 
     private Context mContext;
@@ -71,11 +68,11 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        public CardView cardView;
-        public ImageView imageView;
-        public TextView location, dryerCount, washerCount;
+        private CardView cardView;
+        private ImageView imageView;
+        private TextView location, dryerCount, washerCount;
 
-        public ViewHolder(View v) {
+        private ViewHolder(View v) {
             super(v);
             cardView = (CardView) v.findViewById(R.id.card_view);
             imageView = (ImageView) v.findViewById(R.id.image_view_location);
@@ -85,10 +82,10 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         }
     }
 
-    public void setImage(ImageView image, int position) {
+    private void setImage(ImageView image, int position) {
         String roomName = Constants.getListOfRooms()[position];
         int resourceId = Constants.getLocationImageResource(roomName);
-        Picasso.with(mContext).load(resourceId).resize(222, 235).centerCrop().into(image);
+        Picasso.with(mContext).load(resourceId).resize(225, 231).centerCrop().into(image);
     }
 
 }
