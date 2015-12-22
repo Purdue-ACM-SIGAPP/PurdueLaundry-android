@@ -109,7 +109,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         });
 
         int color = Constants.getMachineAvailabilityColor(m.getStatus());
-        holder.cardView.setCardBackgroundColor(ContextCompat.getColor(c,color));
+        holder.cardView.setCardBackgroundColor(ContextCompat.getColor(c, color));
 
     }
 

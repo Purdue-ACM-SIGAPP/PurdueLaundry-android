@@ -12,17 +12,17 @@ public class Rooms {
             "Meredith Northwest", "Meredith Southeast", "Owen", "Shreve", "Tarkington", "Third Street", "Wiley",
             "Windsor - Duhme", "Windsor - Warren"};
 
-    private  HashMap<String,String> roomsToAPILocations;
-    private HashMap<String,Integer> roomsToImage;
-    private HashMap<String,Integer> machineAvailabilityColors;
+    private HashMap<String, String> roomsToAPILocations;
+    private HashMap<String, Integer> roomsToImage;
+    private HashMap<String, Integer> machineAvailabilityColors;
 
-    private Rooms(){
+    private Rooms() {
         roomsToAPILocations = new HashMap<>();
         roomsToImage = new HashMap<>();
         machineAvailabilityColors = new HashMap<>();
 
-        for(String room : LIST_OF_ROOMS){
-            roomsToAPILocations.put(room,toAPILocation(room));
+        for (String room : LIST_OF_ROOMS) {
+            roomsToAPILocations.put(room, toAPILocation(room));
             roomsToImage.put(room, toImageResourceId(room));
         }
 
@@ -33,15 +33,15 @@ public class Rooms {
 
     }
 
-    public static Rooms getRoomsConstantsInstance(){
+    public static Rooms getRoomsConstantsInstance() {
         return rm;
     }
 
-    public String[] getListOfRooms(){
+    public String[] getListOfRooms() {
         return LIST_OF_ROOMS;
     }
 
-    public int machineAvailabilityToColor (String availability) {
+    public int machineAvailabilityToColor(String availability) {
         if (machineAvailabilityColors.containsKey(availability)) {
             return machineAvailabilityColors.get(availability);
         } else {
@@ -49,11 +49,11 @@ public class Rooms {
         }
     }
 
-    public String roomToApiLocation(String roomName){
+    public String roomToApiLocation(String roomName) {
         return roomsToAPILocations.get(roomName);
     }
 
-    public int roomToImageResource(String roomName){
+    public int roomToImageResource(String roomName) {
         return roomsToImage.get(roomName);
     }
 
@@ -95,7 +95,7 @@ public class Rooms {
         return null;
     }
 
-    private int toImageResourceId(String room){
+    private int toImageResourceId(String room) {
         switch (room) {
             case "Cary West":
                 return R.drawable.image_cary;

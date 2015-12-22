@@ -19,11 +19,11 @@ public class Constants {
         return roomsConstants.roomToApiLocation(room);
     }
 
-    public static int getLocationImageResource(String room){
+    public static int getLocationImageResource(String room) {
         return roomsConstants.roomToImageResource(room);
     }
 
-    public static int getMachineAvailabilityColor(String availability){
+    public static int getMachineAvailabilityColor(String availability) {
         return roomsConstants.machineAvailabilityToColor(availability);
     }
 
