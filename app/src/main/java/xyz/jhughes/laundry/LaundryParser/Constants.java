@@ -6,8 +6,8 @@ package xyz.jhughes.laundry.LaundryParser;
  */
 public class Constants {
 
-    static String[] LIST_OF_ROOMS = {"Cary West", "Earhart", "Harrison", "Hawkins", "Hillenbrand", "McCutcheon",
-            "Meredith Northwest", "Meredith Southeast", "Owen", "Shreve", "Tarkington", "Third Street", "Wiley",
+    static String[] LIST_OF_ROOMS = {"Cary Hall West", "Earhart Hall", "Harrison Hall", "Hawkins Hall", "Hillenbrand Hall", "McCutcheon Hall",
+            "Meredith Northwest", "Meredith Southeast", "Owen Hall", "Shreve Hall", "Tarkington Hall", "Third Street Suites", "Wiley Hall",
             "Windsor - Duhme", "Windsor - Warren"};
 
     public static String[] getListOfRooms() {
@@ -16,31 +16,31 @@ public class Constants {
 
     public static String getName(String room) {
         switch (room) {
-            case "Cary West":
+            case "Cary Hall West":
                 return "cary";
-            case "Earhart":
+            case "Earhart Hall":
                 return "earhart";
-            case "Harrison":
+            case "Harrison Hall":
                 return "harrison";
-            case "Hawkins":
+            case "Hawkins Hall":
                 return "hawkins";
-            case "Hillenbrand":
+            case "Hillenbrand Hall":
                 return "hillenbrand";
-            case "McCutcheon":
+            case "McCutcheon Hall":
                 return "mccutcheon";
             case "Meredith Northwest":
                 return "meredith_nw";
             case "Meredith Southeast":
                 return "meredith_se";
-            case "Owen":
+            case "Owen Hall":
                 return "owen";
-            case "Shreve":
+            case "Shreve Hall":
                 return "shreve";
-            case "Tarkington":
+            case "Tarkington Hall":
                 return "tarkington";
-            case "Third Street":
+            case "Third Street Suites":
                 return "third";
-            case "Wiley":
+            case "Wiley Hall":
                 return "wiley";
             case "Windsor - Duhme":
                 return "windsor_duhme";

@@ -11,4 +11,9 @@
     <color name="gray">#eaeaea</color>
     <color name="bgGray">#cfd8dc</color>
     <color name="white">#ffffff</color>
+
+    <!-- Location List Colors -->
+    <color name="locationName">#212121</color> <!-- Grey 900 -->
+    <color name="availableCount">#8B572A</color>
+    <color name="availableLabel">#616161</color> <!-- Grey 700 -->
 </resources>

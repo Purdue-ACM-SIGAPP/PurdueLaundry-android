@@ -51,8 +51,10 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         final String location = Constants.getListOfRooms()[position];
         Integer[] count = mDataset.get(location);
         holder.location.setText(location);
-        holder.dryerCount.setText(count[1] + "/" + count[0]);
-        holder.washerCount.setText(count[3] + "/" + count[2]);
+        holder.washerAvailableCount.setText(count[3].toString());
+        holder.washerTotalCount.setText("/" + count[2].toString());
+        holder.dryerAvailableCount.setText(count[1].toString());
+        holder.dryerTotalCount.setText("/" + count[0].toString());
         setImage(holder.imageView, position);
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,64 +77,70 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         // each data item is just a string in this case
         public CardView cardView;
         public ImageView imageView;
-        public TextView location, dryerCount, washerCount;
+        public TextView location, washerAvailableCount, washerTotalCount, dryerAvailableCount, dryerTotalCount;
 
         public ViewHolder(View v) {
             super(v);
             cardView = (CardView) v.findViewById(R.id.card_view);
             imageView = (ImageView) v.findViewById(R.id.image_view_location);
             location = (TextView) v.findViewById(R.id.text_view_location_name);
-            dryerCount = (TextView) v.findViewById(R.id.text_view_dryer_count);
-            washerCount = (TextView) v.findViewById(R.id.text_view_washer_count);
+            washerAvailableCount = (TextView) v.findViewById(R.id.text_view_washer_available_count);
+            washerTotalCount = (TextView) v.findViewById(R.id.text_view_washer_total_count);
+            dryerAvailableCount = (TextView) v.findViewById(R.id.text_view_dryer_available_count);
+            dryerTotalCount = (TextView) v.findViewById(R.id.text_view_dryer_total_count);
         }
     }
 
     public void setImage(ImageView image, int position) {
+        int width = 136;
+        int height = 136;
+        int imgId = R.drawable.image_windsor;
         switch (Constants.getListOfRooms()[position]) {
-            case "Cary West":
+            case "Cary Hall West":
                 System.out.println(image.getWidth() + " " + image.getHeight());
-                Picasso.with(mContext).load(R.drawable.image_cary).resize(223, 185).centerCrop().into(image);
+                imgId = R.drawable.image_cary;
                 break;
-            case "Earhart":
-                Picasso.with(mContext).load(R.drawable.image_earhart).resize(223, 185).centerCrop().into(image);
+            case "Earhart Hall":
+                imgId = R.drawable.image_earhart;
                 break;
-            case "Harrison":
-                Picasso.with(mContext).load(R.drawable.image_harrison).resize(223, 185).centerCrop().into(image);
+            case "Harrison Hall":
+                imgId = R.drawable.image_harrison;
                 break;
-            case "Hawkins":
-                Picasso.with(mContext).load(R.drawable.image_hawkins).resize(223, 185).centerCrop().into(image);
+            case "Hawkins Hall":
+                imgId = R.drawable.image_hawkins;
                 break;
-            case "Hillenbrand":
-                Picasso.with(mContext).load(R.drawable.image_hillenbrand).resize(223, 185).centerCrop().into(image);
+            case "Hillenbrand Hall":
+                imgId = R.drawable.image_hillenbrand;
                 break;
-            case "McCutcheon":
-                Picasso.with(mContext).load(R.drawable.image_mccutcheon).resize(223, 185).centerCrop().into(image);
+            case "McCutcheon Hall":
+                imgId = R.drawable.image_mccutcheon;
                 break;
             case "Meredith Northwest":
             case "Meredith Southeast":
-                Picasso.with(mContext).load(R.drawable.image_meredith).resize(223, 185).centerCrop().into(image);
+                imgId = R.drawable.image_meredith;
                 break;
-            case "Owen":
-                Picasso.with(mContext).load(R.drawable.image_owen).resize(223, 185).centerCrop().into(image);
+            case "Owen Hall":
+                imgId = R.drawable.image_owen;
                 break;
-            case "Shreve":
-                Picasso.with(mContext).load(R.drawable.image_shreve).resize(223, 185).centerCrop().into(image);
+            case "Shreve Hall":
+                imgId = R.drawable.image_shreve;
                 break;
-            case "Tarkington":
-                Picasso.with(mContext).load(R.drawable.image_tarkington).resize(223, 185).centerCrop().into(image);
+            case "Tarkington Hall":
+                imgId = R.drawable.image_tarkington;
                 break;
-            case "Third Street":
-                Picasso.with(mContext).load(R.drawable.image_tss).resize(223, 185).centerCrop().into(image);
+            case "Third Street Suites":
+                imgId = R.drawable.image_tss;
                 break;
-            case "Wiley":
-                Picasso.with(mContext).load(R.drawable.image_wiley).resize(223, 185).centerCrop().into(image);
+            case "Wiley Hall":
+                imgId = R.drawable.image_wiley;
                 break;
             case "Windsor - Duhme":
             case "Windsor - Warren":
-                Picasso.with(mContext).load(R.drawable.image_windsor).resize(223, 185).centerCrop().into(image);
+                imgId = R.drawable.image_windsor;
                 break;
 
         }
+        Picasso.with(mContext).load(imgId).fit().centerCrop().into(image);
     }
 
 }
