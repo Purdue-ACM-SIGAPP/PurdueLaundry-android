@@ -8,6 +8,7 @@
     <color name="InUse">#f44336</color>
     <color name="AlmostDone">#ffab40</color>
     <color name="Finished">#c5e1a5</color>
+    <color name="OutOfOrder">#9E9E9E</color> <!-- Grey 500 -->
     <color name="gray">#eaeaea</color>
     <color name="bgGray">#cfd8dc</color>
     <color name="white">#ffffff</color>
@@ -16,4 +17,8 @@
     <color name="locationName">#212121</color> <!-- Grey 900 -->
     <color name="availableCount">#8B572A</color>
     <color name="availableLabel">#616161</color> <!-- Grey 700 -->
+
+    <!-- Machine -->
+    <color name="transparentWhite">#BFFFFFFF</color>
+
 </resources>
