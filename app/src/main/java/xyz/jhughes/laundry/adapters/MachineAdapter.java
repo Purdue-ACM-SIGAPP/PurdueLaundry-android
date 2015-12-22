@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.helpers.NotificationPublisher;
@@ -43,7 +45,6 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
             nameTextView = (TextView) v.findViewById(R.id.machine_name_text_view);
             statusTextView = (TextView) v.findViewById(R.id.machine_status_text_view);
             timeLeftTextView = (TextView) v.findViewById(R.id.machine_time_left_text_view);
-            //iconView = (ImageView)v.findViewById(R.id.icon);
             cardView = (CardView) v.findViewById(R.id.card_view);
         }
     }
@@ -53,13 +54,6 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         this.c = c;
         currentMachines = new ArrayList<Machine>();
 
-        for (Machine m : machines) {
-            machineHelper(m, dryers, options);
-        }
-    }
-
-    public void setMachines(ArrayList<Machine> machines, Boolean dryers, String options) {
-        this.currentMachines.clear();
         for (Machine m : machines) {
             machineHelper(m, dryers, options);
         }
@@ -109,27 +103,14 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                     int millisInFuture = minutesInFuture * 60000; //60 seconds * 1000 milliseconds
                     fireNotificationInFuture(millisInFuture, holder);
                 } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
-                    Toast.makeText(c, "Machine not running", Toast.LENGTH_LONG).show();
+                    Toast.makeText(c, "This machine is already available", Toast.LENGTH_LONG).show();
                 }
             }
         });
 
-        switch (m.getStatus()) {
-            case "Available":
-                holder.cardView.setBackgroundColor(ContextCompat.getColor(c, R.color.Available));
-                break;
-            case "In use":
-                holder.cardView.setBackgroundColor(ContextCompat.getColor(c, R.color.InUse));
-                break;
-            case "Almost done":
-                holder.cardView.setBackgroundColor(ContextCompat.getColor(c, R.color.AlmostDone));
-                break;
-            case "End of cycle":
-                holder.cardView.setBackgroundColor(ContextCompat.getColor(c, R.color.Finished));
-                break;
-            default:
-                holder.cardView.setBackgroundColor(ContextCompat.getColor(c, R.color.InUse));
-        }
+        int color = Constants.getMachineAvailabilityColor(m.getStatus());
+        holder.cardView.setCardBackgroundColor(ContextCompat.getColor(c,color));
+
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -140,28 +121,29 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
 
     //Set and Fire Notification
     private void fireNotificationInFuture(final int milliInFuture, final ViewHolder holder) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(c);
-        alertDialogBuilder.setTitle("Alarm");
-        alertDialogBuilder.setMessage("Would you like to set an alarm for when the machine is finished?");
-        alertDialogBuilder.setCancelable(true);
-        alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                if (!holder.alarmSet) {
-                    scheduleNotification(getNotification("Laundry machine is finished!"), milliInFuture);
-                    holder.alarmSet = true;
-                    dialog.cancel();
-                } else {
-                    dialog.cancel();
-                    Toast.makeText(c, "You already have an alarm set for this machine", Toast.LENGTH_LONG).show();
-                }
-            }
-        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-                Toast.makeText(c, "No Alarm Set", Toast.LENGTH_LONG).show();
-            }
-        });
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(c)
+                .setTitle("Alarm")
+                .setMessage("Would you like to set an alarm for when the machine is finished?")
+                .setCancelable(true)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        if (!holder.alarmSet) {
+                            scheduleNotification(getNotification("Laundry machine is finished!"), milliInFuture);
+                            holder.alarmSet = true;
+                            dialog.cancel();
+                        } else {
+                            dialog.cancel();
+                            Toast.makeText(c, "You already have an alarm set for this machine", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        Toast.makeText(c, "No Alarm Set", Toast.LENGTH_LONG).show();
+                    }
+                });
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }

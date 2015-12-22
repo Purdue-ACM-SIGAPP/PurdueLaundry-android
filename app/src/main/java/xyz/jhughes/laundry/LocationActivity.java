@@ -45,9 +45,6 @@ public class LocationActivity extends AppCompatActivity {
         locationHashMap = new HashMap<>();
         mContext = this;
 
-        int[] laundryCount = new int[Constants.getListOfRooms().length];
-        int[] dryerCount = new int[Constants.getListOfRooms().length];
-
         for (String name : Constants.getListOfRooms()) {
             Integer[] array = getLaundryCall(Constants.getName(name));
             locationHashMap.put(name, array);
