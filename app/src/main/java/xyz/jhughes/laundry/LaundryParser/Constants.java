@@ -10,7 +10,6 @@ public class Constants {
 
     static Rooms roomsConstants = Rooms.getRoomsConstantsInstance();
 
-
     public static String[] getListOfRooms() {
         return roomsConstants.getListOfRooms();
     }

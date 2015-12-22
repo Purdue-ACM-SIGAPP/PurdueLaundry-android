@@ -49,8 +49,8 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         int totalWashers = count[2];
         int availableWashers = count[3];
         holder.location.setText(location);
-        holder.dryerCount.setText(availableDryers + "/" + totalDryers);
-        holder.washerCount.setText(availableWashers + "/" + totalWashers);
+        holder.dryerCount.setText(String.valueOf(availableDryers));
+        holder.washerCount.setText(String.valueOf(availableWashers));
         setImage(holder.imageView, position);
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,7 +88,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
     public void setImage(ImageView image, int position) {
         String roomName = Constants.getListOfRooms()[position];
         int resourceId = Constants.getLocationImageResource(roomName);
-        Picasso.with(mContext).load(resourceId).resize(223, 185).centerCrop().into(image);
+        Picasso.with(mContext).load(resourceId).resize(222, 235).centerCrop().into(image);
     }
 
 }
