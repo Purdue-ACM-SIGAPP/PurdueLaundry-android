@@ -17,7 +17,7 @@ import android.widget.ListView;
 import xyz.jhughes.laundry.FragmentPagerAdapter.AppSectionsPagerAdapter;
 import xyz.jhughes.laundry.MachineFragments.MachineFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MachineActivity extends AppCompatActivity {
 
     /**
      * Managing our tabs

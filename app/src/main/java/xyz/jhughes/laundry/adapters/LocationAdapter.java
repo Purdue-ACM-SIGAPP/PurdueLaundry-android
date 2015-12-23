@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import xyz.jhughes.laundry.LaundryParser.Constants;
-import xyz.jhughes.laundry.MainActivity;
+import xyz.jhughes.laundry.MachineActivity;
 import xyz.jhughes.laundry.R;
 
 import java.util.HashMap;
@@ -53,7 +53,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
                 SharedPreferences.Editor sharedPreferenceEditor = mContext.getSharedPreferences("xyz.jhughes.laundry", mContext.MODE_PRIVATE).edit();
                 sharedPreferenceEditor.putString("lastRoom", location);
                 sharedPreferenceEditor.apply();
-                Intent intent = new Intent(mContext, MainActivity.class);
+                Intent intent = new Intent(mContext, MachineActivity.class);
                 mContext.startActivity(intent);
             }
         });
@@ -75,10 +75,10 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
             cardView = (CardView) v.findViewById(R.id.card_view);
             imageView = (ImageView) v.findViewById(R.id.image_view_location);
             location = (TextView) v.findViewById(R.id.text_view_location_name);
-            washerAvailableCount = (TextView) v.findViewById(R.id.text_view_washer_available_count);
-            washerTotalCount = (TextView) v.findViewById(R.id.text_view_washer_total_count);
-            dryerAvailableCount = (TextView) v.findViewById(R.id.text_view_dryer_available_count);
-            dryerTotalCount = (TextView) v.findViewById(R.id.text_view_dryer_total_count);
+            washerAvailableCount = (TextView) v.findViewById(R.id.text_view_washer_count);
+            dryerAvailableCount = (TextView) v.findViewById(R.id.text_view_dryer_count);
+            washerTotalCount = (TextView) v.findViewById(R.id.text_view_washer_total);
+            dryerTotalCount = (TextView) v.findViewById(R.id.text_view_dryer_total);
         }
     }
 

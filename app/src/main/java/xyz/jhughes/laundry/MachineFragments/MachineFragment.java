@@ -23,7 +23,7 @@ import retrofit.Retrofit;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.MachineService;
-import xyz.jhughes.laundry.MainActivity;
+import xyz.jhughes.laundry.MachineActivity;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.MachineAdapter;
 
@@ -70,7 +70,7 @@ public class MachineFragment extends Fragment implements SwipeRefreshLayout.OnRe
                              Bundle savedInstanceState) {
 
         isDryers = getArguments().getBoolean("isDryers");
-        selected = Constants.getName(MainActivity.getSelected());
+        selected = Constants.getName(MachineActivity.getSelected());
 
         rootView = inflater.inflate(R.layout.fragment_dryer, container, false);
 
