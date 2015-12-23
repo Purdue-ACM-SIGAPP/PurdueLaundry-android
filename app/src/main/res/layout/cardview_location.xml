@@ -72,6 +72,8 @@
                         android:layout_toRightOf="@id/text_view_washer_count"
                         android:layout_toEndOf="@id/text_view_washer_count"
                         android:layout_above="@id/text_view_washer"
+                        android:textSize="18sp"
+                        android:layout_marginBottom="3dp"
                         android:textColor="@android:color/holo_blue_dark"/>
 
             </RelativeLayout>
@@ -111,6 +113,8 @@
                         android:layout_toRightOf="@id/text_view_dryer_count"
                         android:layout_toEndOf="@id/text_view_dryer_count"
                         android:layout_above="@id/text_view_dryer"
+                        android:textSize="18sp"
+                        android:layout_marginBottom="3dp"
                         android:textColor="@android:color/holo_blue_dark"/>
 
 
