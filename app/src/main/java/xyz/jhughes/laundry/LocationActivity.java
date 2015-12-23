@@ -1,6 +1,8 @@
 package xyz.jhughes.laundry;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,6 +10,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
@@ -23,6 +29,8 @@ import java.util.HashMap;
  * Created by vieck on 10/27/15.
  */
 public class LocationActivity extends AppCompatActivity {
+    private Tracker mTracker;
+    private final String activityName = "Location List";
 
     private Context mContext;
 
@@ -34,6 +42,7 @@ public class LocationActivity extends AppCompatActivity {
 
     private LocationAdapter adapter;
 
+    private SharedPreferences mSharedPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +64,25 @@ public class LocationActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.location_activity_toolbar);
         setSupportActionBar(toolbar);
 
+        try {
+            // Obtain the shared Tracker instance.
+            AnalyticsApplication application = (AnalyticsApplication) getApplication();
+            mTracker = application.getDefaultTracker();
+        } catch(Exception e) {
+            Log.e("AnalyticsException", e.getMessage());
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            mTracker.setScreenName(activityName);
+            mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+        } catch(Exception e) {
+            Log.e("AnalyticsException", e.getMessage());
+        }
     }
 
     protected Integer[] getLaundryCall(String name) {

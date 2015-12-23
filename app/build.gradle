@@ -7,6 +7,7 @@ buildscript {
     }
 }
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 repositories {
     mavenCentral()
@@ -34,6 +35,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.google.android.gms:play-services-analytics:8.3.0'
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'org.jsoup:jsoup:1.8.1'
     compile 'com.google.code.gson:gson:2.3'

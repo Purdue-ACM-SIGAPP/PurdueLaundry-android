@@ -1,5 +1,6 @@
 package xyz.jhughes.laundry.adapters;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -11,12 +12,17 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
+import xyz.jhughes.laundry.AnalyticsApplication;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.R;
@@ -106,6 +112,19 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    // Get tracker.
+                    Tracker t = ((AnalyticsApplication) ((Activity)c).getApplication()).getDefaultTracker();
+                    // Build and send an Event.
+                    t.send(new HitBuilders.EventBuilder()
+                            .setCategory(m.getType())
+                            .setAction("Click")
+                            .setLabel(m.getStatus())
+                            .build());
+                } catch(Exception e) {
+                    Log.e("AnalyticsException", e.getMessage());
+                }
+
                 try {
                     int minutesInFuture = Integer.parseInt(m.getTime().substring(0, m.getTime().indexOf(' ')));
                     int millisInFuture = minutesInFuture * 60000; //60 seconds * 1000 milliseconds

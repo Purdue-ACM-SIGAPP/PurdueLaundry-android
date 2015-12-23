@@ -11,15 +11,21 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Spinner;
+
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
+import xyz.jhughes.laundry.AnalyticsApplication;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.MachineService;
@@ -62,6 +68,15 @@ public class MachineFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 progressDialog.show();
             }
             progressDialog.setCanceledOnTouchOutside(false);
+        }
+
+        try {
+            // Get tracker.
+            Tracker mTracker = ((AnalyticsApplication) getActivity().getApplication()).getDefaultTracker();
+            mTracker.setScreenName(MainActivity.getSelected());
+            mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+        } catch(Exception e) {
+            Log.e("AnalyticsException", e.getMessage());
         }
     }
 
