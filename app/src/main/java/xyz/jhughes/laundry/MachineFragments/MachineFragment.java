@@ -73,7 +73,7 @@ public class MachineFragment extends Fragment implements SwipeRefreshLayout.OnRe
         try {
             // Get tracker.
             Tracker mTracker = ((AnalyticsApplication) getActivity().getApplication()).getDefaultTracker();
-            mTracker.setScreenName(MainActivity.getSelected());
+            mTracker.setScreenName(MachineActivity.getSelected());
             mTracker.send(new HitBuilders.ScreenViewBuilder().build());
         } catch(Exception e) {
             Log.e("AnalyticsException", e.getMessage());
