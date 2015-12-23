@@ -19,8 +19,8 @@
     <string name="Time">0 Minutes Remaining</string>
     <string name="Finished">Set an alarm for when finished</string>
     <string name="five_until_fin">Set an alarm for 5 minutes before finished</string>
-    <string name="dryers_available">Dryers available</string>
-    <string name="washers_available">Washers available</string>
+    <string name="dryers_available">Dryers\nAvailable</string>
+    <string name="washers_available">Washers\nAvailable</string>
     <string name="ResHallPic">ResHallPic</string>
 
     <array name="options">

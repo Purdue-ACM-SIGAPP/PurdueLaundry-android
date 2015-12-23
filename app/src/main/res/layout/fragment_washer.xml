@@ -11,11 +11,13 @@
             android:id="@+id/washer_list_layout"
             android:background="@color/bgGray">
 
-        <ListView
+        <android.support.v7.widget.RecyclerView
                 android:id="@+id/washer_list"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-        </ListView>
+                android:padding="8dp"
+                android:clipToPadding="false"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+        </android.support.v7.widget.RecyclerView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

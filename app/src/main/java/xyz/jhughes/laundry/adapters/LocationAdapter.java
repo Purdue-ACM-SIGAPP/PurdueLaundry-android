@@ -41,13 +41,11 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         final String location = Constants.getListOfRooms()[position];
         Integer[] count = mDataset.get(location);
-        int totalDryers = count[0];
-        int availableDryers = count[1];
-        int totalWashers = count[2];
-        int availableWashers = count[3];
         holder.location.setText(location);
-        holder.dryerCount.setText(String.valueOf(availableDryers));
-        holder.washerCount.setText(String.valueOf(availableWashers));
+        holder.washerAvailableCount.setText(count[3].toString());
+        holder.washerTotalCount.setText("/" + count[2].toString());
+        holder.dryerAvailableCount.setText(count[1].toString());
+        holder.dryerTotalCount.setText("/" + count[0].toString());
         setImage(holder.imageView, position);
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,22 +68,24 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         // each data item is just a string in this case
         private CardView cardView;
         private ImageView imageView;
-        private TextView location, dryerCount, washerCount;
+        private TextView location, washerAvailableCount, washerTotalCount, dryerAvailableCount, dryerTotalCount;
 
         private ViewHolder(View v) {
             super(v);
             cardView = (CardView) v.findViewById(R.id.card_view);
             imageView = (ImageView) v.findViewById(R.id.image_view_location);
             location = (TextView) v.findViewById(R.id.text_view_location_name);
-            dryerCount = (TextView) v.findViewById(R.id.text_view_dryer_count);
-            washerCount = (TextView) v.findViewById(R.id.text_view_washer_count);
+            washerAvailableCount = (TextView) v.findViewById(R.id.text_view_washer_available_count);
+            washerTotalCount = (TextView) v.findViewById(R.id.text_view_washer_total_count);
+            dryerAvailableCount = (TextView) v.findViewById(R.id.text_view_dryer_available_count);
+            dryerTotalCount = (TextView) v.findViewById(R.id.text_view_dryer_total_count);
         }
     }
 
-    private void setImage(ImageView image, int position) {
-        String roomName = Constants.getListOfRooms()[position];
-        int resourceId = Constants.getLocationImageResource(roomName);
-        Picasso.with(mContext).load(resourceId).resize(225, 231).centerCrop().into(image);
+    public void setImage(ImageView image, int position) {
+        String hall = Constants.getListOfRooms()[position];
+        int imgId = Constants.getLocationImageResource(hall);
+        Picasso.with(mContext).load(imgId).fit().centerCrop().into(image);
     }
 
 }

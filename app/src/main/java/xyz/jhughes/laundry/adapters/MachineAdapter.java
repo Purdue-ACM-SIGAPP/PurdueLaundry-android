@@ -44,7 +44,8 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
             super(v);
             nameTextView = (TextView) v.findViewById(R.id.machine_name_text_view);
             statusTextView = (TextView) v.findViewById(R.id.machine_status_text_view);
-            timeLeftTextView = (TextView) v.findViewById(R.id.machine_time_left_text_view);
+            //timeLeftTextView = (TextView) v.findViewById(R.id.machine_time_left_text_view);
+            //iconView = (ImageView)v.findViewById(R.id.icon);
             cardView = (CardView) v.findViewById(R.id.card_view);
         }
     }
@@ -93,8 +94,15 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
 
         final Machine m = currentMachines.get(position);
         holder.nameTextView.setText(m.getName());
-        holder.statusTextView.setText(m.getStatus());
-        holder.timeLeftTextView.setText(m.getTime());
+        if(m.getStatus().equals("In use")) {
+            // Instead of showing "In Use", show how many minutes are left!
+            holder.statusTextView.setText(m.getTime()); // this will need to be updated once people start using the machines again...It should be "xx min. left"
+        } else if(m.getStatus().equals("Ready to start")) {
+            holder.statusTextView.setText("In Use"); // this should be replaced too
+        } else {
+            holder.statusTextView.setText(m.getStatus());
+        }
+        //holder.timeLeftTextView.setText(m.getTime());
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
