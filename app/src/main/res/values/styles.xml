@@ -1,10 +1,16 @@
 <resources>
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
 
-            <!-- Set AppCompat’s color theming attrs -->
-            <item name="colorPrimary">@color/PurdueGoldLight</item>
-            <item name="colorPrimaryDark">@color/PurdueGoldDark</item>
-            <!-- The rest of your attributes -->
+        <!-- Set AppCompat’s color theming attrs -->
+        <item name="colorPrimary">@color/PurdueGoldLight</item>
+        <item name="colorPrimaryDark">@color/PurdueGoldDark</item>
+        <!-- The rest of your attributes -->
+    </style>
+
+    <style name="TabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">@color/white</item>
+        <item name="tabTextColor">@color/bgGray</item>
+        <item name="tabSelectedTextColor">@color/white</item>
     </style>
 
     <style name="Location_TextView">

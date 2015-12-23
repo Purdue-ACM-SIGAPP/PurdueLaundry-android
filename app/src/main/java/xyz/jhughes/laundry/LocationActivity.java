@@ -8,18 +8,16 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
-import xyz.jhughes.laundry.Adapters.LocationAdapter;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
+import xyz.jhughes.laundry.adapters.LocationAdapter;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by vieck on 10/27/15.
@@ -32,7 +30,7 @@ public class LocationActivity extends AppCompatActivity {
 
     private LinearLayoutManager layoutManager;
 
-    private HashMap<String,Integer[]> locationHashMap;
+    private HashMap<String, Integer[]> locationHashMap;
 
     private LocationAdapter adapter;
 
@@ -46,9 +44,6 @@ public class LocationActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         locationHashMap = new HashMap<>();
         mContext = this;
-
-        int[] laundryCount = new int[Constants.getListOfRooms().length];
-        int[] dryerCount = new int[Constants.getListOfRooms().length];
 
         for (String name : Constants.getListOfRooms()) {
             Integer[] array = getLaundryCall(Constants.getName(name));
@@ -64,7 +59,7 @@ public class LocationActivity extends AppCompatActivity {
 
     protected Integer[] getLaundryCall(String name) {
         final Integer[] countArray = new Integer[4];
-        for ( int i=0; i<4; i++ ){
+        for (int i = 0; i < 4; i++) {
             countArray[i] = 0;
         }
         Call<ArrayList<Machine>> call = MachineService.getService().getMachineStatus(name);

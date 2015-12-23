@@ -8,14 +8,15 @@
     <android.support.v4.widget.SwipeRefreshLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/dryer_list_layout">
+            android:id="@+id/dryer_list_layout"
+            android:background="@color/bgGray">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/dryer_machines_recycler_view"
-            android:scrollbars="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:onClick="onClick"/>
+                android:id="@+id/dryer_machines_recycler_view"
+                android:scrollbars="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:onClick="onClick"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

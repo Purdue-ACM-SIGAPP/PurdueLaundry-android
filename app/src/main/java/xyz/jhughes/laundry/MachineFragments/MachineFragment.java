@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Spinner;
-
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
@@ -26,7 +25,7 @@ import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.MachineService;
 import xyz.jhughes.laundry.MainActivity;
 import xyz.jhughes.laundry.R;
-import xyz.jhughes.laundry.Adapters.MachineAdapter;
+import xyz.jhughes.laundry.adapters.MachineAdapter;
 
 import java.util.ArrayList;
 
