@@ -1,6 +1,5 @@
 package xyz.jhughes.laundry.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,7 +18,6 @@ import xyz.jhughes.laundry.R;
 import java.util.HashMap;
 
 public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHolder> {
-    private final int requestCode = 0;
 
     private Context mContext;
 

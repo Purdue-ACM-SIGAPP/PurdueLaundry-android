@@ -1,8 +1,6 @@
 package xyz.jhughes.laundry;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,8 +39,6 @@ public class LocationActivity extends AppCompatActivity {
     private HashMap<String, Integer[]> locationHashMap;
 
     private LocationAdapter adapter;
-
-    private SharedPreferences mSharedPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
