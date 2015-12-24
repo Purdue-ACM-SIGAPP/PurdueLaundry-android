@@ -59,7 +59,6 @@ public class LocationActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.location_activity_toolbar);
         setSupportActionBar(toolbar);
-        Log.d("DEBUG=", String.valueOf(BuildConfig.DEBUG));
 
         try {
             // Obtain the shared Tracker instance.
