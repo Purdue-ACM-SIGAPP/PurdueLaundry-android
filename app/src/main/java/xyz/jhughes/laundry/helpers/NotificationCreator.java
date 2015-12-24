@@ -68,7 +68,7 @@ public class NotificationCreator {
                 .setPriority(id);
 
         // if time up or at 5 minutes
-        if(timeLeft == 0 ||(countDown.equals("5:00"))){
+        if(timeLeft == 0 ||(countDown.equals("5:00"))) {
             builder.setVibrate(new long[]{1000, 1000, 1000});
         }
 
