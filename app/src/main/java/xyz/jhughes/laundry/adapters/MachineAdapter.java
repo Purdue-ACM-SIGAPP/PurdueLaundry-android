@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.SystemClock;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.R;
+import xyz.jhughes.laundry.helpers.NotificationCreator;
 import xyz.jhughes.laundry.helpers.NotificationPublisher;
 
 import java.util.ArrayList;
@@ -109,7 +111,15 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                 try {
                     int minutesInFuture = Integer.parseInt(m.getTime().substring(0, m.getTime().indexOf(' ')));
                     int millisInFuture = minutesInFuture * 60000; //60 seconds * 1000 milliseconds
-                    fireNotificationInFuture(millisInFuture, holder);
+
+                    SharedPreferences sharedPreferences = c.getSharedPreferences("xyz.jhughes.laundry", c.MODE_PRIVATE);
+                    String currentRoom = sharedPreferences.getString("lastRoom", "Cary West");
+                    String notificationKey = currentRoom + " " + m.getName();
+                    if(NotificationCreator.notificationExists(notificationKey)){
+                        Toast.makeText(c, "You already have a reminder set for this machine", Toast.LENGTH_LONG).show();
+                    } else {
+                        fireNotificationInFuture(millisInFuture, holder, notificationKey);
+                    }
                 } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
                     Toast.makeText(c, "This machine is already available", Toast.LENGTH_LONG).show();
                 }
@@ -128,21 +138,14 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     }
 
     //Set and Fire Notification
-    private void fireNotificationInFuture(final int milliInFuture, final ViewHolder holder) {
+    private void fireNotificationInFuture(final int milliInFuture, final ViewHolder holder, final String notificationKey) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(c)
                 .setTitle("Alarm")
                 .setMessage("Would you like to set an alarm for when the machine is finished?")
                 .setCancelable(true)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        if (!holder.alarmSet) {
-                            scheduleNotification(getNotification("Laundry machine is finished!"), milliInFuture);
-                            holder.alarmSet = true;
-                            dialog.cancel();
-                        } else {
-                            dialog.cancel();
-                            Toast.makeText(c, "You already have an alarm set for this machine", Toast.LENGTH_LONG).show();
-                        }
+                        NotificationCreator.createNotification(c, notificationKey, milliInFuture);
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
