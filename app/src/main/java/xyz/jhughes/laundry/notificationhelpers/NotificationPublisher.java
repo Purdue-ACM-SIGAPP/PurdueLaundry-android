@@ -1,4 +1,4 @@
-package xyz.jhughes.laundry.helpers;
+package xyz.jhughes.laundry.notificationhelpers;
 
 import android.app.Notification;
 import android.app.NotificationManager;

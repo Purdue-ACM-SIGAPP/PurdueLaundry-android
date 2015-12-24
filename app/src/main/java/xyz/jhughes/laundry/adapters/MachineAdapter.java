@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.SystemClock;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -26,7 +27,8 @@ import xyz.jhughes.laundry.AnalyticsApplication;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.R;
-import xyz.jhughes.laundry.helpers.NotificationPublisher;
+import xyz.jhughes.laundry.notificationhelpers.NotificationCreator;
+import xyz.jhughes.laundry.notificationhelpers.NotificationPublisher;
 
 import java.util.ArrayList;
 
@@ -59,7 +61,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     // Provide a suitable constructor (depends on the kind of dataset)
     public MachineAdapter(ArrayList<Machine> machines, Context c, Boolean dryers, String options) {
         this.c = c;
-        currentMachines = new ArrayList<Machine>();
+        currentMachines = new ArrayList<>();
 
         for (Machine m : machines) {
             machineHelper(m, dryers, options);
@@ -88,8 +90,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                 .inflate(R.layout.cardview_machine, parent, false);
         // set the view's size, margins, paddings and layout parameters
 
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
+        return new ViewHolder(v);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
@@ -100,13 +101,19 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
 
         final Machine m = currentMachines.get(position);
         holder.nameTextView.setText(m.getName());
-        if(m.getStatus().equals("In use")) {
-            // Instead of showing "In Use", show how many minutes are left!
-            holder.statusTextView.setText(m.getTime()); // this will need to be updated once people start using the machines again...It should be "xx min. left"
-        } else if(m.getStatus().equals("Ready to start")) {
-            holder.statusTextView.setText("In Use"); // this should be replaced too
-        } else {
-            holder.statusTextView.setText(m.getStatus());
+        switch (m.getStatus()) {
+            case "In use":
+                // Instead of showing "In Use", show how many minutes are left!
+                holder.statusTextView.setText(m.getTime()); // this will need to be updated once people start using the machines again...It should be "xx min. left"
+
+                break;
+            case "Ready to start":
+                holder.statusTextView.setText(c.getResources().getStringArray(R.array.options)[1]); // this should be replaced too
+
+                break;
+            default:
+                holder.statusTextView.setText(m.getStatus());
+                break;
         }
         //holder.timeLeftTextView.setText(m.getTime());
         holder.cardView.setOnClickListener(new View.OnClickListener() {
@@ -128,9 +135,17 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                 try {
                     int minutesInFuture = Integer.parseInt(m.getTime().substring(0, m.getTime().indexOf(' ')));
                     int millisInFuture = minutesInFuture * 60000; //60 seconds * 1000 milliseconds
-                    fireNotificationInFuture(millisInFuture, holder);
+
+                    SharedPreferences sharedPreferences = c.getSharedPreferences("xyz.jhughes.laundry", Context.MODE_PRIVATE);
+                    String currentRoom = sharedPreferences.getString("lastRoom", "Cary West");
+                    String notificationKey = currentRoom + " " + m.getName();
+                    if(NotificationCreator.notificationExists(notificationKey)){
+                        Toast.makeText(c, "You already have a reminder set for this machine", Toast.LENGTH_LONG).show();
+                    } else {
+                        fireNotificationInFuture(millisInFuture, holder, notificationKey);
+                    }
                 } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
-                    Toast.makeText(c, "This machine is already available", Toast.LENGTH_LONG).show();
+                    Toast.makeText(c, "This machine is not running", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -147,21 +162,14 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     }
 
     //Set and Fire Notification
-    private void fireNotificationInFuture(final int milliInFuture, final ViewHolder holder) {
+    private void fireNotificationInFuture(final int milliInFuture, final ViewHolder holder, final String notificationKey) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(c)
                 .setTitle("Alarm")
                 .setMessage("Would you like to set an alarm for when the machine is finished?")
                 .setCancelable(true)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        if (!holder.alarmSet) {
-                            scheduleNotification(getNotification("Laundry machine is finished!"), milliInFuture);
-                            holder.alarmSet = true;
-                            dialog.cancel();
-                        } else {
-                            dialog.cancel();
-                            Toast.makeText(c, "You already have an alarm set for this machine", Toast.LENGTH_LONG).show();
-                        }
+                        NotificationCreator.createNotification(c, notificationKey, milliInFuture);
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
