@@ -29,8 +29,13 @@
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value=".LocationActivity"/>
         </activity>
+<<<<<<< HEAD
         <receiver android:name=".helpers.NotificationPublisher"/>
         <receiver android:name=".helpers.NotificationCancelReceiver"/>
+=======
+        <receiver
+                android:name=".helpers.NotificationPublisher"/>
+>>>>>>> develop
     </application>
 
 </manifest>

@@ -17,7 +17,7 @@ import android.widget.ListView;
 import xyz.jhughes.laundry.FragmentPagerAdapter.AppSectionsPagerAdapter;
 import xyz.jhughes.laundry.MachineFragments.MachineFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MachineActivity extends AppCompatActivity {
 
     /**
      * Managing our tabs
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         SharedPreferences sharedPreferences = getSharedPreferences("xyz.jhughes.laundry", MODE_PRIVATE);
-        currentRoom = sharedPreferences.getString("lastRoom", "Cary West");
+        currentRoom = sharedPreferences.getString("lastRoom", "Cary Hall West");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(currentRoom);

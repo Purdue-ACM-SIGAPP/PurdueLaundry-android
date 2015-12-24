@@ -8,6 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
@@ -23,6 +27,8 @@ import java.util.HashMap;
  * Created by vieck on 10/27/15.
  */
 public class LocationActivity extends AppCompatActivity {
+    private Tracker mTracker;
+    private final String activityName = "Location List";
 
     private Context mContext;
 
@@ -33,7 +39,6 @@ public class LocationActivity extends AppCompatActivity {
     private HashMap<String, Integer[]> locationHashMap;
 
     private LocationAdapter adapter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +61,25 @@ public class LocationActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Log.d("DEBUG=", String.valueOf(BuildConfig.DEBUG));
 
+        try {
+            // Obtain the shared Tracker instance.
+            AnalyticsApplication application = (AnalyticsApplication) getApplication();
+            mTracker = application.getDefaultTracker();
+        } catch(Exception e) {
+            Log.e("AnalyticsException", e.getMessage());
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            mTracker.setScreenName(activityName);
+            mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+        } catch(Exception e) {
+            Log.e("AnalyticsException", e.getMessage());
+        }
     }
 
     protected Integer[] getLaundryCall(String name) {
