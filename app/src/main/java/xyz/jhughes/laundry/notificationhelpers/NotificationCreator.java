@@ -1,4 +1,4 @@
-package xyz.jhughes.laundry.helpers;
+package xyz.jhughes.laundry.notificationhelpers;
 
 
 import android.app.PendingIntent;
@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.NotificationCompat;
 
 
@@ -18,7 +19,7 @@ import xyz.jhughes.laundry.R;
 
 public class NotificationCreator {
 
-    final static String GROUP_KEY_EMAILS = "laundry_notif_group_key";
+    private final static String GROUP_KEY_EMAILS = "laundry_notif_group_key";
     private static HashMap<String, Integer> notifcationIds = new HashMap<>();
     private static HashMap<Integer, CountDownTimer> timers = new HashMap<>();
     private static int id = 0;
@@ -39,7 +40,7 @@ public class NotificationCreator {
         id++;
     }
 
-    public static void updateTimeNotification(String machine, Context context,long timeLeft) {
+    private static void updateTimeNotification(String machine, Context context,long timeLeft) {
         int id = notifcationIds.get(machine);
         String countDown;
         if(timeLeft != 0) {
@@ -61,7 +62,7 @@ public class NotificationCreator {
                 .setContentTitle(machine)
                 .setContentText(countDown)
                 .setSmallIcon(R.drawable.ic_machine_notification)
-                .setColor(context.getResources().getColor(R.color.Available))
+                .setColor(ContextCompat.getColor(context, R.color.Available))
                 .setGroup(GROUP_KEY_EMAILS)
                 .addAction(R.drawable.ic_action_content_clear, "Cancel", pendingIntent)
                 .setOngoing(true)
@@ -75,7 +76,7 @@ public class NotificationCreator {
         notificationManager.notify(id,builder.build());
     }
 
-    public static void stopTimer(int id, String machine) {
+    static void stopTimer(int id, String machine) {
         notifcationIds.remove(machine);
         timers.get(id).cancel();
         timers.remove(id);
