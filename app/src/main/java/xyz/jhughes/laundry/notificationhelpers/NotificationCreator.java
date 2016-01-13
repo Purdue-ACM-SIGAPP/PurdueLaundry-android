@@ -26,7 +26,7 @@ public class NotificationCreator {
 
     public static void createNotification(final Context mContext, final String machine, int timeLeft) {
         notifcationIds.put(machine, id);
-        CountDownTimer timer = new CountDownTimer(timeLeft, 60000) {
+        CountDownTimer timer = new CountDownTimer(timeLeft, 1000) {
             public void onTick(long millisUntilFinished) {
                 updateTimeNotification(machine, mContext, millisUntilFinished);
             }
