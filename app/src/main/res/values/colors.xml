@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="PurdueGoldDark">#6A4D07</color>
-    <color name="PurdueGoldLight">#B1810B</color>
+    <color name="PurdueGoldDark">#556E79</color>
+    <color name="PurdueGoldLight">#617D8A</color>
+    <color name="PurdueGoldDark2">#6A4D07</color>
+    <color name="PurdueGoldLight2">#B1810B</color>
+    <color name="Available">#4caf50</color>
+    <color name="InUse">#f44336</color>
+    <color name="AlmostDone">#ffab40</color>
+    <color name="Finished">#c5e1a5</color>
+    <color name="OutOfOrder">#9E9E9E</color> <!-- Grey 500 -->
+    <color name="gray">#eaeaea</color>
+    <color name="bgGray">#cfd8dc</color>
+    <color name="white">#ffffff</color>
+
+    <!-- Location List Colors -->
+    <color name="locationName">#212121</color> <!-- Grey 900 -->
+    <color name="availableCount">#8B572A</color>
+    <color name="availableLabel">#616161</color> <!-- Grey 700 -->
+
+    <!-- Machine -->
+    <color name="transparentWhite">#BFFFFFFF</color>
+
 </resources>
