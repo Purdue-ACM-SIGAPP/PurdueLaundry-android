@@ -26,7 +26,7 @@ public class NotificationCreator {
 
     public static void createNotification(final Context mContext, final String machine, int timeLeft) {
         notifcationIds.put(machine, id);
-        CountDownTimer timer = new CountDownTimer(timeLeft, 1000) {
+        CountDownTimer timer = new CountDownTimer(timeLeft, 60000) {
             public void onTick(long millisUntilFinished) {
                 updateTimeNotification(machine, mContext, millisUntilFinished);
             }
@@ -44,14 +44,11 @@ public class NotificationCreator {
         int id = notifcationIds.get(machine);
         String countDown;
         if(timeLeft != 0) {
-            countDown = String.format("%01d:%02d",
-                    TimeUnit.MILLISECONDS.toMinutes(timeLeft),
-                    TimeUnit.MILLISECONDS.toSeconds(timeLeft) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeLeft))
-            );
+            countDown = String.format("%01d minutes left", TimeUnit.MILLISECONDS.toMinutes(timeLeft));
         } else {
             countDown = " is finished!";
         }
+
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         Intent cancelIntent  = new Intent(context,NotificationCancelReceiver.class);
         cancelIntent.putExtra("notificationId", id);

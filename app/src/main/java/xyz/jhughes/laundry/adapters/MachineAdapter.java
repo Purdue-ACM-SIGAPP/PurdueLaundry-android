@@ -139,7 +139,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                     SharedPreferences sharedPreferences = c.getSharedPreferences("xyz.jhughes.laundry", Context.MODE_PRIVATE);
                     String currentRoom = sharedPreferences.getString("lastRoom", "Cary West");
                     String notificationKey = currentRoom + " " + m.getName();
-                    if(NotificationCreator.notificationExists(notificationKey)){
+                    if(NotificationCreator.notificationExists(notificationKey)) {
                         Toast.makeText(c, "You already have a reminder set for this machine", Toast.LENGTH_LONG).show();
                     } else {
                         fireNotificationInFuture(millisInFuture, holder, notificationKey);
