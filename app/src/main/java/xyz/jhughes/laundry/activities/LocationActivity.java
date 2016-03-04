@@ -2,6 +2,7 @@ package xyz.jhughes.laundry.activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,13 +33,11 @@ import xyz.jhughes.laundry.adapters.LocationAdapter;
  */
 public class LocationActivity extends AppCompatActivity {
     private Tracker mTracker;
-    private final String activityName = "Location List";
+    private final String ACTIVITY_NAME = "Location List";
 
     private Context mContext;
 
     private RecyclerView recyclerView;
-
-    private LinearLayoutManager layoutManager;
 
     private HashMap<String, Integer[]> locationHashMap;
 
@@ -49,7 +48,7 @@ public class LocationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        layoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         locationHashMap = new HashMap<>();
         mContext = this;
@@ -77,7 +76,7 @@ public class LocationActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         try {
-            mTracker.setScreenName(activityName);
+            mTracker.setScreenName(ACTIVITY_NAME);
             mTracker.send(new HitBuilders.ScreenViewBuilder().build());
         } catch(Exception e) {
             Log.e("AnalyticsException", e.getMessage());
@@ -112,10 +111,15 @@ public class LocationActivity extends AppCompatActivity {
                         }
                     }
                 }
-
-                adapter = new LocationAdapter(locationHashMap, mContext);
-                findViewById(R.id.progressBar).setVisibility(View.GONE);
-                recyclerView.setAdapter(adapter);
+                Handler h = new Handler();
+                h.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter = new LocationAdapter(locationHashMap, mContext);
+                        findViewById(R.id.progressBar).setVisibility(View.GONE);
+                        recyclerView.setAdapter(adapter);
+                    }
+                }, 5000);
             }
 
             @Override

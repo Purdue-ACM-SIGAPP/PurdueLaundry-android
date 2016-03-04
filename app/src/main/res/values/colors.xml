@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="PurdueGoldDark">#556E79</color>
-    <color name="PurdueGoldLight">#617D8A</color>
+    <color name="appPrimaryColor">#556E79</color>
+    <color name="appSecondaryColor">#617D8A</color>
     <color name="PurdueGoldDark2">#6A4D07</color>
     <color name="PurdueGoldLight2">#B1810B</color>
     <color name="Available">#4caf50</color>

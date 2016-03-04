@@ -29,11 +29,11 @@
         android:layout_below="@+id/location_activity_toolbar"/>
 
     <ProgressBar
-        android:layout_centerInParent="true"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:indeterminate="true"
         android:id="@+id/progressBar"
-        android:layout_below="@+id/location_activity_toolbar"/>
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
