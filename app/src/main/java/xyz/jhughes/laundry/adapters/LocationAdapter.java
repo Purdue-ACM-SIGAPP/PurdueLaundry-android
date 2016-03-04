@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import xyz.jhughes.laundry.LaundryParser.Constants;
-import xyz.jhughes.laundry.MachineActivity;
+import xyz.jhughes.laundry.activities.MachineActivity;
 import xyz.jhughes.laundry.R;
 
 import java.util.HashMap;

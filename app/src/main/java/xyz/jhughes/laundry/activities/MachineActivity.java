@@ -1,4 +1,4 @@
-package xyz.jhughes.laundry;
+package xyz.jhughes.laundry.activities;
 
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -14,30 +14,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
-import xyz.jhughes.laundry.FragmentPagerAdapter.AppSectionsPagerAdapter;
-import xyz.jhughes.laundry.MachineFragments.MachineFragment;
+
+import xyz.jhughes.laundry.R;
+import xyz.jhughes.laundry.adapters.AppSectionsPagerAdapter;
+import xyz.jhughes.laundry.fragments.MachineFragment;
 
 public class MachineActivity extends AppCompatActivity {
-
-    /**
-     * Managing our tabs
-     */
-    private ViewPager viewPager;
-
-    /**
-     * The layout we use for the drawer, which is simply a ListView in our case.
-     */
-    private DrawerLayout mDrawerLayout;
-
-    /**
-     * Managing whether it'currentRoom open or closed
-     */
-    private ActionBarDrawerToggle mDrawerToggle;
-
-    /**
-     * The list of rooms available
-     */
-    private ListView mDrawerList;
 
     /**
      * The current room
@@ -45,8 +27,6 @@ public class MachineActivity extends AppCompatActivity {
     private static String currentRoom;
 
     private AppSectionsPagerAdapter appSectionsPagerAdapter;
-
-    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

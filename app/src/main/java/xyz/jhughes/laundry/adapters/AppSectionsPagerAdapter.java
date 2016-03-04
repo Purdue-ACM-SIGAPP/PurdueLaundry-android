@@ -1,10 +1,10 @@
-package xyz.jhughes.laundry.FragmentPagerAdapter;
+package xyz.jhughes.laundry.adapters;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import xyz.jhughes.laundry.MachineFragments.MachineFragment;
+import xyz.jhughes.laundry.fragments.MachineFragment;
 
 /**
  * Created by jeff on 10/4/15.

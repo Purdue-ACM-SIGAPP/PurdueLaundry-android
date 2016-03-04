@@ -1,13 +1,15 @@
-package xyz.jhughes.laundry;
+package xyz.jhughes.laundry.activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -16,8 +18,11 @@ import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
+import xyz.jhughes.laundry.AnalyticsApplication;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
+import xyz.jhughes.laundry.MachineService;
+import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.LocationAdapter;
 
 import java.util.ArrayList;
@@ -54,8 +59,7 @@ public class LocationActivity extends AppCompatActivity {
             Integer[] array = getLaundryCall(Constants.getName(name));
             locationHashMap.put(name, array);
         }
-        adapter = new LocationAdapter(locationHashMap, mContext);
-        recyclerView.setAdapter(adapter);
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.location_activity_toolbar);
         setSupportActionBar(toolbar);
@@ -109,7 +113,10 @@ public class LocationActivity extends AppCompatActivity {
                         }
                     }
                 }
-                adapter.notifyDataSetChanged();
+
+                adapter = new LocationAdapter(locationHashMap, mContext);
+                findViewById(R.id.progressBar).setVisibility(View.GONE);
+                recyclerView.setAdapter(adapter);
             }
 
             @Override

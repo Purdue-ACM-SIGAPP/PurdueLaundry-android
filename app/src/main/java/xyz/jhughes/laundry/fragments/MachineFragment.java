@@ -1,4 +1,4 @@
-package xyz.jhughes.laundry.MachineFragments;
+package xyz.jhughes.laundry.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -29,7 +29,7 @@ import xyz.jhughes.laundry.AnalyticsApplication;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.MachineService;
-import xyz.jhughes.laundry.MachineActivity;
+import xyz.jhughes.laundry.activities.MachineActivity;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.MachineAdapter;
 
@@ -41,10 +41,7 @@ import java.util.ArrayList;
 public class MachineFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private ArrayList<Machine> classMachines;
-    private ListView lv;
     private RecyclerView recyclerView;
-    private Spinner s;
-    private String currentlySelected;
     private boolean isRefreshing;
     private boolean isDryers;
     private String selected;
