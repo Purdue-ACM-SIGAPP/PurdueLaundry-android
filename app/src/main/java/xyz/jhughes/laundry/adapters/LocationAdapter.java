@@ -10,12 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.squareup.picasso.Picasso;
-import xyz.jhughes.laundry.LaundryParser.Constants;
-import xyz.jhughes.laundry.activities.MachineActivity;
-import xyz.jhughes.laundry.R;
 
 import java.util.HashMap;
+
+import xyz.jhughes.laundry.LaundryParser.Constants;
+import xyz.jhughes.laundry.R;
+import xyz.jhughes.laundry.activities.MachineActivity;
 
 public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHolder> {
 
@@ -50,7 +52,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences.Editor sharedPreferenceEditor = mContext.getSharedPreferences("xyz.jhughes.laundry", mContext.MODE_PRIVATE).edit();
+                SharedPreferences.Editor sharedPreferenceEditor = mContext.getSharedPreferences("xyz.jhughes.laundry", Context.MODE_PRIVATE).edit();
                 sharedPreferenceEditor.putString("lastRoom", location);
                 sharedPreferenceEditor.apply();
                 Intent intent = new Intent(mContext, MachineActivity.class);

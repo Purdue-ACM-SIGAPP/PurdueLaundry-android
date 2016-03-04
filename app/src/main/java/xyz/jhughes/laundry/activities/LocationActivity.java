@@ -2,7 +2,6 @@ package xyz.jhughes.laundry.activities;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +13,9 @@ import android.view.View;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
@@ -24,9 +26,6 @@ import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.MachineService;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.LocationAdapter;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by vieck on 10/27/15.

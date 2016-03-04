@@ -15,11 +15,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.Spinner;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+
+import java.util.ArrayList;
 
 import retrofit.Call;
 import retrofit.Callback;
@@ -29,11 +29,9 @@ import xyz.jhughes.laundry.AnalyticsApplication;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.MachineService;
-import xyz.jhughes.laundry.activities.MachineActivity;
 import xyz.jhughes.laundry.R;
+import xyz.jhughes.laundry.activities.MachineActivity;
 import xyz.jhughes.laundry.adapters.MachineAdapter;
-
-import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.

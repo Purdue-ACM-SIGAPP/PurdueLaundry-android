@@ -9,10 +9,8 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.NotificationCompat;
 
-
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
-
 
 import xyz.jhughes.laundry.R;
 

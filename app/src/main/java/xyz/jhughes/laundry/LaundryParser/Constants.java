@@ -1,7 +1,5 @@
 package xyz.jhughes.laundry.LaundryParser;
 
-import java.util.HashMap;
-
 /*
  * Created by tylorgarrett on 8/24/15.
  * Heavily modified by hughesjeff

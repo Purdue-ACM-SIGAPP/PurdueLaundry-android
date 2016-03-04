@@ -23,14 +23,14 @@ import android.widget.Toast;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
+import java.util.ArrayList;
+
 import xyz.jhughes.laundry.AnalyticsApplication;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.notificationhelpers.NotificationCreator;
 import xyz.jhughes.laundry.notificationhelpers.NotificationPublisher;
-
-import java.util.ArrayList;
 
 public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHolder> {
     private ArrayList<Machine> currentMachines;
