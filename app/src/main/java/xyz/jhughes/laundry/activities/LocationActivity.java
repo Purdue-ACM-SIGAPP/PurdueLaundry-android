@@ -53,12 +53,6 @@ public class LocationActivity extends AppCompatActivity {
         locationHashMap = new HashMap<>();
         mContext = this;
 
-        for (String name : Constants.getListOfRooms()) {
-            Integer[] array = getLaundryCall(Constants.getName(name));
-            locationHashMap.put(name, array);
-        }
-
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.location_activity_toolbar);
         setSupportActionBar(toolbar);
 
@@ -80,6 +74,14 @@ public class LocationActivity extends AppCompatActivity {
             mTracker.send(new HitBuilders.ScreenViewBuilder().build());
         } catch(Exception e) {
             Log.e("AnalyticsException", e.getMessage());
+        }
+
+        recyclerView.setAdapter(null);
+        findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+
+        for (String name : Constants.getListOfRooms()) {
+            Integer[] array = getLaundryCall(Constants.getName(name));
+            locationHashMap.put(name, array);
         }
     }
 
@@ -111,15 +113,15 @@ public class LocationActivity extends AppCompatActivity {
                         }
                     }
                 }
-                Handler h = new Handler();
-                h.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
+                //Handler h = new Handler();
+                //h.postDelayed(new Runnable() {
+                //    @Override
+                //    public void run() {
                         adapter = new LocationAdapter(locationHashMap, mContext);
                         findViewById(R.id.progressBar).setVisibility(View.GONE);
                         recyclerView.setAdapter(adapter);
-                    }
-                }, 5000);
+                //    }
+                //}, 5000);
             }
 
             @Override
