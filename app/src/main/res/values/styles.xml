@@ -2,8 +2,8 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
 
         <!-- Set AppCompat’s color theming attrs -->
-        <item name="colorPrimary">@color/PurdueGoldLight</item>
-        <item name="colorPrimaryDark">@color/PurdueGoldDark</item>
+        <item name="colorPrimary">@color/appSecondaryColor</item>
+        <item name="colorPrimaryDark">@color/appPrimaryColor</item>
         <!-- The rest of your attributes -->
     </style>
 

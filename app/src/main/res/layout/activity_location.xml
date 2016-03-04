@@ -34,6 +34,7 @@
         android:indeterminate="true"
         android:id="@+id/progressBar"
         android:layout_centerVertical="true"
+        android:progressDrawable="@drawable/progress"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
