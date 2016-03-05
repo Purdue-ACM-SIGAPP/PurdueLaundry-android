@@ -33,6 +33,17 @@ public class MachineActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("xyz.jhughes.laundry", MODE_PRIVATE);
         currentRoom = sharedPreferences.getString("lastRoom", "Cary Hall West");
 
+        initToolbar();
+
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        appSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager(), currentRoom);
+        viewPager.setAdapter(appSectionsPagerAdapter);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        tabLayout.setupWithViewPager(viewPager);
+    }
+
+    private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(currentRoom);
         setSupportActionBar(toolbar);
@@ -41,13 +52,6 @@ public class MachineActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
         }
-
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        appSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager(), currentRoom);
-        viewPager.setAdapter(appSectionsPagerAdapter);
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-        tabLayout.setupWithViewPager(viewPager);
     }
 
     public void createDialog() {
