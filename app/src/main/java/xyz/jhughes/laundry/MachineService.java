@@ -9,7 +9,7 @@ import xyz.jhughes.laundry.interfaces.MachineAPI;
  * Created by kyle on 10/6/15.
  */
 public class MachineService {
-    private static String API_ROOT = "http://api.tylorgarrett.com";
+    private static String API_ROOT = "http://ec2-52-37-183-17.us-west-2.compute.amazonaws.com";
     private static MachineAPI REST_CLIENT;
 
     static {
