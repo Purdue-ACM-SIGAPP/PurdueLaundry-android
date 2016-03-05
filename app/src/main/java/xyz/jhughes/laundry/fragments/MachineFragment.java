@@ -25,13 +25,13 @@ import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
-import xyz.jhughes.laundry.AnalyticsApplication;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.MachineService;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.activities.MachineActivity;
 import xyz.jhughes.laundry.adapters.MachineAdapter;
+import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -67,7 +67,7 @@ public class MachineFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
         try {
             // Get tracker.
-            Tracker mTracker = ((AnalyticsApplication) getActivity().getApplication()).getDefaultTracker();
+            Tracker mTracker = AnalyticsHelper.getDefaultTracker();
             mTracker.setScreenName(MachineActivity.getSelected());
             mTracker.send(new HitBuilders.ScreenViewBuilder().build());
         } catch(Exception e) {

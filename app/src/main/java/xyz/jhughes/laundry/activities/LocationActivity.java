@@ -1,8 +1,6 @@
 package xyz.jhughes.laundry.activities;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,31 +10,31 @@ import android.view.Menu;
 import android.view.View;
 
 import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
-import xyz.jhughes.laundry.AnalyticsApplication;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.MachineService;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.LocationAdapter;
+import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 
 /**
- * Created by vieck on 10/27/15.
+ * The main activity of the app. Lists the locations of
+ * laundry and an overview of the availabilities.
  */
 public class LocationActivity extends AppCompatActivity {
-    private Tracker mTracker;
     private final String ACTIVITY_NAME = "Location List";
 
-    private Context mContext;
-
+    @Bind(R.id.recycler_view)
     private RecyclerView recyclerView;
 
     private HashMap<String, Integer[]> locationHashMap;
@@ -47,31 +45,30 @@ public class LocationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        locationHashMap = new HashMap<>();
-        mContext = this;
+        ButterKnife.bind(this);
 
+        initRecyclerView();
+        initToolbar();
+
+        locationHashMap = new HashMap<>();
+    }
+
+    private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.location_activity_toolbar);
         setSupportActionBar(toolbar);
+    }
 
-        try {
-            // Obtain the shared Tracker instance.
-            AnalyticsApplication application = (AnalyticsApplication) getApplication();
-            mTracker = application.getDefaultTracker();
-        } catch(Exception e) {
-            Log.e("AnalyticsException", e.getMessage());
-        }
-
+    private void initRecyclerView() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         try {
-            mTracker.setScreenName(ACTIVITY_NAME);
-            mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+            AnalyticsHelper.getDefaultTracker().setScreenName(ACTIVITY_NAME);
+            AnalyticsHelper.getDefaultTracker().send(new HitBuilders.ScreenViewBuilder().build());
         } catch(Exception e) {
             Log.e("AnalyticsException", e.getMessage());
         }
@@ -117,7 +114,7 @@ public class LocationActivity extends AppCompatActivity {
                 //h.postDelayed(new Runnable() {
                 //    @Override
                 //    public void run() {
-                        adapter = new LocationAdapter(locationHashMap, mContext);
+                        adapter = new LocationAdapter(locationHashMap, LocationActivity.this.getApplicationContext());
                         findViewById(R.id.progressBar).setVisibility(View.GONE);
                         recyclerView.setAdapter(adapter);
                 //    }

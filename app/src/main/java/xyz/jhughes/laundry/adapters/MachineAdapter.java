@@ -1,6 +1,5 @@
 package xyz.jhughes.laundry.adapters;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -25,10 +24,10 @@ import com.google.android.gms.analytics.Tracker;
 
 import java.util.ArrayList;
 
-import xyz.jhughes.laundry.AnalyticsApplication;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.R;
+import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.notificationhelpers.NotificationCreator;
 import xyz.jhughes.laundry.notificationhelpers.NotificationPublisher;
 
@@ -121,7 +120,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
             public void onClick(View v) {
                 try {
                     // Get tracker.
-                    Tracker t = ((AnalyticsApplication) ((Activity)c).getApplication()).getDefaultTracker();
+                    Tracker t = AnalyticsHelper.getDefaultTracker();
                     // Build and send an Event.
                     t.send(new HitBuilders.EventBuilder()
                             .setCategory(m.getType())
