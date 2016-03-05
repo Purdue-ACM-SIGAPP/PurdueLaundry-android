@@ -43,9 +43,9 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        @Bind(R.id.machine_name_text_view) private TextView nameTextView;
-        @Bind(R.id.machine_status_text_view) private TextView statusTextView;
-        @Bind(R.id.card_view) private CardView cardView;
+        @Bind(R.id.machine_name_text_view)  TextView nameTextView;
+        @Bind(R.id.machine_status_text_view)  TextView statusTextView;
+        @Bind(R.id.card_view)  CardView cardView;
         private boolean alarmSet = false;
 
         private ViewHolder(View v) {
@@ -65,6 +65,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     }
 
     private void machineHelper(Machine m, Boolean dryers, String options) {
+        /*
         String status = m.getStatus();
         boolean isCorrectType = dryers == m.getType().equals("Dryer");
         boolean matchesParameters = options.contains(status);
@@ -75,6 +76,8 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         if (isCorrectType && (matchesParameters || isStillAllowed)) {
             currentMachines.add(m);
         }
+        */
+        currentMachines.add(m);
     }
 
     // Create new views (invoked by the layout manager)

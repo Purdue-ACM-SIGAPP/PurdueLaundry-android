@@ -78,6 +78,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
         selected = Constants.getName(MachineActivity.getSelected());
 
         rootView = inflater.inflate(R.layout.fragment_dryer, container, false);
+        ButterKnife.bind(this, rootView);
 
 
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this.getContext(), 2);
@@ -89,7 +90,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        ButterKnife.bind(this, rootView);
+
         return rootView;
     }
 
@@ -120,7 +121,8 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                     mSwipeRefreshLayout.setRefreshing(false);
                     isRefreshing = false;
                     classMachines = response.body();
-                    recyclerView.setAdapter(new MachineAdapter(classMachines, rootView.getContext(), isDryers, options));
+                    MachineAdapter adapter = new MachineAdapter(classMachines,rootView.getContext(),isDryers,options);
+                    recyclerView.setAdapter(adapter);
                 }
 
                 @Override

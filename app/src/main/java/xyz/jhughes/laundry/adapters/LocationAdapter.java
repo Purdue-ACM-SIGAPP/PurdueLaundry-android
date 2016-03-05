@@ -59,6 +59,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
                 sharedPreferenceEditor.putString("lastRoom", location);
                 sharedPreferenceEditor.apply();
                 Intent intent = new Intent(mContext, MachineActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(intent);
             }
         });
@@ -71,13 +72,13 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        @Bind(R.id.card_view) private CardView cardView;
-        @Bind(R.id.image_view_location) private ImageView imageView;
-        @Bind(R.id.text_view_location_name) private TextView location;
-        @Bind(R.id.text_view_washer_count) private TextView washerAvailableCount;
-        @Bind(R.id.text_view_washer_total) private TextView washerTotalCount;
-        @Bind(R.id.text_view_dryer_count) private TextView dryerAvailableCount;
-        @Bind(R.id.text_view_dryer_total) private TextView dryerTotalCount;
+        @Bind(R.id.card_view)  CardView cardView;
+        @Bind(R.id.image_view_location) ImageView imageView;
+        @Bind(R.id.text_view_location_name)  TextView location;
+        @Bind(R.id.text_view_washer_count)  TextView washerAvailableCount;
+        @Bind(R.id.text_view_washer_total)  TextView washerTotalCount;
+        @Bind(R.id.text_view_dryer_count)  TextView dryerAvailableCount;
+        @Bind(R.id.text_view_dryer_total)  TextView dryerTotalCount;
 
         private ViewHolder(View v) {
             super(v);
