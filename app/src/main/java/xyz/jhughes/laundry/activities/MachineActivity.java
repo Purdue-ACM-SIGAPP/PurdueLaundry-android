@@ -12,6 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.AppSectionsPagerAdapter;
 import xyz.jhughes.laundry.fragments.MachineFragment;
@@ -26,25 +28,30 @@ public class MachineActivity extends AppCompatActivity {
 
     private AppSectionsPagerAdapter appSectionsPagerAdapter;
 
+    @Bind(R.id.viewpager) ViewPager viewPager;
+    @Bind(R.id.sliding_tabs) TabLayout tabLayout;
+    @Bind(R.id.toolbar) Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         currentRoom = SharedPrefsHelper.getSharedPrefs(this).getString("lastRoom", "Cary Hall West");
 
         initToolbar();
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        setUpViewPager();
+    }
+
+    private void setUpViewPager() {
         appSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager(), currentRoom);
         viewPager.setAdapter(appSectionsPagerAdapter);
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
     }
 
     private void initToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(currentRoom);
         setSupportActionBar(toolbar);
         final ActionBar actionBar = getSupportActionBar();

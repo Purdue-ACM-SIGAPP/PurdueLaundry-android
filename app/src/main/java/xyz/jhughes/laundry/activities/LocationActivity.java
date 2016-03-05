@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,8 +33,10 @@ import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 public class LocationActivity extends AppCompatActivity {
     private final String ACTIVITY_NAME = "Location List";
 
-    @Bind(R.id.recycler_view)
-    private RecyclerView recyclerView;
+    @Bind(R.id.recycler_view) RecyclerView recyclerView;
+    @Bind(R.id.location_activity_toolbar) Toolbar toolbar;
+    @Bind(R.id.progressBar) ProgressBar mLoadingProgressBar;
+
 
     private HashMap<String, Integer[]> locationHashMap;
 
@@ -52,7 +55,6 @@ public class LocationActivity extends AppCompatActivity {
     }
 
     private void initToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.location_activity_toolbar);
         setSupportActionBar(toolbar);
     }
 
@@ -68,7 +70,7 @@ public class LocationActivity extends AppCompatActivity {
         AnalyticsHelper.sendScreenViewHit(ACTIVITY_NAME);
 
         recyclerView.setAdapter(null);
-        findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+        mLoadingProgressBar.setVisibility(View.VISIBLE);
 
         for (String name : Constants.getListOfRooms()) {
             Integer[] array = getLaundryCall(Constants.getName(name));
@@ -109,7 +111,7 @@ public class LocationActivity extends AppCompatActivity {
                 //    @Override
                 //    public void run() {
                         adapter = new LocationAdapter(locationHashMap, LocationActivity.this.getApplicationContext());
-                        findViewById(R.id.progressBar).setVisibility(View.GONE);
+                        mLoadingProgressBar.setVisibility(View.GONE);
                         recyclerView.setAdapter(adapter);
                 //    }
                 //}, 5000);

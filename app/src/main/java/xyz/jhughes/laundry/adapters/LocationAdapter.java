@@ -15,6 +15,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.activities.MachineActivity;
@@ -69,19 +71,17 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        private CardView cardView;
-        private ImageView imageView;
-        private TextView location, washerAvailableCount, washerTotalCount, dryerAvailableCount, dryerTotalCount;
+        @Bind(R.id.card_view) private CardView cardView;
+        @Bind(R.id.image_view_location) private ImageView imageView;
+        @Bind(R.id.text_view_location_name) private TextView location;
+        @Bind(R.id.text_view_washer_count) private TextView washerAvailableCount;
+        @Bind(R.id.text_view_washer_total) private TextView washerTotalCount;
+        @Bind(R.id.text_view_dryer_count) private TextView dryerAvailableCount;
+        @Bind(R.id.text_view_dryer_total) private TextView dryerTotalCount;
 
         private ViewHolder(View v) {
             super(v);
-            cardView = (CardView) v.findViewById(R.id.card_view);
-            imageView = (ImageView) v.findViewById(R.id.image_view_location);
-            location = (TextView) v.findViewById(R.id.text_view_location_name);
-            washerAvailableCount = (TextView) v.findViewById(R.id.text_view_washer_count);
-            dryerAvailableCount = (TextView) v.findViewById(R.id.text_view_dryer_count);
-            washerTotalCount = (TextView) v.findViewById(R.id.text_view_washer_total);
-            dryerTotalCount = (TextView) v.findViewById(R.id.text_view_dryer_total);
+            ButterKnife.bind(this, v);
         }
     }
 

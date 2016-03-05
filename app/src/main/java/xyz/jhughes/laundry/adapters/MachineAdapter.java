@@ -24,6 +24,8 @@ import com.google.android.gms.analytics.Tracker;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.R;
@@ -41,20 +43,14 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        private TextView nameTextView;
-        private TextView statusTextView;
-        private TextView timeLeftTextView;
-        //private ImageView iconView;
-        private CardView cardView;
+        @Bind(R.id.machine_name_text_view) private TextView nameTextView;
+        @Bind(R.id.machine_status_text_view) private TextView statusTextView;
+        @Bind(R.id.card_view) private CardView cardView;
         private boolean alarmSet = false;
 
         private ViewHolder(View v) {
             super(v);
-            nameTextView = (TextView) v.findViewById(R.id.machine_name_text_view);
-            statusTextView = (TextView) v.findViewById(R.id.machine_status_text_view);
-            //timeLeftTextView = (TextView) v.findViewById(R.id.machine_time_left_text_view);
-            //iconView = (ImageView)v.findViewById(R.id.icon);
-            cardView = (CardView) v.findViewById(R.id.card_view);
+            ButterKnife.bind(this, v);
         }
     }
 

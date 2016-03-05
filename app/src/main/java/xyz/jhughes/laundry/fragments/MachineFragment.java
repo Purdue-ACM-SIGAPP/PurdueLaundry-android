@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
@@ -35,7 +37,10 @@ import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 public class MachineFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private ArrayList<Machine> classMachines;
-    private RecyclerView recyclerView;
+
+    @Bind(R.id.dryer_machines_recycler_view) RecyclerView recyclerView;
+    @Bind(R.id.dryer_list_layout) SwipeRefreshLayout mSwipeRefreshLayout;
+
     private boolean isRefreshing;
     private boolean isDryers;
     private String selected;
@@ -73,7 +78,6 @@ public class MachineFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
         rootView = inflater.inflate(R.layout.fragment_dryer, container, false);
 
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.dryer_machines_recycler_view);
 
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this.getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
@@ -82,8 +86,9 @@ public class MachineFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
         refreshList();
 
-        ((SwipeRefreshLayout) rootView.findViewById(R.id.dryer_list_layout)).setOnRefreshListener(this);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
 
+        ButterKnife.bind(this, rootView);
         return rootView;
     }
 
@@ -111,7 +116,7 @@ public class MachineFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         progressDialog.dismiss();
                     }
 
-                    ((SwipeRefreshLayout) rootView.findViewById(R.id.dryer_list_layout)).setRefreshing(false);
+                    mSwipeRefreshLayout.setRefreshing(false);
                     isRefreshing = false;
                     classMachines = response.body();
                     recyclerView.setAdapter(new MachineAdapter(classMachines, rootView.getContext(), isDryers, options));
@@ -123,17 +128,26 @@ public class MachineFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 }
             });
         } else {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-            alertDialogBuilder.setTitle("Connection Error");
-            alertDialogBuilder.setMessage("You have no internet connection");
-            alertDialogBuilder.setCancelable(false);
-            alertDialogBuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    getActivity().finish();
-                }
-            });
-            AlertDialog alertDialog = alertDialogBuilder.create();
-            alertDialog.show();
+            showNoInternetDialog();
         }
+    }
+
+    private void showNoInternetDialog() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        alertDialogBuilder.setTitle("Connection Error");
+        alertDialogBuilder.setMessage("You have no internet connection");
+        alertDialogBuilder.setCancelable(false);
+        alertDialogBuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                getActivity().finish();
+            }
+        });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 }
