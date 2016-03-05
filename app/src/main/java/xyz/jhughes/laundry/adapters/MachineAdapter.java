@@ -118,18 +118,8 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    // Get tracker.
-                    Tracker t = AnalyticsHelper.getDefaultTracker();
-                    // Build and send an Event.
-                    t.send(new HitBuilders.EventBuilder()
-                            .setCategory(m.getType())
-                            .setAction("Click")
-                            .setLabel(m.getStatus())
-                            .build());
-                } catch(Exception e) {
-                    Log.e("AnalyticsException", e.getMessage());
-                }
+
+                AnalyticsHelper.sendEventHit(m.getType(), AnalyticsHelper.CLICK, m.getStatus());
 
                 try {
                     int minutesInFuture = Integer.parseInt(m.getTime().substring(0, m.getTime().indexOf(' ')));

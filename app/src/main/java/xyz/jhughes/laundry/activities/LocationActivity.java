@@ -66,12 +66,8 @@ public class LocationActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        try {
-            AnalyticsHelper.getDefaultTracker().setScreenName(ACTIVITY_NAME);
-            AnalyticsHelper.getDefaultTracker().send(new HitBuilders.ScreenViewBuilder().build());
-        } catch(Exception e) {
-            Log.e("AnalyticsException", e.getMessage());
-        }
+
+        AnalyticsHelper.sendScreenViewHit(ACTIVITY_NAME);
 
         recyclerView.setAdapter(null);
         findViewById(R.id.progressBar).setVisibility(View.VISIBLE);

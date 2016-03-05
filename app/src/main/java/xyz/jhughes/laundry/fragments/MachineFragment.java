@@ -65,14 +65,7 @@ public class MachineFragment extends Fragment implements SwipeRefreshLayout.OnRe
             progressDialog.setCanceledOnTouchOutside(false);
         }
 
-        try {
-            // Get tracker.
-            Tracker mTracker = AnalyticsHelper.getDefaultTracker();
-            mTracker.setScreenName(MachineActivity.getSelected());
-            mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-        } catch(Exception e) {
-            Log.e("AnalyticsException", e.getMessage());
-        }
+        AnalyticsHelper.sendScreenViewHit(MachineActivity.getSelected());
     }
 
     @Override
