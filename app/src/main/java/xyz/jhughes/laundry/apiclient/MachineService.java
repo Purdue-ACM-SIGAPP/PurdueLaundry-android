@@ -1,12 +1,12 @@
-package xyz.jhughes.laundry;
+package xyz.jhughes.laundry.apiclient;
 
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
-import xyz.jhughes.laundry.interfaces.MachineAPI;
+import xyz.jhughes.laundry.apiclient.MachineAPI;
 
 
 /**
- * Created by kyle on 10/6/15.
+ * Singleton impl for the Machine API.
  */
 public class MachineService {
     private static String API_ROOT = "http://api.tylorgarrett.com";
@@ -18,7 +18,6 @@ public class MachineService {
 
     public static MachineAPI getService() {
         return REST_CLIENT;
-
     }
 
     private static void setupRestClient() {

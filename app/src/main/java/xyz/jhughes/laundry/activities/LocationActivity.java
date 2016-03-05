@@ -9,8 +9,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 
-import com.google.android.gms.analytics.HitBuilders;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -22,7 +20,7 @@ import retrofit.Response;
 import retrofit.Retrofit;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
-import xyz.jhughes.laundry.MachineService;
+import xyz.jhughes.laundry.apiclient.MachineService;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.LocationAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;

@@ -1,4 +1,4 @@
-package xyz.jhughes.laundry.interfaces;
+package xyz.jhughes.laundry.apiclient;
 
 import java.util.ArrayList;
 
@@ -8,7 +8,7 @@ import retrofit.http.Path;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 
 /**
- * Created by hughesjeff
+ * Retrofit interface for the Machine API.
  */
 public interface MachineAPI {
     @GET("/laundry/{location}")
