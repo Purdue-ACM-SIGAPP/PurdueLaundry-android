@@ -1,7 +1,6 @@
 package xyz.jhughes.laundry.activities;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -21,22 +20,20 @@ import retrofit.Response;
 import retrofit.Retrofit;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
+import xyz.jhughes.laundry.analytics.ScreenTrackedActivity;
 import xyz.jhughes.laundry.apiclient.MachineService;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.LocationAdapter;
-import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 
 /**
  * The main activity of the app. Lists the locations of
  * laundry and an overview of the availabilities.
  */
-public class LocationActivity extends AppCompatActivity {
-    private final String ACTIVITY_NAME = "Location List";
+public class LocationActivity extends ScreenTrackedActivity {
 
     @Bind(R.id.recycler_view) RecyclerView recyclerView;
     @Bind(R.id.location_activity_toolbar) Toolbar toolbar;
     @Bind(R.id.progressBar) ProgressBar mLoadingProgressBar;
-
 
     private HashMap<String, Integer[]> locationHashMap;
 
@@ -66,8 +63,6 @@ public class LocationActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        AnalyticsHelper.sendScreenViewHit(ACTIVITY_NAME);
 
         recyclerView.setAdapter(null);
         mLoadingProgressBar.setVisibility(View.VISIBLE);

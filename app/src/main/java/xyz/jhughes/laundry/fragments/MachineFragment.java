@@ -25,6 +25,7 @@ import retrofit.Response;
 import retrofit.Retrofit;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
+import xyz.jhughes.laundry.analytics.ScreenTrackedFragment;
 import xyz.jhughes.laundry.apiclient.MachineService;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.activities.MachineActivity;
@@ -34,7 +35,7 @@ import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MachineFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class MachineFragment extends ScreenTrackedFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private ArrayList<Machine> classMachines;
 
@@ -66,7 +67,7 @@ public class MachineFragment extends Fragment implements SwipeRefreshLayout.OnRe
             progressDialog.setCanceledOnTouchOutside(false);
         }
 
-        AnalyticsHelper.sendScreenViewHit(MachineActivity.getSelected());
+        setScreenName(MachineActivity.getSelected());
     }
 
     @Override
