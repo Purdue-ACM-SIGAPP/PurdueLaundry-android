@@ -30,6 +30,7 @@ import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.notificationhelpers.NotificationCreator;
 import xyz.jhughes.laundry.notificationhelpers.NotificationPublisher;
+import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
 public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHolder> {
     private ArrayList<Machine> currentMachines;
@@ -125,7 +126,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                     int minutesInFuture = Integer.parseInt(m.getTime().substring(0, m.getTime().indexOf(' ')));
                     int millisInFuture = minutesInFuture * 60000; //60 seconds * 1000 milliseconds
 
-                    SharedPreferences sharedPreferences = c.getSharedPreferences("xyz.jhughes.laundry", Context.MODE_PRIVATE);
+                    SharedPreferences sharedPreferences = SharedPrefsHelper.getSharedPrefs(c);
                     String currentRoom = sharedPreferences.getString("lastRoom", "Cary West");
                     String notificationKey = currentRoom + " " + m.getName();
                     if(NotificationCreator.notificationExists(notificationKey)) {

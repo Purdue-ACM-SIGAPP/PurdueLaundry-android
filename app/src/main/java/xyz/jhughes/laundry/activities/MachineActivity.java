@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.AppSectionsPagerAdapter;
 import xyz.jhughes.laundry.fragments.MachineFragment;
+import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
 public class MachineActivity extends AppCompatActivity {
 
@@ -30,8 +31,7 @@ public class MachineActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("xyz.jhughes.laundry", MODE_PRIVATE);
-        currentRoom = sharedPreferences.getString("lastRoom", "Cary Hall West");
+        currentRoom = SharedPrefsHelper.getSharedPrefs(this).getString("lastRoom", "Cary Hall West");
 
         initToolbar();
 
@@ -76,7 +76,7 @@ public class MachineActivity extends AppCompatActivity {
                         MachineFragment.options = options;
                         appSectionsPagerAdapter.notifyDataSetChanged();
 
-                        SharedPreferences.Editor e = getSharedPreferences("xyz.jhughes.laundry", MODE_PRIVATE).edit();
+                        SharedPreferences.Editor e = SharedPrefsHelper.getSharedPrefs(MachineActivity.this).edit();
                         e.putString("options", options);
                         e.apply();
                     }
