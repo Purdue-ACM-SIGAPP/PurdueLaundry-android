@@ -44,6 +44,9 @@ dependencies {
     //Image rendering.
     compile 'com.squareup.picasso:picasso:2.5.2'
 
+    //Butterknife for view binding
+    compile 'com.jakewharton:butterknife:7.0.1'
+
     //Additional dependencies
     compile 'org.jsoup:jsoup:1.8.1'
     compile 'com.google.code.gson:gson:2.4'
