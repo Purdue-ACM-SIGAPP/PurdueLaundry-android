@@ -62,10 +62,12 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         for (Machine m : machines) {
             machineHelper(m, dryers, options);
         }
+
+        Log.d("MachineAdapter", "There are " + currentMachines.size() + " machines. Dryers? " + dryers);
     }
 
     private void machineHelper(Machine m, Boolean dryers, String options) {
-        /*
+
         String status = m.getStatus();
         boolean isCorrectType = dryers == m.getType().equals("Dryer");
         boolean matchesParameters = options.contains(status);
@@ -76,8 +78,6 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         if (isCorrectType && (matchesParameters || isStillAllowed)) {
             currentMachines.add(m);
         }
-        */
-        currentMachines.add(m);
     }
 
     // Create new views (invoked by the layout manager)
