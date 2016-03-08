@@ -5,6 +5,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import xyz.jhughes.laundry.analytics.AnalyticsHelper;
+
 public class NotificationCancelReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -13,5 +15,6 @@ public class NotificationCancelReceiver extends BroadcastReceiver {
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCreator.stopTimer(notificationId, machine);
         manager.cancel(notificationId);
+        AnalyticsHelper.sendEventHit("Reminders", AnalyticsHelper.CLICK, "CANCEL");
     }
 }

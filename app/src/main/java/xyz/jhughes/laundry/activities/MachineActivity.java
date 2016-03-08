@@ -16,6 +16,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.AppSectionsPagerAdapter;
+import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.fragments.MachineFragment;
 import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
@@ -86,6 +87,7 @@ public class MachineActivity extends AppCompatActivity {
                         SharedPreferences.Editor e = SharedPrefsHelper.getSharedPrefs(MachineActivity.this).edit();
                         e.putString("options", options);
                         e.apply();
+                        AnalyticsHelper.sendEventHit("Filters", AnalyticsHelper.CLICK, options);
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -144,6 +146,7 @@ public class MachineActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.display_parameters:
+                AnalyticsHelper.sendEventHit("Filters", AnalyticsHelper.CLICK, "YES");
                 createDialog();
             default:
                 return super.onOptionsItemSelected(item);

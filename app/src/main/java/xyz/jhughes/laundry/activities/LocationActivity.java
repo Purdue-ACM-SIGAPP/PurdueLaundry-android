@@ -37,7 +37,6 @@ public class LocationActivity extends ScreenTrackedActivity {
     @Bind(R.id.location_activity_toolbar) Toolbar toolbar;
     @Bind(R.id.progressBar) ProgressBar mLoadingProgressBar;
 
-    private HashMap<String, Integer[]> locationHashMap;
 
     private LocationAdapter adapter;
 
@@ -50,7 +49,6 @@ public class LocationActivity extends ScreenTrackedActivity {
         initRecyclerView();
         initToolbar();
 
-        locationHashMap = new HashMap<>();
     }
 
     private void initToolbar() {
@@ -68,13 +66,10 @@ public class LocationActivity extends ScreenTrackedActivity {
 
         recyclerView.setAdapter(null);
         mLoadingProgressBar.setVisibility(View.VISIBLE);
-
-        for (String name : Constants.getListOfRooms()) {
-            getLaundryCall(Constants.getName(name));
-        }
+        getLaundryCall();
     }
 
-    protected void getLaundryCall(String name) {
+    protected void getLaundryCall() {
         Call<Map<String,List<Machine>>> allMachineCall = MachineService.getService().getAllMachines();
         allMachineCall.enqueue(new Callback<Map<String, List<Machine>>>() {
             @Override

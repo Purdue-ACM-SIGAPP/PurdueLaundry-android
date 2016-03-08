@@ -17,6 +17,8 @@ import xyz.jhughes.laundry.R;
  */
 public class AnalyticsHelper {
     public static final String CLICK = "Click";
+    public static final String REMINDER_CLICK_YES = "REMINDER CLICK_YES";
+    public static final String REMINDER_CLICK_NO  = "REMINDER_CLICK_NO";
 
     private static Tracker mTracker;
 

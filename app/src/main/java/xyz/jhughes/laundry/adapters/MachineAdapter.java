@@ -63,7 +63,6 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
             machineHelper(m, dryers, options);
         }
 
-        Log.d("MachineAdapter", "There are " + currentMachines.size() + " machines. Dryers? " + dryers);
     }
 
     private void machineHelper(Machine m, Boolean dryers, String options) {
@@ -158,12 +157,14 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                 .setCancelable(true)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        AnalyticsHelper.sendEventHit("Reminders", AnalyticsHelper.CLICK, "YES");
                         NotificationCreator.createNotification(c, notificationKey, milliInFuture);
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        AnalyticsHelper.sendEventHit("Reminders", AnalyticsHelper.CLICK, "NO");
                         dialog.cancel();
                         Toast.makeText(c, "No Alarm Set", Toast.LENGTH_LONG).show();
                     }
