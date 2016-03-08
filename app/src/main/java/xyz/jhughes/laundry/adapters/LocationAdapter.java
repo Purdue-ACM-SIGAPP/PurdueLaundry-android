@@ -14,10 +14,15 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.crypto.Mac;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xyz.jhughes.laundry.LaundryParser.Constants;
+import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.activities.MachineActivity;
 import xyz.jhughes.laundry.storage.SharedPrefsHelper;
@@ -26,10 +31,10 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
 
     private Context mContext;
 
-    private HashMap<String, Integer[]> mDataset;
+    private Map<String, List<Machine>> mDataset;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public LocationAdapter(HashMap<String, Integer[]> mDataset, Context mContext) {
+    public LocationAdapter(Map<String, List<Machine>> mDataset, Context mContext) {
         this.mContext = mContext;
         this.mDataset = mDataset;
     }
@@ -42,10 +47,36 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         return new ViewHolder(v);
     }
 
+    private Integer[] getCounts(List<Machine> machines){
+        final Integer[] countArray = new Integer[4];
+        for (int i = 0; i < 4; i++) {
+            countArray[i] = 0;
+        }
+        for (Machine machine : machines) {
+            if (machine.getType().equals("Dryer")) {
+                //Increments Total Dryer Count For Specific Place
+                countArray[0] = countArray[0] + 1;
+                if (machine.getStatus().equals("Available")) {
+                    //Increments Available Dryer Count For Specific Place
+                    countArray[1] = countArray[1] + 1;
+                }
+            } else {
+                //Increments Total Washer Count For Specific Place
+                countArray[2] = countArray[2] + 1;
+                if (machine.getStatus().equals("Available")) {
+                    //Increments Available Washer Count For Specific Place
+                    countArray[3] = countArray[3] + 1;
+                }
+            }
+        }
+        return countArray;
+    }
+
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final String location = Constants.getListOfRooms()[position];
-        Integer[] count = mDataset.get(location);
+        List<Machine> machinesByLocation = mDataset.get(Constants.getName(location));
+        Integer[] count = getCounts(machinesByLocation);
         holder.location.setText(location);
         holder.washerAvailableCount.setText(count[3].toString());
         holder.washerTotalCount.setText("/" + count[2].toString());

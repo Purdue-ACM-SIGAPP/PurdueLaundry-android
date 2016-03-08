@@ -1,6 +1,8 @@
 package xyz.jhughes.laundry.apiclient;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import retrofit.Call;
 import retrofit.http.GET;
@@ -15,4 +17,7 @@ public interface MachineAPI {
     Call<ArrayList<Machine>> getMachineStatus(
             @Path("location") String location
     );
+
+    @GET("/laundry/location/all")
+    Call<Map<String,List<Machine>>>getAllMachines();
 }

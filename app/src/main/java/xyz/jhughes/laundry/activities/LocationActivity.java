@@ -11,6 +11,8 @@ import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -68,56 +70,27 @@ public class LocationActivity extends ScreenTrackedActivity {
         mLoadingProgressBar.setVisibility(View.VISIBLE);
 
         for (String name : Constants.getListOfRooms()) {
-            Integer[] array = getLaundryCall(Constants.getName(name));
-            locationHashMap.put(name, array);
+            getLaundryCall(Constants.getName(name));
         }
     }
 
-    protected Integer[] getLaundryCall(String name) {
-        final Integer[] countArray = new Integer[4];
-        for (int i = 0; i < 4; i++) {
-            countArray[i] = 0;
-        }
-        Call<ArrayList<Machine>> call = MachineService.getService().getMachineStatus(name);
-
-        call.enqueue(new Callback<ArrayList<Machine>>() {
+    protected void getLaundryCall(String name) {
+        Call<Map<String,List<Machine>>> allMachineCall = MachineService.getService().getAllMachines();
+        allMachineCall.enqueue(new Callback<Map<String, List<Machine>>>() {
             @Override
-            public void onResponse(Response<ArrayList<Machine>> response, Retrofit retrofit) {
-                ArrayList<Machine> classMachines = response.body();
-                for (Machine machine : classMachines) {
-                    if (machine.getType().equals("Dryer")) {
-                        //Increments Total Dryer Count For Specific Place
-                        countArray[0] = countArray[0] + 1;
-                        if (machine.getStatus().equals("Available")) {
-                            //Increments Available Dryer Count For Specific Place
-                            countArray[1] = countArray[1] + 1;
-                        }
-                    } else {
-                        //Increments Total Washer Count For Specific Place
-                        countArray[2] = countArray[2] + 1;
-                        if (machine.getStatus().equals("Available")) {
-                            //Increments Available Washer Count For Specific Place
-                            countArray[3] = countArray[3] + 1;
-                        }
-                    }
-                }
-                //Handler h = new Handler();
-                //h.postDelayed(new Runnable() {
-                //    @Override
-                //    public void run() {
-                        adapter = new LocationAdapter(locationHashMap, LocationActivity.this.getApplicationContext());
-                        mLoadingProgressBar.setVisibility(View.GONE);
-                        recyclerView.setAdapter(adapter);
-                //    }
-                //}, 5000);
+            public void onResponse(Response<Map<String, List<Machine>>> response, Retrofit retrofit) {
+                Map<String,List<Machine>> machineMap = response.body();
+                adapter = new LocationAdapter(machineMap, LocationActivity.this.getApplicationContext());
+                mLoadingProgressBar.setVisibility(View.GONE);
+                recyclerView.setAdapter(adapter);
             }
 
             @Override
             public void onFailure(Throwable t) {
-                Log.d("LocationActivity", "API Fail " + t.getMessage());
+                Log.e("LocationActivity", "API ERROR - " + t.getMessage());
             }
         });
-        return countArray;
+
     }
 
     @Override
