@@ -9,7 +9,7 @@ import xyz.jhughes.laundry.apiclient.MachineAPI;
  * Singleton impl for the Machine API.
  */
 public class MachineService {
-    private static String API_ROOT = "http://ec2-52-37-183-17.us-west-2.compute.amazonaws.com";
+    private static String API_ROOT = "http://ec2-52-27-152-61.us-west-2.compute.amazonaws.com";
     private static MachineAPI REST_CLIENT;
 
     static {
