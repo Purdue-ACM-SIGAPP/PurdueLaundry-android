@@ -7,6 +7,7 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
+import xyz.jhughes.laundry.BuildConfig;
 import xyz.jhughes.laundry.R;
 
 /**
@@ -28,6 +29,11 @@ public class AnalyticsHelper {
      */
     public synchronized static void initDefaultTracker(Application application) {
         GoogleAnalytics analytics = GoogleAnalytics.getInstance(application);
+
+        if(BuildConfig.DEBUG) {
+            analytics.setDryRun(true);
+        }
+
         // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
         mTracker = analytics.newTracker(R.xml.global_tracker);
     }
