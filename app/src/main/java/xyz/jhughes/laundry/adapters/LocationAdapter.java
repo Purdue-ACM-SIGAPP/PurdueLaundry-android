@@ -5,21 +5,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import javax.crypto.Mac;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -34,10 +30,23 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
     private Context mContext;
 
     private Map<String, List<Machine>> mDataset;
+    private List<String> allLocations = new ArrayList<>();
+    private List<List<Machine>> allMachines = new ArrayList<>();
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public LocationAdapter(Map<String, List<Machine>> mDataset, Context mContext) {
         this.mContext = mContext;
+        for(String key : mDataset.keySet()){
+            List<Machine> machines = mDataset.get(key);
+            if(! (machinesOffline(machines))){
+                allLocations.add(0,key);
+                allMachines.add(0,machines);
+            } else {
+                allLocations.add(key);
+                allMachines.add(machines);
+            }
+
+        }
         this.mDataset = mDataset;
     }
 
@@ -78,18 +87,19 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.setIsRecyclable(false);
-        final String location = Constants.getListOfRooms()[position];
-        List<Machine> machinesByLocation = mDataset.get(Constants.getName(location));
-        boolean dryersOffline = machinesOffline(machinesByLocation, "Dryer");
-        boolean washersOffline = machinesOffline(machinesByLocation,"Washer");
-
-        holder.dryerOfflineImage.setImageResource(R.drawable.ic_machine_offline);
-        holder.washerOfflineImage.setImageResource(R.drawable.ic_machine_offline);
-        if(!dryersOffline){
-            holder.dryerOfflineImage.setVisibility(View.GONE);
-        }
-        if(!washersOffline){
-            holder.washerOfflineImage.setVisibility(View.GONE);
+        final String location = Constants.getLocationName(allLocations.get(position));
+        List<Machine> machinesByLocation = allMachines.get(position);
+        boolean isOffline = machinesOffline(machinesByLocation);
+        holder.textViewOffline.setVisibility(View.GONE);
+        if(isOffline){
+            holder.cardView.setAlpha((float)0.6);
+            holder.washerAvailableCount.setVisibility(View.GONE);
+            holder.washerTotalCount.setVisibility(View.GONE);
+            holder.dryerAvailableCount.setVisibility(View.GONE);
+            holder.dryerTotalCount.setVisibility(View.GONE);
+            holder.textViewDryer.setVisibility(View.GONE);
+            holder.textViewWasher.setVisibility(View.GONE);
+            holder.textViewOffline.setVisibility(View.VISIBLE);
         }
         Integer[] count = getCounts(machinesByLocation);
         holder.location.setText(location);
@@ -97,7 +107,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         holder.washerTotalCount.setText("/" + count[2].toString());
         holder.dryerAvailableCount.setText(count[1].toString());
         holder.dryerTotalCount.setText("/" + count[0].toString());
-        setImage(holder.imageView, position);
+        setImage(holder.imageView, position,Constants.getLocationName(allLocations.get(position)));
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,12 +121,10 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         });
     }
 
-    public boolean machinesOffline(List<Machine>machines, String type){
-        for(Machine m : machines){
-            if(m.getType().equals(type)){
-                if(! (m.getStatus().equals("Not online"))){
-                    return false;
-                }
+    public boolean machinesOffline(List<Machine>machines){
+        for(Machine m : machines) {
+            if (!(m.getStatus().equals("Not online"))) {
+                return false;
             }
         }
         return true;
@@ -125,7 +133,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return mDataset.keySet().size();
+        return allLocations.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -137,9 +145,9 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         @Bind(R.id.text_view_washer_total)  TextView washerTotalCount;
         @Bind(R.id.text_view_dryer_count)   TextView dryerAvailableCount;
         @Bind(R.id.text_view_dryer_total)   TextView dryerTotalCount;
-        @Bind(R.id.dryer_offline_image)     ImageView dryerOfflineImage;
-        @Bind(R.id.washer_offline_image)    ImageView washerOfflineImage;
-
+        @Bind(R.id.text_view_washer)        TextView textViewWasher;
+        @Bind(R.id.text_view_dryer)         TextView textViewDryer;
+        @Bind(R.id.text_view_offline)       TextView textViewOffline;
 
         private ViewHolder(View v) {
             super(v);
@@ -147,8 +155,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         }
     }
 
-    public void setImage(ImageView image, int position) {
-        String hall = Constants.getListOfRooms()[position];
+    public void setImage(ImageView image, int position, String hall) {
         int imgId = Constants.getLocationImageResource(hall);
         Picasso.with(mContext).load(imgId).fit().centerCrop().into(image);
     }

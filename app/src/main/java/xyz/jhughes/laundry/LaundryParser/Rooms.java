@@ -12,6 +12,7 @@ public class Rooms {
             "Meredith Northwest", "Meredith Southeast", "Owen Hall", "Shreve Hall", "Tarkington Hall", "Third Street Suites", "Wiley Hall",
             "Windsor - Duhme", "Windsor - Warren"};
     private HashMap<String, String> roomsToAPILocations;
+    private HashMap<String, String> APILocationToRooms;
     private HashMap<String, Integer> roomsToImage;
     private HashMap<String, Integer> machineAvailabilityColors;
 
@@ -19,9 +20,11 @@ public class Rooms {
         roomsToAPILocations = new HashMap<>();
         roomsToImage = new HashMap<>();
         machineAvailabilityColors = new HashMap<>();
+        APILocationToRooms = new HashMap<>();
 
         for (String room : LIST_OF_ROOMS) {
             roomsToAPILocations.put(room, toAPILocation(room));
+            APILocationToRooms.put(toAPILocation(room),room);
             roomsToImage.put(room, toImageResourceId(room));
         }
 
@@ -50,6 +53,10 @@ public class Rooms {
 
     public String roomToApiLocation(String roomName) {
         return roomsToAPILocations.get(roomName);
+    }
+
+    public String ApiLocationToRoom(String apiLocation){
+        return getRoom(apiLocation);
     }
 
     public int roomToImageResource(String roomName) {
@@ -126,5 +133,9 @@ public class Rooms {
                  return R.drawable.image_windsor;
         }
         return -1;
+    }
+
+    private String getRoom(String apiLocation){
+        return APILocationToRooms.get(apiLocation);
     }
 }

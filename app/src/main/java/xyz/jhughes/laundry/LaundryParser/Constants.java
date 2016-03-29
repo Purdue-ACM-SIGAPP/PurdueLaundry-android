@@ -12,9 +12,15 @@ public class Constants {
         return roomsConstants.getListOfRooms();
     }
 
-    public static String getName(String room) {
+    public static String getApiLocation(String room) {
         return roomsConstants.roomToApiLocation(room);
     }
+
+    public static String getLocationName(String apiLocation){
+        return roomsConstants.ApiLocationToRoom(apiLocation);
+    }
+
+
 
     public static int getLocationImageResource(String room) {
         return roomsConstants.roomToImageResource(room);

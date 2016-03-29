@@ -30,7 +30,6 @@ import xyz.jhughes.laundry.apiclient.MachineService;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.activities.MachineActivity;
 import xyz.jhughes.laundry.adapters.MachineAdapter;
-import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -75,7 +74,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                              Bundle savedInstanceState) {
 
         isDryers = getArguments().getBoolean("isDryers");
-        selected = Constants.getName(MachineActivity.getSelected());
+        selected = Constants.getApiLocation(MachineActivity.getSelected());
 
         rootView = inflater.inflate(R.layout.fragment_dryer, container, false);
         ButterKnife.bind(this, rootView);

@@ -28,6 +28,7 @@
                 android:layout_weight="2"
                 android:layout_marginBottom="10sp"
                 android:layout_marginTop="6sp">
+
             <TextView
                     android:id="@+id/text_view_location_name"
                     android:layout_margin="4dp"
@@ -36,6 +37,16 @@
                     android:layout_gravity="center_horizontal"
                     android:textSize="28sp"
                     android:typeface="normal"/>
+
+            <TextView
+                android:id="@+id/text_view_offline"
+                android:paddingLeft="6dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_view_location_name"
+                android:text="@string/offlineText"
+                android:typeface="normal"/>
 
             <RelativeLayout
                     android:id="@+id/washer_layout"

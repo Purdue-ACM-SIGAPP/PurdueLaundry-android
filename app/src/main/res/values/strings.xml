@@ -22,6 +22,7 @@
     <string name="dryers_available">Dryers Available</string>
     <string name="washers_available">Washers Available</string>
     <string name="ResHallPic">ResHallPic</string>
+    <string name="offlineText">Offline</string>
 
     <array name="options">
         <item>Available</item>
