@@ -77,6 +77,7 @@ public class LocationActivity extends ScreenTrackedActivity {
                 Map<String,List<Machine>> machineMap = response.body();
                 adapter = new LocationAdapter(machineMap, LocationActivity.this.getApplicationContext());
                 mLoadingProgressBar.setVisibility(View.GONE);
+                recyclerView.setHasFixedSize(true);
                 recyclerView.setAdapter(adapter);
             }
 

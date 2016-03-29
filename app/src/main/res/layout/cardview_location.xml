@@ -76,6 +76,16 @@
                         android:layout_marginBottom="3dp"
                         android:textColor="@android:color/holo_blue_dark"/>
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="60dp"
+                    android:id="@+id/washer_offline_image"
+                    android:layout_above="@id/text_view_washer"
+                    android:layout_toRightOf="@id/text_view_washer_total"
+                    android:layout_toEndOf="@id/text_view_washer_total"/>
+
+
             </RelativeLayout>
 
             <RelativeLayout
@@ -116,6 +126,15 @@
                         android:textSize="18sp"
                         android:layout_marginBottom="3dp"
                         android:textColor="@android:color/holo_blue_dark"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="60dp"
+                    android:id="@+id/dryer_offline_image"
+                    android:layout_above="@id/text_view_dryer"
+                    android:layout_toRightOf="@id/text_view_dryer_total"
+                    android:layout_toEndOf="@id/text_view_dryer_total"/>
 
 
             </RelativeLayout>

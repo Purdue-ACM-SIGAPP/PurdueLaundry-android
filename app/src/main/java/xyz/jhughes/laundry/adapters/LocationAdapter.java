@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -72,10 +74,23 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         return countArray;
     }
 
+
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        //holder.setIsRecyclable(false);
         final String location = Constants.getListOfRooms()[position];
         List<Machine> machinesByLocation = mDataset.get(Constants.getName(location));
+        boolean dryersOffline = machinesOffline(machinesByLocation, "Dryer");
+        boolean washersOffline = machinesOffline(machinesByLocation,"Washer");
+
+        holder.dryerOfflineImage.setImageResource(R.drawable.ic_machine_offline);
+        holder.washerOfflineImage.setImageResource(R.drawable.ic_machine_offline);
+        if(!dryersOffline){
+            holder.dryerOfflineImage.setVisibility(View.GONE);
+        }
+        if(!washersOffline){
+            holder.washerOfflineImage.setVisibility(View.GONE);
+        }
         Integer[] count = getCounts(machinesByLocation);
         holder.location.setText(location);
         holder.washerAvailableCount.setText(count[3].toString());
@@ -96,6 +111,18 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         });
     }
 
+    public boolean machinesOffline(List<Machine>machines, String type){
+        for(Machine m : machines){
+            if(m.getType().equals(type)){
+                if(! (m.getStatus().equals("Not online"))){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+
     @Override
     public int getItemCount() {
         return mDataset.keySet().size();
@@ -105,11 +132,14 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         // each data item is just a string in this case
         @Bind(R.id.card_view)  CardView cardView;
         @Bind(R.id.image_view_location) ImageView imageView;
-        @Bind(R.id.text_view_location_name)  TextView location;
+        @Bind(R.id.text_view_location_name) TextView location;
         @Bind(R.id.text_view_washer_count)  TextView washerAvailableCount;
         @Bind(R.id.text_view_washer_total)  TextView washerTotalCount;
-        @Bind(R.id.text_view_dryer_count)  TextView dryerAvailableCount;
-        @Bind(R.id.text_view_dryer_total)  TextView dryerTotalCount;
+        @Bind(R.id.text_view_dryer_count)   TextView dryerAvailableCount;
+        @Bind(R.id.text_view_dryer_total)   TextView dryerTotalCount;
+        @Bind(R.id.dryer_offline_image)     ImageView dryerOfflineImage;
+        @Bind(R.id.washer_offline_image)    ImageView washerOfflineImage;
+
 
         private ViewHolder(View v) {
             super(v);
