@@ -77,7 +77,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        //holder.setIsRecyclable(false);
+        holder.setIsRecyclable(false);
         final String location = Constants.getListOfRooms()[position];
         List<Machine> machinesByLocation = mDataset.get(Constants.getName(location));
         boolean dryersOffline = machinesOffline(machinesByLocation, "Dryer");
