@@ -16,6 +16,9 @@ public class AnalyticsApplication extends Application {
         super.onCreate();
         AnalyticsHelper.initDefaultTracker(this);
 
-        getSharedPreferences("alerts", Context.MODE_PRIVATE).edit().clear().commit();
+        if(BuildConfig.DEBUG) {
+            //if on a debug version, remove the alert boolean every time. This is expected.
+            getSharedPreferences("alerts", Context.MODE_PRIVATE).edit().remove("offline_alert_thrown").apply();
+        }
     }
 }

@@ -143,10 +143,6 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     }
 
     private void showOfflineDialogIfNecessary() {
-        if(BuildConfig.DEBUG) {
-            //if on a debug version, remove the alert boolean every time. This is expected.
-            rootView.getContext().getSharedPreferences("alerts", Context.MODE_PRIVATE).edit().remove("offline_alert_thrown").apply();
-        }
 
         if(!rootView.getContext().getSharedPreferences("alerts", Context.MODE_PRIVATE).getBoolean("offline_alert_thrown", false)) {
             // 1. Instantiate an AlertDialog.Builder with its constructor
@@ -154,7 +150,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
 
             // 2. Chain together various setter methods to set the dialog characteristics
             builder.setMessage("We cannot reach the machines at this location right now, but they may still be available to use.")
-                    .setTitle("Cannot reach machines").setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    .setTitle("Can't reach machines").setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
