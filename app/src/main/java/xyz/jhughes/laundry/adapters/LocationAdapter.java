@@ -21,6 +21,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
+import xyz.jhughes.laundry.ModelOperations;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.activities.MachineActivity;
 import xyz.jhughes.laundry.storage.SharedPrefsHelper;
@@ -36,9 +37,10 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
     // Provide a suitable constructor (depends on the kind of dataset)
     public LocationAdapter(Map<String, List<Machine>> mDataset, Context mContext) {
         this.mContext = mContext;
+
         for(String key : mDataset.keySet()){
             List<Machine> machines = mDataset.get(key);
-            if(! (machinesOffline(machines))){
+            if(! (ModelOperations.machinesOffline(machines))){
                 allLocations.add(0,key);
                 allMachines.add(0,machines);
             } else {
@@ -89,7 +91,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         holder.setIsRecyclable(false);
         final String location = Constants.getLocationName(allLocations.get(position));
         List<Machine> machinesByLocation = allMachines.get(position);
-        boolean isOffline = machinesOffline(machinesByLocation);
+        boolean isOffline = ModelOperations.machinesOffline(machinesByLocation);
         holder.textViewOffline.setVisibility(View.GONE);
         if(isOffline){
             holder.cardView.setAlpha((float)0.6);
@@ -120,16 +122,6 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
             }
         });
     }
-
-    public boolean machinesOffline(List<Machine>machines){
-        for(Machine m : machines) {
-            if (!(m.getStatus().equals("Not online"))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
 
     @Override
     public int getItemCount() {

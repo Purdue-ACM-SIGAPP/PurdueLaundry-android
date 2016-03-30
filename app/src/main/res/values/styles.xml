@@ -4,6 +4,7 @@
         <!-- Set AppCompat’s color theming attrs -->
         <item name="colorPrimary">@color/appSecondaryColor</item>
         <item name="colorPrimaryDark">@color/appPrimaryColor</item>
+
         <!-- The rest of your attributes -->
     </style>
 
