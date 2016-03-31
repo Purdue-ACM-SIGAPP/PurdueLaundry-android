@@ -1,7 +1,12 @@
 package xyz.jhughes.laundry.apiclient;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
+import xyz.jhughes.laundry.LaundryParser.MachineList;
+import xyz.jhughes.laundry.LaundryParser.MachineListDeserializer;
 import xyz.jhughes.laundry.apiclient.MachineAPI;
 
 
@@ -21,9 +26,14 @@ public class MachineService {
     }
 
     private static void setupRestClient() {
+
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(MachineList.class, new MachineListDeserializer())
+                .create();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(API_ROOT)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         REST_CLIENT = retrofit.create(MachineAPI.class);
     }
