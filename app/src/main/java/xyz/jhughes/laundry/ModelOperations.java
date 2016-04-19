@@ -3,6 +3,7 @@ package xyz.jhughes.laundry;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +35,20 @@ public class ModelOperations {
                 locations.add(0,location);
             }
         }
+
+        Collections.sort(locations, new Comparator<Location>() {
+            @Override
+            public int compare(Location l1, Location l2) {
+                if(!l1.getMachineList().isOffline() && l2.getMachineList().isOffline()){
+                    return -1;
+                } else if(l1.getMachineList().isOffline() && !l2.getMachineList().isOffline()){
+                    return 1;
+                }
+                else{
+                    return l1.getLocationName().compareTo(l2.getLocationName());
+                }
+            }
+        });
         return locations;
     }
 

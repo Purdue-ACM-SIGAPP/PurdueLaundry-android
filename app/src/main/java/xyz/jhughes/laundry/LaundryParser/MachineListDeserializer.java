@@ -30,7 +30,6 @@ public class MachineListDeserializer implements JsonDeserializer<MachineList> {
             } else {
                 ml.setIsOffline(false);
             }
-
             return ml;
         }
 }
