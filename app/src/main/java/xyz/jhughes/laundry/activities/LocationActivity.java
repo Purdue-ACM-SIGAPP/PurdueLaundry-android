@@ -1,5 +1,7 @@
 package xyz.jhughes.laundry.activities;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +28,7 @@ import xyz.jhughes.laundry.analytics.ScreenTrackedActivity;
 import xyz.jhughes.laundry.apiclient.MachineService;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.LocationAdapter;
+import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
 /**
  * The main activity of the app. Lists the locations of
@@ -43,6 +46,15 @@ public class LocationActivity extends ScreenTrackedActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        String lastRoom = SharedPrefsHelper.getSharedPrefs(this)
+                .getString("lastRoom", "hello, world!");
+        if (!lastRoom.equals("hello, world!")) {
+            Intent intent = new Intent(this, MachineActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+
         setContentView(R.layout.activity_location);
         ButterKnife.bind(this);
 
