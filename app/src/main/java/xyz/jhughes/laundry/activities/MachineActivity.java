@@ -34,6 +34,15 @@ public class MachineActivity extends AppCompatActivity {
     @Bind(R.id.toolbar) Toolbar toolbar;
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        // Get rid of lastRoom so the home screen doesn't try to go back if the user wants to check
+        // on a different dorm
+        SharedPrefsHelper.getSharedPrefs(this).edit().putString("lastRoom", null).apply();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
