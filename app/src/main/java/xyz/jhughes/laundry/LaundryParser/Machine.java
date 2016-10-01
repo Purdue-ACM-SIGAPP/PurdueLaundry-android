@@ -15,7 +15,8 @@ public class Machine implements Serializable {
 
     public Machine(String name, String type, String status, String time) {
         // Get rid of leading 0s
-        if (name.matches(" 0[0-9]+")) name = name.replaceFirst("0", "");
+        if (name.matches(" 0[1-9]{2}")) name = name.replaceFirst("0", "");
+        else if (name.matches(" 0{2}[1-9]")) name = name.replaceAll("0", "");
 
         this.name = name;
         this.type = type;
