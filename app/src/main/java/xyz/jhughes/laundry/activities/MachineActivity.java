@@ -1,6 +1,7 @@
 package xyz.jhughes.laundry.activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -32,15 +33,6 @@ public class MachineActivity extends AppCompatActivity {
     @Bind(R.id.viewpager) ViewPager viewPager;
     @Bind(R.id.sliding_tabs) TabLayout tabLayout;
     @Bind(R.id.toolbar) Toolbar toolbar;
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-
-        // Get rid of lastRoom so the home screen doesn't try to go back if the user wants to check
-        // on a different dorm
-        SharedPrefsHelper.getSharedPrefs(this).edit().putString("lastRoom", null).apply();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,6 +146,10 @@ public class MachineActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                    Intent i = getParentActivityIntent().putExtra("forceMainMenu", true);
+                    navigateUpTo(i);
+                return super.onOptionsItemSelected(item);
             case R.id.display_parameters:
                 AnalyticsHelper.sendEventHit("Filters", AnalyticsHelper.CLICK, "YES");
                 createDialog();

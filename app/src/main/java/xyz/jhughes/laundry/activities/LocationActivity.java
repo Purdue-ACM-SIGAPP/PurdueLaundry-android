@@ -40,19 +40,20 @@ public class LocationActivity extends ScreenTrackedActivity {
     @Bind(R.id.location_activity_toolbar) Toolbar toolbar;
     @Bind(R.id.progressBar) ProgressBar mLoadingProgressBar;
 
-
     private LocationAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String lastRoom = SharedPrefsHelper.getSharedPrefs(this)
-                .getString("lastRoom", "hello, world!");
-        if (!lastRoom.equals("hello, world!")) {
-            Intent intent = new Intent(this, MachineActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+        if (!getIntent().getBooleanExtra("forceMainMenu", false)) {
+            String lastRoom = SharedPrefsHelper.getSharedPrefs(this)
+                    .getString("lastRoom", "hi, jeff");
+            if (!lastRoom.equals("hi, jeff")) {
+                Intent intent = new Intent(this, MachineActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
         }
 
         setContentView(R.layout.activity_location);
@@ -60,7 +61,6 @@ public class LocationActivity extends ScreenTrackedActivity {
 
         initRecyclerView();
         initToolbar();
-
     }
 
     private void initToolbar() {
