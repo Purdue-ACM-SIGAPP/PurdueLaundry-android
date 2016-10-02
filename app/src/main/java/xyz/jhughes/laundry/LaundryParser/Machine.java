@@ -13,11 +13,9 @@ public class Machine implements Serializable {
     private String status;
     private String time;
 
+    // TODO: Call constructor when creating machines so stripping leading 0s doesn't
+    // happen every time you get the name
     public Machine(String name, String type, String status, String time) {
-        // Get rid of leading 0s
-        if (name.matches(" 0[1-9]{2}")) name = name.replaceFirst("0", "");
-        else if (name.matches(" 0{2}[1-9]")) name = name.replaceAll("0", "");
-
         this.name = name;
         this.type = type;
         this.status = status;
@@ -25,7 +23,10 @@ public class Machine implements Serializable {
     }
 
     public String getName() {
-        return name;
+        // Get rid of leading 0s
+        if (name.matches(".*0[1-9][0-9].*")) return name.replaceFirst("0", "");
+        else if (name.matches(".*0{2}[1-9].*")) return name.replaceAll("0", "");
+        else return name;
     }
 
     public void setName(String name) {
