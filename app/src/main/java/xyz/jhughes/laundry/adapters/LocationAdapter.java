@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +15,17 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xyz.jhughes.laundry.LaundryParser.Constants;
+import xyz.jhughes.laundry.LaundryParser.Location;
 import xyz.jhughes.laundry.LaundryParser.Machine;
+import xyz.jhughes.laundry.LaundryParser.MachineList;
+import xyz.jhughes.laundry.ModelOperations;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.activities.MachineActivity;
 import xyz.jhughes.laundry.storage.SharedPrefsHelper;
@@ -29,24 +34,11 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
 
     private Context mContext;
 
-    private Map<String, List<Machine>> mDataset;
-    private List<String> allLocations = new ArrayList<>();
-    private List<List<Machine>> allMachines = new ArrayList<>();
+    private List<Location> mDataset;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public LocationAdapter(Map<String, List<Machine>> mDataset, Context mContext) {
+    public LocationAdapter(List<Location> mDataset, Context mContext) {
         this.mContext = mContext;
-        for(String key : mDataset.keySet()){
-            List<Machine> machines = mDataset.get(key);
-            if(! (machinesOffline(machines))){
-                allLocations.add(0,key);
-                allMachines.add(0,machines);
-            } else {
-                allLocations.add(key);
-                allMachines.add(machines);
-            }
-
-        }
         this.mDataset = mDataset;
     }
 
@@ -58,38 +50,13 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         return new ViewHolder(v);
     }
 
-    private Integer[] getCounts(List<Machine> machines){
-        final Integer[] countArray = new Integer[4];
-        for (int i = 0; i < 4; i++) {
-            countArray[i] = 0;
-        }
-        for (Machine machine : machines) {
-            if (machine.getType().equals("Dryer")) {
-                //Increments Total Dryer Count For Specific Place
-                countArray[0] = countArray[0] + 1;
-                if (machine.getStatus().equals("Available")) {
-                    //Increments Available Dryer Count For Specific Place
-                    countArray[1] = countArray[1] + 1;
-                }
-            } else {
-                //Increments Total Washer Count For Specific Place
-                countArray[2] = countArray[2] + 1;
-                if (machine.getStatus().equals("Available")) {
-                    //Increments Available Washer Count For Specific Place
-                    countArray[3] = countArray[3] + 1;
-                }
-            }
-        }
-        return countArray;
-    }
-
-
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.setIsRecyclable(false);
-        final String location = Constants.getLocationName(allLocations.get(position));
-        List<Machine> machinesByLocation = allMachines.get(position);
-        boolean isOffline = machinesOffline(machinesByLocation);
+
+        Location location = mDataset.get(position);
+        final String locationName = Constants.getLocationName(location.getLocationName());
+        boolean isOffline = location.getMachineList().isOffline();
         holder.textViewOffline.setVisibility(View.GONE);
         if(isOffline){
             holder.cardView.setAlpha((float)0.6);
@@ -101,18 +68,18 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
             holder.textViewWasher.setVisibility(View.GONE);
             holder.textViewOffline.setVisibility(View.VISIBLE);
         }
-        Integer[] count = getCounts(machinesByLocation);
-        holder.location.setText(location);
+        Integer[] count = ModelOperations.getAvailableCounts(location.getMachineList().getMachines());
+        holder.location.setText(locationName);
         holder.washerAvailableCount.setText(count[3].toString());
         holder.washerTotalCount.setText("/" + count[2].toString());
         holder.dryerAvailableCount.setText(count[1].toString());
         holder.dryerTotalCount.setText("/" + count[0].toString());
-        setImage(holder.imageView, position,Constants.getLocationName(allLocations.get(position)));
+        setImage(holder.imageView, position,Constants.getLocationName(location.getLocationName()));
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SharedPreferences.Editor sharedPreferenceEditor = SharedPrefsHelper.getSharedPrefs(mContext).edit();
-                sharedPreferenceEditor.putString("lastRoom", location);
+                sharedPreferenceEditor.putString("lastRoom", locationName);
                 sharedPreferenceEditor.apply();
                 Intent intent = new Intent(mContext, MachineActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -121,19 +88,9 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         });
     }
 
-    public boolean machinesOffline(List<Machine>machines){
-        for(Machine m : machines) {
-            if (!(m.getStatus().equals("Not online"))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-
     @Override
     public int getItemCount() {
-        return allLocations.size();
+        return mDataset.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

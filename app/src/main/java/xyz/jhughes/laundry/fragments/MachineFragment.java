@@ -23,8 +23,10 @@ import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
+import xyz.jhughes.laundry.BuildConfig;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
+import xyz.jhughes.laundry.ModelOperations;
 import xyz.jhughes.laundry.analytics.ScreenTrackedFragment;
 import xyz.jhughes.laundry.apiclient.MachineService;
 import xyz.jhughes.laundry.R;
@@ -120,8 +122,14 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                     mSwipeRefreshLayout.setRefreshing(false);
                     isRefreshing = false;
                     classMachines = response.body();
+
+                    if(ModelOperations.machinesOffline(classMachines)) {
+                        showOfflineDialogIfNecessary();
+                    }
+
                     MachineAdapter adapter = new MachineAdapter(classMachines,rootView.getContext(),isDryers,options);
                     recyclerView.setAdapter(adapter);
+
                 }
 
                 @Override
@@ -131,6 +139,29 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
             });
         } else {
             showNoInternetDialog();
+        }
+    }
+
+    private void showOfflineDialogIfNecessary() {
+
+        if(!rootView.getContext().getSharedPreferences("alerts", Context.MODE_PRIVATE).getBoolean("offline_alert_thrown", false)) {
+            // 1. Instantiate an AlertDialog.Builder with its constructor
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+            // 2. Chain together various setter methods to set the dialog characteristics
+            builder.setMessage("We cannot reach the machines at this location right now, but they may still be available to use.")
+                    .setTitle("Can't reach machines").setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+            // 3. Get the AlertDialog from create()
+            AlertDialog dialog = builder.create();
+
+            dialog.show();
+            rootView.getContext().getSharedPreferences("alerts", Context.MODE_PRIVATE).edit().putBoolean("offline_alert_thrown", true).apply();
         }
     }
 

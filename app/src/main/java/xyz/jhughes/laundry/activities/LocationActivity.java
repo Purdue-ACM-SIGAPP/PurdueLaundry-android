@@ -9,8 +9,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -20,8 +19,9 @@ import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
-import xyz.jhughes.laundry.LaundryParser.Constants;
-import xyz.jhughes.laundry.LaundryParser.Machine;
+import xyz.jhughes.laundry.LaundryParser.Location;
+import xyz.jhughes.laundry.LaundryParser.MachineList;
+import xyz.jhughes.laundry.ModelOperations;
 import xyz.jhughes.laundry.analytics.ScreenTrackedActivity;
 import xyz.jhughes.laundry.apiclient.MachineService;
 import xyz.jhughes.laundry.R;
@@ -70,12 +70,13 @@ public class LocationActivity extends ScreenTrackedActivity {
     }
 
     protected void getLaundryCall() {
-        Call<Map<String,List<Machine>>> allMachineCall = MachineService.getService().getAllMachines();
-        allMachineCall.enqueue(new Callback<Map<String, List<Machine>>>() {
+        Call<Map<String,MachineList>> allMachineCall = MachineService.getService().getAllMachines();
+        allMachineCall.enqueue(new Callback<Map<String, MachineList>>() {
             @Override
-            public void onResponse(Response<Map<String, List<Machine>>> response, Retrofit retrofit) {
-                Map<String,List<Machine>> machineMap = response.body();
-                adapter = new LocationAdapter(machineMap, LocationActivity.this.getApplicationContext());
+            public void onResponse(Response<Map<String, MachineList>> response, Retrofit retrofit) {
+                Map<String,MachineList> machineMap = response.body();
+                List<Location> locations = ModelOperations.machineMapToLocationList(machineMap);
+                adapter = new LocationAdapter(locations, LocationActivity.this.getApplicationContext());
                 mLoadingProgressBar.setVisibility(View.GONE);
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setAdapter(adapter);
