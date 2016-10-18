@@ -50,6 +50,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
 
     private View rootView;
 
+    //TODO: What is this doing? What is special about these entries?
     public static String options = "Available|In use|Almost done|End of cycle";
 
     public MachineFragment() {

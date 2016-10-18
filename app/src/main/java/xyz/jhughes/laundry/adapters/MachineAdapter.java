@@ -28,6 +28,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
+import xyz.jhughes.laundry.LaundryParser.MachineStates;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.notificationhelpers.NotificationCreator;
@@ -72,7 +73,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         boolean matchesParameters = options.contains(status);
         boolean isStillAllowed = !matchesParameters
                 && !"Available|In use|Almost done|End of cycle".contains(status)
-                && options.contains("In use");
+                && options.contains(MachineStates.IN_USE);
 
         if (isCorrectType && (matchesParameters || isStillAllowed)) {
             currentMachines.add(m);
@@ -100,12 +101,12 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         final Machine m = currentMachines.get(position);
         holder.nameTextView.setText(m.getName());
         switch (m.getStatus()) {
-            case "In use":
+            case MachineStates.IN_USE:
                 // Instead of showing "In Use", show how many minutes are left!
                 holder.statusTextView.setText(m.getTime()); // this will need to be updated once people start using the machines again...It should be "xx min. left"
 
                 break;
-            case "Ready to start":
+            case MachineStates.READY:
                 holder.statusTextView.setText(c.getResources().getStringArray(R.array.options)[1]); // this should be replaced too
 
                 break;
@@ -187,7 +188,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
 
     private Notification getNotification(String content) {
         Notification.Builder builder = new Notification.Builder(c);
-        builder.setContentTitle("Purdue Laundry");
+        builder.setContentTitle("Purdue Laundry"); //TODO: Get string resource for App name.
         builder.setContentText(content);
         builder.setSmallIcon(R.drawable.ic_launcher);
         builder.setVibrate(new long[]{1000, 1000, 1000});
