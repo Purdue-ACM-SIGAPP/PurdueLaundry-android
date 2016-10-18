@@ -73,7 +73,8 @@ public class NotificationCreator {
 
     static void stopTimer(int id, String machine) {
         notifcationIds.remove(machine);
-        timers.get(id).cancel();
+        if(timers.get(id) != null) //This could be called when the app has been cleared.
+            timers.get(id).cancel();
         timers.remove(id);
 
     }
