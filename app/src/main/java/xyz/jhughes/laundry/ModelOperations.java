@@ -14,6 +14,7 @@ import xyz.jhughes.laundry.LaundryParser.Location;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.LaundryParser.MachineList;
 import xyz.jhughes.laundry.LaundryParser.MachineStates;
+import xyz.jhughes.laundry.LaundryParser.MachineTypes;
 
 public class ModelOperations {
     public static boolean machinesOffline(List<Machine> machines) {
@@ -59,7 +60,7 @@ public class ModelOperations {
             countArray[i] = 0;
         }
         for (Machine machine : machines) {
-            if (machine.getType().equals("Dryer")) {
+            if (machine.getType().equals(MachineTypes.DRYER)) {
                 //Increments Total Dryer Count For Specific Place
                 countArray[0] = countArray[0] + 1;
                 if (machine.getStatus().equals(MachineStates.AVAILABLE)) {

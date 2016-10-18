@@ -29,6 +29,7 @@ import butterknife.ButterKnife;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.LaundryParser.MachineStates;
+import xyz.jhughes.laundry.LaundryParser.MachineTypes;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.notificationhelpers.NotificationCreator;
@@ -69,7 +70,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     private void machineHelper(Machine m, Boolean dryers, String options) {
 
         String status = m.getStatus();
-        boolean isCorrectType = dryers == m.getType().equals("Dryer");
+        boolean isCorrectType = dryers == m.getType().equals(MachineTypes.DRYER);
         boolean matchesParameters = options.contains(status);
         boolean isStillAllowed = !matchesParameters
                 && !"Available|In use|Almost done|End of cycle".contains(status)
