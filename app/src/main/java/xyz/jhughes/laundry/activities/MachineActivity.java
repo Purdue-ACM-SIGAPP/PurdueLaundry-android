@@ -27,11 +27,7 @@ import xyz.jhughes.laundry.storage.SharedPrefsHelper;
  */
 public class MachineActivity extends AppCompatActivity {
 
-    /**
-     * The current room
-     */
-    private static String currentRoom;
-
+    private String currentRoom;
     private AppSectionsPagerAdapter appSectionsPagerAdapter;
 
     @Bind(R.id.viewpager) ViewPager viewPager;
@@ -160,10 +156,4 @@ public class MachineActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    public static String getSelected() {
-        return currentRoom;
-    }
-
-
 }
