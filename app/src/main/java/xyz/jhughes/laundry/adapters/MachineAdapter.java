@@ -73,7 +73,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         boolean isCorrectType = dryers == m.getType().equals(MachineTypes.DRYER);
         boolean matchesParameters = options.contains(status);
         boolean isStillAllowed = !matchesParameters
-                && !"Available|In use|Almost done|End of cycle".contains(status)
+                && !MachineStates.FILTERABLE_OPTIONS.contains(status)
                 && options.contains(MachineStates.IN_USE);
 
         if (isCorrectType && (matchesParameters || isStillAllowed)) {

@@ -13,6 +13,12 @@ public class MachineStates {
 
     public static final String SEPARATOR = "|";
 
+    //"Available|In use|Almost done|End of cycle"
+    public static final String FILTERABLE_OPTIONS = AVAILABLE + SEPARATOR +
+            IN_USE + SEPARATOR +
+            ALMOST_DONE + SEPARATOR +
+            END_CYCLE;
+
     /*public static final String[] STILL_ALLOWED = new String[] {
             AVAILABLE, IN_USE, ALMOST_DONE, END_CYCLE
     };*/

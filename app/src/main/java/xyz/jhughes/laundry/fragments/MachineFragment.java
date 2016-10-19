@@ -26,6 +26,7 @@ import retrofit.Retrofit;
 import xyz.jhughes.laundry.BuildConfig;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
+import xyz.jhughes.laundry.LaundryParser.MachineStates;
 import xyz.jhughes.laundry.ModelOperations;
 import xyz.jhughes.laundry.analytics.ScreenTrackedFragment;
 import xyz.jhughes.laundry.apiclient.MachineService;
@@ -49,9 +50,6 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     private ProgressDialog progressDialog;
 
     private View rootView;
-
-    //TODO: What is this doing? What is special about these entries?
-    public static String options = "Available|In use|Almost done|End of cycle";
 
     public MachineFragment() {
         // Required empty public constructor
@@ -128,7 +126,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                         showOfflineDialogIfNecessary();
                     }
 
-                    MachineAdapter adapter = new MachineAdapter(classMachines,rootView.getContext(),isDryers,options);
+                    MachineAdapter adapter = new MachineAdapter(classMachines,rootView.getContext(),isDryers, MachineStates.FILTERABLE_OPTIONS);
                     recyclerView.setAdapter(adapter);
 
                 }
