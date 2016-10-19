@@ -125,7 +125,8 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                     int millisInFuture = minutesInFuture * 60000; //60 seconds * 1000 milliseconds
 
                     SharedPreferences sharedPreferences = SharedPrefsHelper.getSharedPrefs(c);
-                    String currentRoom = sharedPreferences.getString("lastRoom", "Cary West");
+                    String currentRoom = sharedPreferences.getString("lastRoom", null);
+                    if(currentRoom == null) throw new IllegalStateException("lastRoom must be stored in shared prefs at this point.");
                     String notificationKey = currentRoom + " " + m.getName();
                     if(NotificationCreator.notificationExists(notificationKey)) {
                         Toast.makeText(c, "You already have a reminder set for this machine", Toast.LENGTH_LONG).show();

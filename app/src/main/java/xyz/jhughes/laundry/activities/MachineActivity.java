@@ -17,10 +17,11 @@ import butterknife.ButterKnife;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.AppSectionsPagerAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
+import xyz.jhughes.laundry.analytics.ScreenTrackedActivity;
 import xyz.jhughes.laundry.fragments.MachineFragment;
 import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
-public class MachineActivity extends AppCompatActivity {
+public class MachineActivity extends ScreenTrackedActivity {
 
     /**
      * The current room
@@ -39,7 +40,12 @@ public class MachineActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        currentRoom = SharedPrefsHelper.getSharedPrefs(this).getString("lastRoom", "Cary Hall West");
+        currentRoom = SharedPrefsHelper.getSharedPrefs(this).getString("lastRoom", null);
+        if(currentRoom == null) {
+            throw new IllegalStateException("This activity cannot be opened without a lastRoom stored in Shared Prefs.");
+        }
+
+        setScreenName(currentRoom);
 
         initToolbar();
 
