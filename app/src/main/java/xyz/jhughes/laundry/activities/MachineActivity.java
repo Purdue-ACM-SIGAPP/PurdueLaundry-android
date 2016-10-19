@@ -35,6 +35,14 @@ public class MachineActivity extends AppCompatActivity {
     @Bind(R.id.toolbar) Toolbar toolbar;
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences.Editor e = SharedPrefsHelper.getSharedPrefs(this).edit();
+        e.putString("lastScreenViewed", currentRoom);
+        e.apply();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);

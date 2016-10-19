@@ -1,5 +1,6 @@
 package xyz.jhughes.laundry.activities;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,6 +28,7 @@ import xyz.jhughes.laundry.analytics.ScreenTrackedActivity;
 import xyz.jhughes.laundry.apiclient.MachineService;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.LocationAdapter;
+import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
 /**
  * The main activity of the app. Lists the locations of
@@ -40,6 +42,14 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     @Bind(R.id.location_list_puller) SwipeRefreshLayout mSwipeRefreshLayout;
 
     private LocationAdapter adapter;
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences.Editor e = SharedPrefsHelper.getSharedPrefs(this).edit();
+        e.putString("lastScreenViewed", "LocationList");
+        e.apply();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
