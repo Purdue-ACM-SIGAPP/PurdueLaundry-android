@@ -61,7 +61,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
         progressDialog = new ProgressDialog(this.getContext());
         {
             if (!isRefreshing) {
-                progressDialog.setMessage("Loading, please wait...");
+                progressDialog.setMessage(getString(R.string.loading_machines));
                 progressDialog.show();
             }
             progressDialog.setCanceledOnTouchOutside(false);
@@ -89,7 +89,6 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
         refreshList();
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
-
 
         return rootView;
     }

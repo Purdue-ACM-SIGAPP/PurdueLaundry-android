@@ -12,15 +12,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 
 import java.util.ArrayList;
 
@@ -38,7 +34,7 @@ import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
 public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHolder> {
     private ArrayList<Machine> currentMachines;
-    private Context c;
+    private Context mContext;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -57,14 +53,13 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MachineAdapter(ArrayList<Machine> machines, Context c, Boolean dryers, String options) {
-        this.c = c;
+    public MachineAdapter(ArrayList<Machine> machines, Context context, Boolean dryers, String options) {
+        this.mContext = context;
         currentMachines = new ArrayList<>();
 
         for (Machine m : machines) {
             machineHelper(m, dryers, options);
         }
-
     }
 
     private void machineHelper(Machine m, Boolean dryers, String options) {
@@ -108,7 +103,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
 
                 break;
             case MachineStates.READY:
-                holder.statusTextView.setText(c.getResources().getStringArray(R.array.options)[1]); // this should be replaced too
+                holder.statusTextView.setText(mContext.getResources().getStringArray(R.array.options)[1]); // this should be replaced too
 
                 break;
             default:
@@ -126,22 +121,22 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                     int minutesInFuture = Integer.parseInt(m.getTime().substring(0, m.getTime().indexOf(' ')));
                     int millisInFuture = minutesInFuture * 60000; //60 seconds * 1000 milliseconds
 
-                    SharedPreferences sharedPreferences = SharedPrefsHelper.getSharedPrefs(c);
+                    SharedPreferences sharedPreferences = SharedPrefsHelper.getSharedPrefs(mContext);
                     String currentRoom = sharedPreferences.getString("lastRoom", "Cary West");
                     String notificationKey = currentRoom + " " + m.getName();
                     if(NotificationCreator.notificationExists(notificationKey)) {
-                        Toast.makeText(c, "You already have a reminder set for this machine", Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, R.string.reminder_already_set, Toast.LENGTH_LONG).show();
                     } else {
                         fireNotificationInFuture(millisInFuture, holder, notificationKey);
                     }
                 } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
-                    Toast.makeText(c, "This machine is not running", Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext, R.string.machine_not_running, Toast.LENGTH_LONG).show();
                 }
             }
         });
 
         int color = Constants.getMachineAvailabilityColor(m.getStatus());
-        holder.cardView.setCardBackgroundColor(ContextCompat.getColor(c, color));
+        holder.cardView.setCardBackgroundColor(ContextCompat.getColor(mContext, color));
 
     }
 
@@ -153,22 +148,22 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
 
     //Set and Fire Notification
     private void fireNotificationInFuture(final int milliInFuture, final ViewHolder holder, final String notificationKey) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(c)
-                .setTitle("Alarm")
-                .setMessage("Would you like to set an alarm for when the machine is finished?")
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext)
+                .setTitle(mContext.getString(R.string.alarm))
+                .setMessage(mContext.getString(R.string.ask_set_alarm))
                 .setCancelable(true)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                .setPositiveButton(mContext.getString(R.string.yes), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         AnalyticsHelper.sendEventHit("Reminders", AnalyticsHelper.CLICK, "YES");
-                        NotificationCreator.createNotification(c, notificationKey, milliInFuture);
+                        NotificationCreator.createNotification(mContext, notificationKey, milliInFuture);
                     }
                 })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                .setNegativeButton(mContext.getString(R.string.no), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         AnalyticsHelper.sendEventHit("Reminders", AnalyticsHelper.CLICK, "NO");
                         dialog.cancel();
-                        Toast.makeText(c, "No Alarm Set", Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, R.string.no_alarm_set, Toast.LENGTH_LONG).show();
                     }
                 });
         AlertDialog alertDialog = alertDialogBuilder.create();
@@ -176,20 +171,19 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     }
 
     private void scheduleNotification(Notification notification, int delay) {
-
-        Intent notificationIntent = new Intent(c, NotificationPublisher.class);
+        Intent notificationIntent = new Intent(mContext, NotificationPublisher.class);
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(c, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         long futureInMillis = SystemClock.elapsedRealtime() + delay;
-        AlarmManager alarmManager = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
     }
 
     private Notification getNotification(String content) {
-        Notification.Builder builder = new Notification.Builder(c);
-        builder.setContentTitle("Purdue Laundry"); //TODO: Get string resource for App name.
+        Notification.Builder builder = new Notification.Builder(mContext);
+        builder.setContentTitle(mContext.getString(R.string.app_name));
         builder.setContentText(content);
         builder.setSmallIcon(R.drawable.ic_launcher);
         builder.setVibrate(new long[]{1000, 1000, 1000});

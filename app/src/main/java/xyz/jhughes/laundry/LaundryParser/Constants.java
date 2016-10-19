@@ -20,8 +20,6 @@ public class Constants {
         return roomsConstants.ApiLocationToRoom(apiLocation);
     }
 
-
-
     public static int getLocationImageResource(String room) {
         return roomsConstants.roomToImageResource(room);
     }
