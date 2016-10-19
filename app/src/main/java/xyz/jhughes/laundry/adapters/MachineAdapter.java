@@ -93,16 +93,6 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                 .inflate(R.layout.cardview_machine, parent, false);
         // set the view's size, margins, paddings and layout parameters
 
-        //updateTimes.scheduleAtFixedRate(new TimerTask() {
-            //@Override
-            //public void run() {
-//                for (int i = 0; i < parent.getChildCount(); i++) {
-//                    View child = parent.getChildAt(i);
-//                    if ()
-//                }
-           // }
-        //}, 0 , 60 * 1000);
-
         return new ViewHolder(v);
     }
 
