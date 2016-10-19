@@ -54,7 +54,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.setIsRecyclable(false);
 
-        Location location = mDataset.get(position);
+        final Location location = mDataset.get(position);
         final String locationName = Constants.getLocationName(location.getLocationName());
         boolean isOffline = location.getMachineList().isOffline();
         holder.textViewOffline.setVisibility(View.GONE);
@@ -78,10 +78,8 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences.Editor sharedPreferenceEditor = SharedPrefsHelper.getSharedPrefs(mContext).edit();
-                sharedPreferenceEditor.putString("lastRoom", locationName);
-                sharedPreferenceEditor.apply();
                 Intent intent = new Intent(mContext, MachineActivity.class);
+                intent.getExtras().putString("locationName", locationName);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(intent);
             }

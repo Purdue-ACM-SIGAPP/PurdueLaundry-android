@@ -21,7 +21,11 @@ import xyz.jhughes.laundry.analytics.ScreenTrackedActivity;
 import xyz.jhughes.laundry.fragments.MachineFragment;
 import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
-public class MachineActivity extends ScreenTrackedActivity {
+/**
+ * This activity does NOT extend ScreenTracked Activity because the screen views are
+ * tracked in each fragment in the ViewPager.
+ */
+public class MachineActivity extends AppCompatActivity {
 
     /**
      * The current room
@@ -40,12 +44,10 @@ public class MachineActivity extends ScreenTrackedActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        currentRoom = SharedPrefsHelper.getSharedPrefs(this).getString("lastRoom", null);
+        currentRoom = getIntent().getExtras().getString("locationName");
         if(currentRoom == null) {
-            throw new IllegalStateException("This activity cannot be opened without a lastRoom stored in Shared Prefs.");
+            throw new IllegalStateException("This activity cannot be opened without a locationName String stored in the intent.");
         }
-
-        setScreenName(currentRoom);
 
         initToolbar();
 
