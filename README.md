@@ -1,6 +1,6 @@
 # PurdueLaundry
 
-Laundry App for Purdue University. [Play Store Link](https://play.google.com/store/apps/details?id=xyz.jhughes.laundry).
+Laundry App for Purdue University. [Play Store Link](https://play.google.com/store/apps/details?id=xyz.jhughes.laundry&referrer=utm_source%3Dgithub%26utm_medium%3Dreadme).
 
 Tired of having to go to the laundry room, only to find out that there's no space available? The Purdue Laundry app solves that by having all the details of your dorm's laundry room in the palm of your hand!
 
