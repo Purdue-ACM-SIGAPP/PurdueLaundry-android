@@ -1,5 +1,7 @@
 package xyz.jhughes.laundry.activities;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +28,7 @@ import xyz.jhughes.laundry.analytics.ScreenTrackedActivity;
 import xyz.jhughes.laundry.apiclient.MachineService;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.LocationAdapter;
+import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
 /**
  * The main activity of the app. Lists the locations of
@@ -37,18 +40,26 @@ public class LocationActivity extends ScreenTrackedActivity {
     @Bind(R.id.location_activity_toolbar) Toolbar toolbar;
     @Bind(R.id.progressBar) ProgressBar mLoadingProgressBar;
 
-
     private LocationAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (!getIntent().getBooleanExtra("forceMainMenu", false)) {
+            String lastRoom = SharedPrefsHelper.getSharedPrefs(this)
+                    .getString("lastRoom", null);
+            if (!(lastRoom == null)) {
+                Intent intent = new Intent(this, MachineActivity.class);
+                startActivity(intent);
+            }
+        }
+
         setContentView(R.layout.activity_location);
         ButterKnife.bind(this);
 
         initRecyclerView();
         initToolbar();
-
     }
 
     private void initToolbar() {

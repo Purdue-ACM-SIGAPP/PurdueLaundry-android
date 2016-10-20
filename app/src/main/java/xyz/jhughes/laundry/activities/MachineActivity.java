@@ -1,9 +1,11 @@
 package xyz.jhughes.laundry.activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -145,6 +147,10 @@ public class MachineActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                    Intent i = getParentActivityIntent().putExtra("forceMainMenu", true);
+                    NavUtils.navigateUpTo(this, i);
+                return super.onOptionsItemSelected(item);
             case R.id.display_parameters:
                 AnalyticsHelper.sendEventHit("Filters", AnalyticsHelper.CLICK, "YES");
                 createDialog();
