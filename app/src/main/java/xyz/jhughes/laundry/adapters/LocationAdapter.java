@@ -3,6 +3,7 @@ package xyz.jhughes.laundry.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -79,7 +80,9 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, MachineActivity.class);
-                intent.getExtras().putString("locationName", locationName);
+                Bundle b = new Bundle();
+                b.putString("locationName", locationName);
+                intent.putExtras(b);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(intent);
             }
