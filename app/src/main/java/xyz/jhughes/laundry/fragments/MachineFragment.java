@@ -69,7 +69,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
 
         mRoomName = getArguments().getString("roomName");
         String machineType = (getArguments().getBoolean("isDryers")) ? "Dryers" : "Washers";
-        setScreenName(MachineActivity.getSelected() + ": " + machineType);
+        setScreenName(Constants.getApiLocation(mRoomName) + ": " + machineType);
     }
 
     @Override

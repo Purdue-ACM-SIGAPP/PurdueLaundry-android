@@ -14,6 +14,7 @@ import android.view.MenuItem;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.AppSectionsPagerAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
@@ -22,10 +23,9 @@ import xyz.jhughes.laundry.fragments.MachineFragment;
 import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
 /**
- * This activity does NOT extend ScreenTracked Activity because the screen views are
- * tracked in each fragment in the ViewPager.
+ * This activity tracks screen views. The fragments ALSO track screen views.
  */
-public class MachineActivity extends AppCompatActivity {
+public class MachineActivity extends ScreenTrackedActivity {
 
     private String currentRoom;
     private AppSectionsPagerAdapter appSectionsPagerAdapter;
@@ -56,6 +56,7 @@ public class MachineActivity extends AppCompatActivity {
         initToolbar();
 
         setUpViewPager();
+        setScreenName(Constants.getApiLocation(currentRoom));
     }
 
     private void setUpViewPager() {
