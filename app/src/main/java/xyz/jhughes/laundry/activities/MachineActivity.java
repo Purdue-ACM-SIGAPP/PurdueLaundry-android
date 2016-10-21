@@ -16,19 +16,20 @@ import android.view.MenuItem;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.AppSectionsPagerAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
+import xyz.jhughes.laundry.analytics.ScreenTrackedActivity;
 import xyz.jhughes.laundry.fragments.MachineFragment;
 import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
-public class MachineActivity extends AppCompatActivity {
+/**
+ * This activity tracks screen views. The fragments ALSO track screen views.
+ */
+public class MachineActivity extends ScreenTrackedActivity {
 
-    /**
-     * The current room
-     */
-    private static String currentRoom;
-
+    private String currentRoom;
     private AppSectionsPagerAdapter appSectionsPagerAdapter;
 
     @Bind(R.id.viewpager)
@@ -37,6 +38,14 @@ public class MachineActivity extends AppCompatActivity {
     TabLayout tabLayout;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences.Editor e = SharedPrefsHelper.getSharedPrefs(this).edit();
+        e.putString("lastScreenViewed", currentRoom);
+        e.apply();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +64,7 @@ public class MachineActivity extends AppCompatActivity {
         initToolbar();
 
         setUpViewPager();
+        setScreenName(Constants.getApiLocation(currentRoom));
     }
 
     private void setUpViewPager() {
@@ -167,10 +177,4 @@ public class MachineActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    public static String getSelected() {
-        return currentRoom;
-    }
-
-
 }

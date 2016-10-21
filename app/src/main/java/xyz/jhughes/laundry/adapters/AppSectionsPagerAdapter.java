@@ -11,33 +11,35 @@ import xyz.jhughes.laundry.fragments.MachineFragment;
  * Created by jeff on 10/4/15.
  */
 public class AppSectionsPagerAdapter extends FragmentPagerAdapter {
-    private String selected;
+    private String mRoomName;
+    private MachineFragment mFragments[];
 
-    public AppSectionsPagerAdapter(FragmentManager fm, String selected) {
+    public AppSectionsPagerAdapter(FragmentManager fm, String roomName) {
         super(fm);
-        this.selected = selected;
+        this.mRoomName = roomName;
+        this.mFragments = new MachineFragment[2];
     }
 
-    public void setSelected(String selected) {
-        this.selected = selected;
+    public void setRoomName(String mRoomName) {
+        this.mRoomName = mRoomName;
     }
 
     @Override
     public Fragment getItem(int i) {
-        MachineFragment fragment = new MachineFragment();
         Bundle b = new Bundle();
-        switch (i) {
-            case 0:
+        if(mFragments[i] == null) {
+            mFragments[i] = new MachineFragment();
+            b.putString("roomName", mRoomName);
+            if(i == 0) {
+                //The washers fragment
                 b.putBoolean("isDryers", false);
-                fragment.setArguments(b);
-                return fragment;
-            case 1:
+            } else if (i == 1) {
+                // The dryers fragment
                 b.putBoolean("isDryers", true);
-                fragment.setArguments(b);
-                return fragment;
-            default:
-                return null;
+            }
+            mFragments[i].setArguments(b);
         }
+        return mFragments[i];
     }
 
     // This is used to allow the view page to refresh when an item is chosen from the drawer
@@ -47,7 +49,7 @@ public class AppSectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return mFragments.length;
     }
 
     @Override
