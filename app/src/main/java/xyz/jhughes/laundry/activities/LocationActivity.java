@@ -1,6 +1,7 @@
 package xyz.jhughes.laundry.activities;
 
 import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -54,6 +55,16 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (!getIntent().getBooleanExtra("forceMainMenu", false)) {
+            String lastRoom = SharedPrefsHelper.getSharedPrefs(this)
+                    .getString("lastRoom", null);
+            if (!(lastRoom == null)) {
+                Intent intent = new Intent(this, MachineActivity.class);
+                startActivity(intent);
+            }
+        }
+
         setContentView(R.layout.activity_location);
         ButterKnife.bind(this);
         setScreenName("Location List");
@@ -76,6 +87,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     @Override
     protected void onStart() {
         super.onStart();
+
         recyclerView.setAdapter(null);
         mLoadingProgressBar.setVisibility(View.VISIBLE);
         getLaundryCall();
@@ -100,6 +112,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
                 Log.e("LocationActivity", "API ERROR - " + t.getMessage());
             }
         });
+
     }
 
     @Override

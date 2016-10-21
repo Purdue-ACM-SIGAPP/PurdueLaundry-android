@@ -23,6 +23,8 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -38,6 +40,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     private ArrayList<Machine> currentMachines;
     private Context c;
     private final String roomName;
+    private Timer updateTimes;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -60,6 +63,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         this.c = c;
         this.roomName = roomName;
         currentMachines = new ArrayList<>();
+        updateTimes = new Timer();
 
         for (Machine m : machines) {
             machineHelper(m, dryers, options);
@@ -83,7 +87,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
 
     // Create new views (invoked by the layout manager)
     @Override
-    public MachineAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+    public MachineAdapter.ViewHolder onCreateViewHolder(final ViewGroup parent,
                                                         int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())

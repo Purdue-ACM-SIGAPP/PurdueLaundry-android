@@ -14,13 +14,22 @@ public class Machine implements Serializable {
     private String time;
 
     public Machine(String name, String type, String status, String time) {
-        this.name = name;
+        setName(name);
         this.type = type;
         this.status = status;
         this.time = time;
     }
 
     public String getName() {
+        name = name.replace("00", "");
+        if (name.contains("0")) {
+            for (int i = name.length() - 1; i > 0; i--) {
+                if (Character.isDigit(name.charAt(i)) && name.charAt(i - 1) == '0') {
+                    name = name.substring(0, i - 1) + name.substring(i);
+                    break;
+                }
+            }
+        }
         return name;
     }
 
