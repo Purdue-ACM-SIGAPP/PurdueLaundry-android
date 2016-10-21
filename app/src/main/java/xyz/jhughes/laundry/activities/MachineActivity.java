@@ -31,9 +31,12 @@ public class MachineActivity extends AppCompatActivity {
 
     private AppSectionsPagerAdapter appSectionsPagerAdapter;
 
-    @Bind(R.id.viewpager) ViewPager viewPager;
-    @Bind(R.id.sliding_tabs) TabLayout tabLayout;
-    @Bind(R.id.toolbar) Toolbar toolbar;
+    @Bind(R.id.viewpager)
+    ViewPager viewPager;
+    @Bind(R.id.sliding_tabs)
+    TabLayout tabLayout;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +44,13 @@ public class MachineActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        currentRoom = SharedPrefsHelper.getSharedPrefs(this).getString("lastRoom", "Cary Hall West");
+        if (getIntent().getExtras() == null ||
+                getIntent().getExtras().get("locationName") == null) {
+            throw new IllegalStateException("This activity cannot be opened without a " +
+                    "locationName String stored in the intent.");
+        }
+
+        currentRoom = getIntent().getExtras().getString("locationName");
 
         initToolbar();
 
@@ -148,8 +157,8 @@ public class MachineActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                    Intent i = getParentActivityIntent().putExtra("forceMainMenu", true);
-                    NavUtils.navigateUpTo(this, i);
+                Intent i = getParentActivityIntent().putExtra("forceMainMenu", true);
+                NavUtils.navigateUpTo(this, i);
                 return super.onOptionsItemSelected(item);
             case R.id.display_parameters:
                 AnalyticsHelper.sendEventHit("Filters", AnalyticsHelper.CLICK, "YES");

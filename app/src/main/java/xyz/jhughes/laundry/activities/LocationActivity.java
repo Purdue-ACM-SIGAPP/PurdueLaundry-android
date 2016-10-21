@@ -48,9 +48,12 @@ public class LocationActivity extends ScreenTrackedActivity {
 
         if (!getIntent().getBooleanExtra("forceMainMenu", false)) {
             String lastRoom = SharedPrefsHelper.getSharedPrefs(this)
-                    .getString("lastRoom", null);
-            if (!(lastRoom == null)) {
+                    .getString("lastScreenViewed", null);
+            if (lastRoom != null && !lastRoom.equals("LocationList")) {
                 Intent intent = new Intent(this, MachineActivity.class);
+                Bundle b = new Bundle();
+                b.putString("locationName", lastRoom);
+                intent.putExtras(b);
                 startActivity(intent);
             }
         }
