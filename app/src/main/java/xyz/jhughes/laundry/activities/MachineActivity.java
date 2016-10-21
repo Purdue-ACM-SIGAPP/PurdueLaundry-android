@@ -16,24 +16,36 @@ import android.view.MenuItem;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.AppSectionsPagerAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
+import xyz.jhughes.laundry.analytics.ScreenTrackedActivity;
 import xyz.jhughes.laundry.fragments.MachineFragment;
 import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
-public class MachineActivity extends AppCompatActivity {
+/**
+ * This activity tracks screen views. The fragments ALSO track screen views.
+ */
+public class MachineActivity extends ScreenTrackedActivity {
 
-    /**
-     * The current room
-     */
-    private static String currentRoom;
-
+    private String currentRoom;
     private AppSectionsPagerAdapter appSectionsPagerAdapter;
 
-    @Bind(R.id.viewpager) ViewPager viewPager;
-    @Bind(R.id.sliding_tabs) TabLayout tabLayout;
-    @Bind(R.id.toolbar) Toolbar toolbar;
+    @Bind(R.id.viewpager)
+    ViewPager viewPager;
+    @Bind(R.id.sliding_tabs)
+    TabLayout tabLayout;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences.Editor e = SharedPrefsHelper.getSharedPrefs(this).edit();
+        e.putString("lastScreenViewed", currentRoom);
+        e.apply();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,11 +53,18 @@ public class MachineActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        currentRoom = SharedPrefsHelper.getSharedPrefs(this).getString("lastRoom", "Cary Hall West");
+        if (getIntent().getExtras() == null ||
+                getIntent().getExtras().get("locationName") == null) {
+            throw new IllegalStateException("This activity cannot be opened without a " +
+                    "locationName String stored in the intent.");
+        }
+
+        currentRoom = getIntent().getExtras().getString("locationName");
 
         initToolbar();
 
         setUpViewPager();
+        setScreenName(Constants.getApiLocation(currentRoom));
     }
 
     private void setUpViewPager() {
@@ -148,8 +167,8 @@ public class MachineActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                    Intent i = getParentActivityIntent().putExtra("forceMainMenu", true);
-                    NavUtils.navigateUpTo(this, i);
+                Intent i = getParentActivityIntent().putExtra("forceMainMenu", true);
+                NavUtils.navigateUpTo(this, i);
                 return super.onOptionsItemSelected(item);
             case R.id.display_parameters:
                 AnalyticsHelper.sendEventHit("Filters", AnalyticsHelper.CLICK, "YES");
@@ -158,10 +177,4 @@ public class MachineActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    public static String getSelected() {
-        return currentRoom;
-    }
-
-
 }

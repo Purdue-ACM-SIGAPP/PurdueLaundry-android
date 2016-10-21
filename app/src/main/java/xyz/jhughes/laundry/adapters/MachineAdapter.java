@@ -39,6 +39,7 @@ import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHolder> {
     private ArrayList<Machine> currentMachines;
     private Context c;
+    private final String roomName;
     private Timer updateTimes;
 
     // Provide a reference to the views for each data item
@@ -58,14 +59,16 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MachineAdapter(ArrayList<Machine> machines, Context c, Boolean dryers, String options) {
+    public MachineAdapter(ArrayList<Machine> machines, Context c, Boolean dryers, String options, String roomName) {
         this.c = c;
+        this.roomName = roomName;
         currentMachines = new ArrayList<>();
         updateTimes = new Timer();
 
         for (Machine m : machines) {
             machineHelper(m, dryers, options);
         }
+
     }
 
     private void machineHelper(Machine m, Boolean dryers, String options) {
@@ -86,8 +89,6 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     @Override
     public MachineAdapter.ViewHolder onCreateViewHolder(final ViewGroup parent,
                                                         int viewType) {
-        //updateTimes.cancel();
-
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.cardview_machine, parent, false);
@@ -130,8 +131,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                     int millisInFuture = minutesInFuture * 60000; //60 seconds * 1000 milliseconds
 
                     SharedPreferences sharedPreferences = SharedPrefsHelper.getSharedPrefs(c);
-                    String currentRoom = sharedPreferences.getString("lastRoom", "Cary West");
-                    String notificationKey = currentRoom + " " + m.getName();
+                    String notificationKey = roomName + " " + m.getName();
                     if(NotificationCreator.notificationExists(notificationKey)) {
                         Toast.makeText(c, "You already have a reminder set for this machine", Toast.LENGTH_LONG).show();
                     } else {

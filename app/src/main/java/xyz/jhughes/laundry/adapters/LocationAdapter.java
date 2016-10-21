@@ -3,6 +3,7 @@ package xyz.jhughes.laundry.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -54,7 +55,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.setIsRecyclable(false);
 
-        Location location = mDataset.get(position);
+        final Location location = mDataset.get(position);
         final String locationName = Constants.getLocationName(location.getLocationName());
         boolean isOffline = location.getMachineList().isOffline();
         holder.textViewOffline.setVisibility(View.GONE);
@@ -78,10 +79,10 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences.Editor sharedPreferenceEditor = SharedPrefsHelper.getSharedPrefs(mContext).edit();
-                sharedPreferenceEditor.putString("lastRoom", locationName);
-                sharedPreferenceEditor.apply();
                 Intent intent = new Intent(mContext, MachineActivity.class);
+                Bundle b = new Bundle();
+                b.putString("locationName", locationName);
+                intent.putExtras(b);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(intent);
             }
