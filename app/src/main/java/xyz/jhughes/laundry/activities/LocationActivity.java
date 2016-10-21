@@ -1,8 +1,9 @@
 package xyz.jhughes.laundry.activities;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -34,13 +35,22 @@ import xyz.jhughes.laundry.storage.SharedPrefsHelper;
  * The main activity of the app. Lists the locations of
  * laundry and an overview of the availabilities.
  */
-public class LocationActivity extends ScreenTrackedActivity {
+public class LocationActivity extends ScreenTrackedActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     @Bind(R.id.recycler_view) RecyclerView recyclerView;
     @Bind(R.id.location_activity_toolbar) Toolbar toolbar;
     @Bind(R.id.progressBar) ProgressBar mLoadingProgressBar;
+    @Bind(R.id.location_list_puller) SwipeRefreshLayout mSwipeRefreshLayout;
 
     private LocationAdapter adapter;
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences.Editor e = SharedPrefsHelper.getSharedPrefs(this).edit();
+        e.putString("lastScreenViewed", "LocationList");
+        e.apply();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +67,12 @@ public class LocationActivity extends ScreenTrackedActivity {
 
         setContentView(R.layout.activity_location);
         ButterKnife.bind(this);
+        setScreenName("Location List");
 
         initRecyclerView();
         initToolbar();
+
+        mSwipeRefreshLayout.setOnRefreshListener(this);
     }
 
     private void initToolbar() {
@@ -72,8 +85,8 @@ public class LocationActivity extends ScreenTrackedActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
 
         recyclerView.setAdapter(null);
         mLoadingProgressBar.setVisibility(View.VISIBLE);
@@ -91,6 +104,7 @@ public class LocationActivity extends ScreenTrackedActivity {
                 mLoadingProgressBar.setVisibility(View.GONE);
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setAdapter(adapter);
+                mSwipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
@@ -105,5 +119,10 @@ public class LocationActivity extends ScreenTrackedActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.clear();
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void onRefresh() {
+        getLaundryCall();
     }
 }
