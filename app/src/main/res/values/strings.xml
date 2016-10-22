@@ -21,7 +21,7 @@
     <string name="five_until_fin">Set an alarm for 5 minutes before finished</string>
     <string name="dryers_available">Dryers Available</string>
     <string name="washers_available">Washers Available</string>
-    <string name="ResHallPic">ResHallPic</string>
+    <string name="ResHallPic">Photograph of this residence hall.</string>
     <string name="offlineText">Offline</string>
 
     <array name="options">
