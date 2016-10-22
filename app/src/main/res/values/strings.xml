@@ -12,7 +12,7 @@
     <string name="title_activity_infromation">InfromationActivity</string>
     <string name="MachineImageInformation">Image for Machine</string>
     <string name="display_parameters">Display Only</string>
-    <string name="select_options">Select Parameters</string>
+    <string name="select_options">Filter by</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="MachineID">Machine XXX</string>
