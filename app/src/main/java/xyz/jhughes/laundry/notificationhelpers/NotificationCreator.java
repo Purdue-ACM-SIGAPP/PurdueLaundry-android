@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import xyz.jhughes.laundry.R;
+import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 
 
 public class NotificationCreator extends Service {
@@ -84,6 +85,7 @@ public class NotificationCreator extends Service {
 
         // if time up or at 5 minutes
         if (timeLeft == 0 || (countDown.equals("5:00"))) {
+            AnalyticsHelper.sendEventHit("Reminders", "Passive", "Timer Finished");
             builder.setVibrate(new long[]{1000, 1000, 1000});
         }
 
