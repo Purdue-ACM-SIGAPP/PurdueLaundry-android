@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.SystemClock;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -29,9 +30,11 @@ import java.util.TimerTask;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit.Callback;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.R;
+import xyz.jhughes.laundry.SnackbarPostListener;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.notificationhelpers.NotificationCreator;
 import xyz.jhughes.laundry.notificationhelpers.NotificationPublisher;
@@ -39,8 +42,12 @@ import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
 public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHolder> {
     private ArrayList<Machine> currentMachines;
+    private final ArrayList<Machine> machines;
     private Context c;
+    private final Boolean dryers;
+    private final String options;
     private final String roomName;
+    private final SnackbarPostListener listener;
     private Timer updateTimes;
 
     // Provide a reference to the views for each data item
@@ -60,9 +67,13 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MachineAdapter(ArrayList<Machine> machines, Context c, Boolean dryers, String options, String roomName) {
+    public MachineAdapter(ArrayList<Machine> machines, Context c, Boolean dryers, String options, String roomName, SnackbarPostListener listener) {
+        this.machines = machines;
         this.c = c;
+        this.dryers = dryers;
+        this.options = options;
         this.roomName = roomName;
+        this.listener = listener;
         currentMachines = new ArrayList<>();
         updateTimes = new Timer();
 
@@ -134,20 +145,16 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                     SharedPreferences sharedPreferences = SharedPrefsHelper.getSharedPrefs(c);
                     String notificationKey = roomName + " " + m.getName();
                     if(NotificationCreator.notificationExists(notificationKey)) {
-                        Toast.makeText(c, "You already have a reminder set for this machine", Toast.LENGTH_LONG).show();
+                        listener.postSnackbar("You already have a reminder set for this machine", Snackbar.LENGTH_LONG);
                     } else {
                         fireNotificationInFuture(millisInFuture, holder, notificationKey);
                     }
                 } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
-                    Log.d("Name", m.getStatus());
-                    Toast toast;
                     if (m.getStatus().compareTo("Out of order") != 0) {
-                       toast = Toast.makeText(c, "This machine is not running", Toast.LENGTH_SHORT);
+                        listener.postSnackbar("This machine is not running", Snackbar.LENGTH_SHORT);
                     } else {
-                       toast =  Toast.makeText(c, "This machine is offline but may still be functioning. Visit " + m.getName() + " for details.", Toast.LENGTH_LONG);
+                        listener.postSnackbar("This machine is offline but may still be functioning. Visit " + m.getName() + " for details.", Snackbar.LENGTH_LONG);
                     }
-                    ((TextView)toast.getView().findViewById(android.R.id.message)).setGravity(Gravity.CENTER);
-                    toast.show();
                 }
             }
         });
