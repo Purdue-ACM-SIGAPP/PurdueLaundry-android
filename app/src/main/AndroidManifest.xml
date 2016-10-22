@@ -32,10 +32,10 @@
         <receiver android:name=".notificationhelpers.NotificationPublisher"/>
         <receiver android:name=".notificationhelpers.NotificationCancelReceiver"/>
 
-
         <!-- Used for Google Play Store Campaign Measurement-->
         <receiver android:name="com.google.android.gms.analytics.CampaignTrackingReceiver"
-            android:enabled="true">
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
