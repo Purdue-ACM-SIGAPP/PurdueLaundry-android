@@ -23,7 +23,6 @@ import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
-import xyz.jhughes.laundry.BuildConfig;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.LaundryParser.MachineStates;
@@ -46,12 +45,12 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
 
     private boolean isRefreshing;
     private boolean isDryers;
-    private String selected;
     private ProgressDialog progressDialog;
 
     private View rootView;
 
     public static String options = "Available|In use|Almost done|End of cycle";
+    private String mRoomName;
 
     public MachineFragment() {
         // Required empty public constructor
@@ -69,7 +68,9 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
             progressDialog.setCanceledOnTouchOutside(false);
         }
 
-        setScreenName(MachineActivity.getSelected());
+        mRoomName = getArguments().getString("roomName");
+        String machineType = (getArguments().getBoolean("isDryers")) ? "Dryers" : "Washers";
+        setScreenName(Constants.getApiLocation(mRoomName) + ": " + machineType);
     }
 
     @Override
@@ -77,11 +78,9 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                              Bundle savedInstanceState) {
 
         isDryers = getArguments().getBoolean("isDryers");
-        selected = Constants.getApiLocation(MachineActivity.getSelected());
 
         rootView = inflater.inflate(R.layout.fragment_dryer, container, false);
         ButterKnife.bind(this, rootView);
-
 
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this.getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
@@ -110,7 +109,8 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
 
     public void refreshList() {
         if (isNetworkAvailable()) {
-            Call<ArrayList<Machine>> call = MachineService.getService().getMachineStatus(selected);
+            String apiLocationFormat = Constants.getApiLocation(mRoomName);
+            Call<ArrayList<Machine>> call = MachineService.getService().getMachineStatus(apiLocationFormat);
 
             call.enqueue(new Callback<ArrayList<Machine>>() {
                 @Override
@@ -127,7 +127,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                         showOfflineDialogIfNecessary();
                     }
 
-                    MachineAdapter adapter = new MachineAdapter(classMachines,rootView.getContext(),isDryers,options);
+                    MachineAdapter adapter = new MachineAdapter(classMachines,rootView.getContext(),isDryers,options, mRoomName);
                     recyclerView.setAdapter(adapter);
 
                 }

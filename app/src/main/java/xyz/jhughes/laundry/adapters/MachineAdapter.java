@@ -19,6 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -34,7 +36,9 @@ import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
 public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHolder> {
     private ArrayList<Machine> currentMachines;
+
     private Context mContext;
+    private final String roomName;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -53,10 +57,10 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MachineAdapter(ArrayList<Machine> machines, Context context, Boolean dryers, String options) {
+    public MachineAdapter(ArrayList<Machine> machines, Context context, Boolean dryers, String options, String roomName) {
         this.mContext = context;
         currentMachines = new ArrayList<>();
-
+        this.roomName = roomName;
         for (Machine m : machines) {
             machineHelper(m, dryers, options);
         }
@@ -78,7 +82,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
 
     // Create new views (invoked by the layout manager)
     @Override
-    public MachineAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+    public MachineAdapter.ViewHolder onCreateViewHolder(final ViewGroup parent,
                                                         int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
@@ -123,7 +127,8 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
 
                     SharedPreferences sharedPreferences = SharedPrefsHelper.getSharedPrefs(mContext);
                     String currentRoom = sharedPreferences.getString("lastRoom", "Cary West");
-                    String notificationKey = currentRoom + " " + m.getName();
+                    String notificationKey = roomName + " " + m.getName();
+
                     if(NotificationCreator.notificationExists(notificationKey)) {
                         Toast.makeText(mContext, R.string.reminder_already_set, Toast.LENGTH_LONG).show();
                     } else {
