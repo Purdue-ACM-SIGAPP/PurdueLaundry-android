@@ -13,6 +13,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -138,7 +139,15 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                         fireNotificationInFuture(millisInFuture, holder, notificationKey);
                     }
                 } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
-                    Toast.makeText(c, "This machine is not running", Toast.LENGTH_LONG).show();
+                    Log.d("Name", m.getStatus());
+                    Toast toast;
+                    if (m.getStatus().compareTo("Out of order") != 0) {
+                       toast = Toast.makeText(c, "This machine is not running", Toast.LENGTH_SHORT);
+                    } else {
+                       toast =  Toast.makeText(c, "This machine is offline but may still be functioning. Visit " + m.getName() + " for details.", Toast.LENGTH_LONG);
+                    }
+                    ((TextView)toast.getView().findViewById(android.R.id.message)).setGravity(Gravity.CENTER);
+                    toast.show();
                 }
             }
         });
