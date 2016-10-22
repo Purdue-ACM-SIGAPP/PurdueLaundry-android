@@ -179,7 +179,9 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         AnalyticsHelper.sendEventHit("Reminders", AnalyticsHelper.CLICK, "YES");
-                        NotificationCreator.createNotification(c, notificationKey, milliInFuture);
+                        c.startService(new Intent(c, NotificationCreator.class)
+                                .putExtra("machine", notificationKey)
+                                .putExtra("time", milliInFuture));
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -192,26 +194,5 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                 });
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
-    }
-
-    private void scheduleNotification(Notification notification, int delay) {
-
-        Intent notificationIntent = new Intent(c, NotificationPublisher.class);
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(c, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        long futureInMillis = SystemClock.elapsedRealtime() + delay;
-        AlarmManager alarmManager = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
-    }
-
-    private Notification getNotification(String content) {
-        Notification.Builder builder = new Notification.Builder(c);
-        builder.setContentTitle("Purdue Laundry");
-        builder.setContentText(content);
-        builder.setSmallIcon(R.drawable.ic_launcher);
-        builder.setVibrate(new long[]{1000, 1000, 1000});
-        return builder.build();
     }
 }
