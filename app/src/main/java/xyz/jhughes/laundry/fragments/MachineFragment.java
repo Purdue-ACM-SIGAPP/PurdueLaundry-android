@@ -51,6 +51,8 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
 
     private View rootView;
 
+    public static String options = "Available|In use|Almost done|End of cycle";
+
     public MachineFragment() {
         // Required empty public constructor
     }
@@ -125,7 +127,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                         showOfflineDialogIfNecessary();
                     }
 
-                    MachineAdapter adapter = new MachineAdapter(classMachines,rootView.getContext(),isDryers, MachineStates.FILTERABLE_OPTIONS);
+                    MachineAdapter adapter = new MachineAdapter(classMachines,rootView.getContext(),isDryers,options);
                     recyclerView.setAdapter(adapter);
 
                 }
