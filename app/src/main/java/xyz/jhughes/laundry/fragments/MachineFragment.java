@@ -12,12 +12,9 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -34,7 +31,6 @@ import xyz.jhughes.laundry.SnackbarPostListener;
 import xyz.jhughes.laundry.analytics.ScreenTrackedFragment;
 import xyz.jhughes.laundry.apiclient.MachineService;
 import xyz.jhughes.laundry.R;
-import xyz.jhughes.laundry.activities.MachineActivity;
 import xyz.jhughes.laundry.adapters.MachineAdapter;
 
 /**
@@ -83,7 +79,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
 
         isDryers = getArguments().getBoolean("isDryers");
 
-        rootView = inflater.inflate(R.layout.fragment_dryer, container, false);
+        rootView = inflater.inflate(R.layout.fragment_machine, container, false);
         ButterKnife.bind(this, rootView);
 
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this.getContext(), 2);
