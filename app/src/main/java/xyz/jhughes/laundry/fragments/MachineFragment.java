@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -26,16 +27,16 @@ import retrofit.Retrofit;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.ModelOperations;
+import xyz.jhughes.laundry.SnackbarPostListener;
 import xyz.jhughes.laundry.analytics.ScreenTrackedFragment;
 import xyz.jhughes.laundry.apiclient.MachineService;
 import xyz.jhughes.laundry.R;
-import xyz.jhughes.laundry.activities.MachineActivity;
 import xyz.jhughes.laundry.adapters.MachineAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MachineFragment extends ScreenTrackedFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class MachineFragment extends ScreenTrackedFragment implements SwipeRefreshLayout.OnRefreshListener, SnackbarPostListener {
 
     private ArrayList<Machine> classMachines;
 
@@ -78,7 +79,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
 
         isDryers = getArguments().getBoolean("isDryers");
 
-        rootView = inflater.inflate(R.layout.fragment_dryer, container, false);
+        rootView = inflater.inflate(R.layout.fragment_machine, container, false);
         ButterKnife.bind(this, rootView);
 
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this.getContext(), 2);
@@ -127,7 +128,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                         showOfflineDialogIfNecessary();
                     }
 
-                    MachineAdapter adapter = new MachineAdapter(classMachines,rootView.getContext(),isDryers,options, mRoomName);
+                    MachineAdapter adapter = new MachineAdapter(classMachines,rootView.getContext(),isDryers,options, mRoomName, MachineFragment.this);
                     recyclerView.setAdapter(adapter);
 
                 }
@@ -182,5 +183,11 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     @Override public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+    }
+
+    @Override
+    public void postSnackbar(String status, int length) {
+        Snackbar snackbar = Snackbar.make(rootView, status, length);
+        snackbar.show();
     }
 }
