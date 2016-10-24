@@ -8,7 +8,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.SystemClock;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -24,11 +26,13 @@ import java.util.TimerTask;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit.Callback;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.LaundryParser.MachineStates;
 import xyz.jhughes.laundry.LaundryParser.MachineTypes;
 import xyz.jhughes.laundry.R;
+import xyz.jhughes.laundry.SnackbarPostListener;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.notificationhelpers.NotificationCreator;
 import xyz.jhughes.laundry.notificationhelpers.NotificationPublisher;
@@ -36,9 +40,10 @@ import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
 public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHolder> {
     private ArrayList<Machine> currentMachines;
-
     private Context mContext;
     private final String roomName;
+    private final SnackbarPostListener listener;
+    private Timer updateTimes;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -57,10 +62,11 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MachineAdapter(ArrayList<Machine> machines, Context context, Boolean dryers, String options, String roomName) {
+    public MachineAdapter(ArrayList<Machine> machines, Context context, Boolean dryers, String options, String roomName, SnackbarPostListener listener) {
         this.mContext = context;
-        currentMachines = new ArrayList<>();
         this.roomName = roomName;
+        this.listener = listener;
+        currentMachines = new ArrayList<>();
         for (Machine m : machines) {
             machineHelper(m, dryers, options);
         }
@@ -118,24 +124,25 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 AnalyticsHelper.sendEventHit(m.getType(), AnalyticsHelper.CLICK, m.getStatus());
 
                 try {
                     int minutesInFuture = Integer.parseInt(m.getTime().substring(0, m.getTime().indexOf(' ')));
                     int millisInFuture = minutesInFuture * 60000; //60 seconds * 1000 milliseconds
 
-                    SharedPreferences sharedPreferences = SharedPrefsHelper.getSharedPrefs(mContext);
-                    String currentRoom = sharedPreferences.getString("lastRoom", "Cary West");
                     String notificationKey = roomName + " " + m.getName();
 
                     if(NotificationCreator.notificationExists(notificationKey)) {
-                        Toast.makeText(mContext, R.string.reminder_already_set, Toast.LENGTH_LONG).show();
+                        listener.postSnackbar(mContext.getString(R.string.reminder_already_set), Snackbar.LENGTH_LONG);
                     } else {
                         fireNotificationInFuture(millisInFuture, holder, notificationKey);
                     }
                 } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
-                    Toast.makeText(mContext, R.string.machine_not_running, Toast.LENGTH_LONG).show();
+                    if (m.getStatus().compareTo("Out of order") != 0) {
+                        listener.postSnackbar(mContext.getString(R.string.machine_not_running), Snackbar.LENGTH_SHORT);
+                    } else {
+                        listener.postSnackbar("This machine is offline but may still be functioning. Visit " + m.getName() + " for details.", Snackbar.LENGTH_LONG);
+                    }
                 }
             }
         });
@@ -160,7 +167,9 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                 .setPositiveButton(mContext.getString(R.string.yes), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         AnalyticsHelper.sendEventHit("Reminders", AnalyticsHelper.CLICK, "YES");
-                        NotificationCreator.createNotification(mContext, notificationKey, milliInFuture);
+                        mContext.startService(new Intent(mContext, NotificationCreator.class)
+                                .putExtra("machine", notificationKey)
+                                .putExtra("time", milliInFuture));
                     }
                 })
                 .setNegativeButton(mContext.getString(R.string.no), new DialogInterface.OnClickListener() {
@@ -173,25 +182,5 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                 });
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
-    }
-
-    private void scheduleNotification(Notification notification, int delay) {
-        Intent notificationIntent = new Intent(mContext, NotificationPublisher.class);
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        long futureInMillis = SystemClock.elapsedRealtime() + delay;
-        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
-    }
-
-    private Notification getNotification(String content) {
-        Notification.Builder builder = new Notification.Builder(mContext);
-        builder.setContentTitle(mContext.getString(R.string.app_name));
-        builder.setContentText(content);
-        builder.setSmallIcon(R.drawable.ic_launcher);
-        builder.setVibrate(new long[]{1000, 1000, 1000});
-        return builder.build();
     }
 }

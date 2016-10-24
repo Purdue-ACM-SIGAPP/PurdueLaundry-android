@@ -1,9 +1,14 @@
 package xyz.jhughes.laundry.activities;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -72,6 +77,10 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
         ButterKnife.bind(this);
         setScreenName("Location List");
 
+        if (!isNetworkAvailable()) {
+            showNoInternetDialog();
+        }
+
         initRecyclerView();
         initToolbar();
 
@@ -127,5 +136,26 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     @Override
     public void onRefresh() {
         getLaundryCall();
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    private void showNoInternetDialog() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("Connection Error");
+        alertDialogBuilder.setMessage("You have no internet connection");
+        alertDialogBuilder.setCancelable(false);
+        alertDialogBuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                finish();
+            }
+        });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 }
