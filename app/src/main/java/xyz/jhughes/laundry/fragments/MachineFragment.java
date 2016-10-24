@@ -27,11 +27,11 @@ import retrofit.Retrofit;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.ModelOperations;
+import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.SnackbarPostListener;
+import xyz.jhughes.laundry.adapters.MachineAdapter;
 import xyz.jhughes.laundry.analytics.ScreenTrackedFragment;
 import xyz.jhughes.laundry.apiclient.MachineService;
-import xyz.jhughes.laundry.R;
-import xyz.jhughes.laundry.adapters.MachineAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -62,7 +62,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
         progressDialog = new ProgressDialog(this.getContext());
         {
             if (!isRefreshing) {
-                progressDialog.setMessage("Loading, please wait...");
+                progressDialog.setMessage(getString(R.string.loading_machines));
                 progressDialog.show();
             }
             progressDialog.setCanceledOnTouchOutside(false);
@@ -90,7 +90,6 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
         refreshList();
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
-
 
         return rootView;
     }

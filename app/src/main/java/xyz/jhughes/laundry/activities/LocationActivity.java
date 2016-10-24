@@ -2,8 +2,8 @@ package xyz.jhughes.laundry.activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -17,7 +17,6 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -30,10 +29,10 @@ import retrofit.Retrofit;
 import xyz.jhughes.laundry.LaundryParser.Location;
 import xyz.jhughes.laundry.LaundryParser.MachineList;
 import xyz.jhughes.laundry.ModelOperations;
-import xyz.jhughes.laundry.analytics.ScreenTrackedActivity;
-import xyz.jhughes.laundry.apiclient.MachineService;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.LocationAdapter;
+import xyz.jhughes.laundry.analytics.ScreenTrackedActivity;
+import xyz.jhughes.laundry.apiclient.MachineService;
 import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
 /**
@@ -61,7 +60,9 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (!getIntent().getBooleanExtra("forceMainMenu", false)) {
+        if (!isNetworkAvailable()) {
+            showNoInternetDialog();
+        } else if (!getIntent().getBooleanExtra("forceMainMenu", false)) {
             String lastRoom = SharedPrefsHelper.getSharedPrefs(this)
                     .getString("lastScreenViewed", null);
             if (lastRoom != null && !lastRoom.equals("LocationList")) {
@@ -76,10 +77,6 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
         setContentView(R.layout.activity_location);
         ButterKnife.bind(this);
         setScreenName("Location List");
-
-        if (!isNetworkAvailable()) {
-            showNoInternetDialog();
-        }
 
         initRecyclerView();
         initToolbar();
@@ -99,7 +96,6 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     @Override
     protected void onStart() {
         super.onStart();
-
         recyclerView.setAdapter(null);
         mLoadingProgressBar.setVisibility(View.VISIBLE);
         getLaundryCall();
@@ -124,7 +120,6 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
                 Log.e("LocationActivity", "API ERROR - " + t.getMessage());
             }
         });
-
     }
 
     @Override
@@ -136,13 +131,6 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     @Override
     public void onRefresh() {
         getLaundryCall();
-    }
-
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     private void showNoInternetDialog() {
@@ -157,5 +145,12 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
         });
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

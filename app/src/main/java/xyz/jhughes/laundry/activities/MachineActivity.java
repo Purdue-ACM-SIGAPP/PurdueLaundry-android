@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xyz.jhughes.laundry.LaundryParser.Constants;
+import xyz.jhughes.laundry.LaundryParser.MachineStates;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.AppSectionsPagerAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
@@ -124,22 +125,22 @@ public class MachineActivity extends ScreenTrackedActivity {
         boolean hasFirst = false;
 
         if (options[0]) {
-            result += "Available";
+            result += MachineStates.AVAILABLE;
             hasFirst = true;
         }
 
         if (options[1]) {
-            result += hasFirst ? "|In use" : "In use";
+            result += hasFirst ? MachineStates.SEPARATOR + MachineStates.IN_USE : MachineStates.IN_USE;
             hasFirst = true;
         }
 
         if (options[2]) {
-            result += hasFirst ? "|Almost done" : "Almost done";
+            result += hasFirst ? MachineStates.SEPARATOR + MachineStates.ALMOST_DONE : MachineStates.ALMOST_DONE;
             hasFirst = true;
         }
 
         if (options[3]) {
-            result += hasFirst ? "|End of cycle" : "End of cycle";
+            result += hasFirst ? MachineStates.SEPARATOR + MachineStates.END_CYCLE : MachineStates.END_CYCLE;
         }
 
         return result;
@@ -147,10 +148,10 @@ public class MachineActivity extends ScreenTrackedActivity {
 
     private boolean[] transformOptions(String options) {
         return new boolean[]{
-                options.contains("Available"),
-                options.contains("In use"),
-                options.contains("Almost done"),
-                options.contains("End of cycle")
+                options.contains(MachineStates.AVAILABLE),
+                options.contains(MachineStates.IN_USE),
+                options.contains(MachineStates.ALMOST_DONE),
+                options.contains(MachineStates.END_CYCLE)
         };
     }
 
@@ -168,7 +169,7 @@ public class MachineActivity extends ScreenTrackedActivity {
             case android.R.id.home:
                 Intent i = getParentActivityIntent().putExtra("forceMainMenu", true);
                 NavUtils.navigateUpTo(this, i);
-                return super.onOptionsItemSelected(item);
+                return true;
             case R.id.display_parameters:
                 AnalyticsHelper.sendEventHit("Filters", AnalyticsHelper.CLICK, "YES");
                 createDialog();
