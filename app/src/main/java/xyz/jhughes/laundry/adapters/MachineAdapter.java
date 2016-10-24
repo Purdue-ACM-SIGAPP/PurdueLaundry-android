@@ -1,16 +1,10 @@
 package xyz.jhughes.laundry.adapters;
 
-import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.SystemClock;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -22,11 +16,9 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import retrofit.Callback;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.LaundryParser.MachineStates;
@@ -35,8 +27,6 @@ import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.SnackbarPostListener;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.notificationhelpers.NotificationCreator;
-import xyz.jhughes.laundry.notificationhelpers.NotificationPublisher;
-import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
 public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHolder> {
     private ArrayList<Machine> currentMachines;

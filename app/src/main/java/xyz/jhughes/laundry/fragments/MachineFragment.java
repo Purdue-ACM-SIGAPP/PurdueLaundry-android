@@ -26,13 +26,12 @@ import retrofit.Response;
 import retrofit.Retrofit;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
-import xyz.jhughes.laundry.LaundryParser.MachineStates;
 import xyz.jhughes.laundry.ModelOperations;
+import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.SnackbarPostListener;
+import xyz.jhughes.laundry.adapters.MachineAdapter;
 import xyz.jhughes.laundry.analytics.ScreenTrackedFragment;
 import xyz.jhughes.laundry.apiclient.MachineService;
-import xyz.jhughes.laundry.R;
-import xyz.jhughes.laundry.adapters.MachineAdapter;
 
 /**
  * A simple {@link Fragment} subclass.

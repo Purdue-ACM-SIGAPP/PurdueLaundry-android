@@ -7,7 +7,6 @@ import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 import xyz.jhughes.laundry.LaundryParser.MachineList;
 import xyz.jhughes.laundry.LaundryParser.MachineListDeserializer;
-import xyz.jhughes.laundry.apiclient.MachineAPI;
 
 
 /**
