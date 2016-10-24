@@ -28,10 +28,10 @@ public class Rooms {
             roomsToImage.put(room, toImageResourceId(room));
         }
 
-        machineAvailabilityColors.put("Available", R.color.Available);
-        machineAvailabilityColors.put("In use", R.color.InUse);
-        machineAvailabilityColors.put("Almost done", R.color.AlmostDone);
-        machineAvailabilityColors.put("End of cycle", R.color.Finished);
+        machineAvailabilityColors.put(MachineStates.AVAILABLE, R.color.Available);
+        machineAvailabilityColors.put(MachineStates.IN_USE, R.color.InUse);
+        machineAvailabilityColors.put(MachineStates.ALMOST_DONE, R.color.AlmostDone);
+        machineAvailabilityColors.put(MachineStates.END_CYCLE, R.color.Finished);
 
     }
 

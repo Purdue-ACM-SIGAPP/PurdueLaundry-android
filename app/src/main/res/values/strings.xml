@@ -23,6 +23,14 @@
     <string name="washers_available">Washers Available</string>
     <string name="ResHallPic">Photograph of this residence hall.</string>
     <string name="offlineText">Offline</string>
+    <string name="reminder_already_set">You already have a reminder set for this machine</string>
+    <string name="machine_not_running">This machine is not running</string>
+    <string name="alarm">Alarm</string>
+    <string name="ask_set_alarm">Would you like to set an alarm for when the machine is finished?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="no_alarm_set">No Alarm Set</string>
+    <string name="loading_machines">Loading, please wait...</string>
 
     <array name="options">
         <item>Available</item>
