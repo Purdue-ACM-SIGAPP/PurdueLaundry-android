@@ -88,7 +88,6 @@
                     android:textSize="18sp" />
 
                 <ImageView
-                    android:id="@+id/washer_offline_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_above="@id/text_view_washer"
@@ -98,7 +97,6 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/dryer_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
@@ -137,7 +135,6 @@
                     android:textSize="18sp" />
 
                 <ImageView
-                    android:id="@+id/dryer_offline_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_above="@id/text_view_dryer"

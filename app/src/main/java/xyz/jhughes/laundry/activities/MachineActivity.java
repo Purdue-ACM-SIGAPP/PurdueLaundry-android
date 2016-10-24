@@ -169,7 +169,7 @@ public class MachineActivity extends ScreenTrackedActivity {
             case android.R.id.home:
                 Intent i = getParentActivityIntent().putExtra("forceMainMenu", true);
                 NavUtils.navigateUpTo(this, i);
-                return super.onOptionsItemSelected(item);
+                return true;
             case R.id.display_parameters:
                 AnalyticsHelper.sendEventHit("Filters", AnalyticsHelper.CLICK, "YES");
                 createDialog();

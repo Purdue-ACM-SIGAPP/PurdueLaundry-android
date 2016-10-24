@@ -33,17 +33,15 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     private Context mContext;
     private final String roomName;
     private final SnackbarPostListener listener;
-    private Timer updateTimes;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         @Bind(R.id.machine_name_text_view)  TextView nameTextView;
         @Bind(R.id.machine_status_text_view)  TextView statusTextView;
         @Bind(R.id.card_view)  CardView cardView;
-        private boolean alarmSet = false;
 
         private ViewHolder(View v) {
             super(v);

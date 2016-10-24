@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 /**
  * A way to cleanly track the screen view of an Activity.
  */
-public class ScreenTrackedActivity extends AppCompatActivity implements ScreenTrackedScreen {
+public abstract class ScreenTrackedActivity extends AppCompatActivity implements ScreenTrackedScreen {
     private String ACTIVITY_NAME;
 
     public void setScreenName(String name) {
