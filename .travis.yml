@@ -16,8 +16,11 @@ android:
     # Specify at least one system image,
     # if you need to run emulator(s) during your tests
     # uncomment these once we have actual tests. 
-    - sys-img-armeabi-v7a-android-24
-    - sys-img-x86-android-17
+    # - sys-img-armeabi-v7a-android-24
+    # - sys-img-x86-android-17
+    
+script:
+    - ./gradlew clean assembleDebug
     
 before_cache:
     - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
