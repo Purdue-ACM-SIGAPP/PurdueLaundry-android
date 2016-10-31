@@ -1,11 +1,12 @@
 language: android
+sudo: required
 android:
   components:
     - tools # to get the new `repository-11.xml`
     - tools # see https://github.com/travis-ci/travis-ci/issues/6040#issuecomment-219367943)
     - platform-tools
-    - build-tools-23.0.3
-    - android-23
+    - build-tools-24.0.2
+    - android-24
     
     - extra-google-google_play_services
     - extra-google-m2repository
@@ -14,5 +15,5 @@ android:
 
     # Specify at least one system image,
     # if you need to run emulator(s) during your tests
-    - sys-img-armeabi-v7a-android-23
+    - sys-img-armeabi-v7a-android-24
     - sys-img-x86-android-17
