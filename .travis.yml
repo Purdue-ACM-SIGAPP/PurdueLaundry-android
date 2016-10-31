@@ -1,6 +1,4 @@
 language: android
-before_install:
-    - java -version
 android:
   components:
     - tools # to get the new `repository-11.xml`
