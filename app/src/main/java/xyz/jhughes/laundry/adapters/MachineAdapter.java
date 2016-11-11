@@ -60,6 +60,12 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         }
     }
 
+    /**
+     * Remove the machines that are being filtered out based on the options string provided.
+     * @param m The machine to be tested.
+     * @param dryers Whether it is a dryer or not.
+     * @param options String representation of currently visible machine states.
+     */
     private void machineHelper(Machine m, Boolean dryers, String options) {
 
         String status = m.getStatus();

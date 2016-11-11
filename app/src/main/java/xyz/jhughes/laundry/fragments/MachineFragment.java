@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -26,6 +27,7 @@ import retrofit.Response;
 import retrofit.Retrofit;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
+import xyz.jhughes.laundry.LaundryParser.MachineStates;
 import xyz.jhughes.laundry.ModelOperations;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.SnackbarPostListener;
@@ -42,6 +44,8 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
 
     @Bind(R.id.dryer_machines_recycler_view) RecyclerView recyclerView;
     @Bind(R.id.dryer_list_layout) SwipeRefreshLayout mSwipeRefreshLayout;
+    @Bind(R.id.machine_fragment_too_filtered)
+    TextView mTooFilteredTextView;
 
     private boolean isRefreshing;
     private boolean isDryers;
@@ -128,6 +132,17 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                     }
 
                     MachineAdapter adapter = new MachineAdapter(classMachines,rootView.getContext(),isDryers,options, mRoomName, MachineFragment.this);
+
+                    //Check if the view is being filtered and causing the
+                    // fragment to appear empty.
+                    // This is not shown if the list is empty for any other reason.
+                    if(!options.equals(MachineStates.FILTERABLE_OPTIONS) && adapter.getItemCount() == 0) {
+                        //Filters are too restrictive.
+                        mTooFilteredTextView.setVisibility(View.VISIBLE);
+                    } else {
+                        mTooFilteredTextView.setVisibility(View.GONE);
+                    }
+
                     recyclerView.setAdapter(adapter);
 
                 }
