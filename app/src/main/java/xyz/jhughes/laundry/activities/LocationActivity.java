@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -118,6 +119,9 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
             @Override
             public void onFailure(Throwable t) {
                 Log.e("LocationActivity", "API ERROR - " + t.getMessage());
+                mSwipeRefreshLayout.setRefreshing(false);
+                Snackbar snackbar = Snackbar.make(recyclerView, "There was an issue refreshing the dorms, try again later.", Snackbar.LENGTH_SHORT);
+                snackbar.show();
             }
         });
     }

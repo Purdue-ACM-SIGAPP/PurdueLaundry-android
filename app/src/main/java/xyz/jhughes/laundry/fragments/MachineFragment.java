@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -134,12 +135,19 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
 
                 @Override
                 public void onFailure(Throwable t) {
-
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    isRefreshing = false;
+                    alertNetworkError();
+                    //TODO: Add a GA here?
                 }
             });
         } else {
             showNoInternetDialog();
         }
+    }
+
+    private void alertNetworkError() {
+        postSnackbar("There was an issue updating the machines, please try again later.", Snackbar.LENGTH_SHORT);
     }
 
     private void showOfflineDialogIfNecessary() {
