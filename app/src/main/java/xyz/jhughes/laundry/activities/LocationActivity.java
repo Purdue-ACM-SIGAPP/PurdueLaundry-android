@@ -97,12 +97,18 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     @Override
     protected void onStart() {
         super.onStart();
-        recyclerView.setAdapter(null);
-        mLoadingProgressBar.setVisibility(View.VISIBLE);
+        //We only want to clear the adapter/show the loading
+        // if there are no items in the list already.
+        if(recyclerView.getAdapter() == null || recyclerView.getAdapter().getItemCount() <= 0) {
+            recyclerView.setAdapter(null);
+            mLoadingProgressBar.setVisibility(View.VISIBLE);
+        }
         getLaundryCall();
     }
 
     protected void getLaundryCall() {
+        mSwipeRefreshLayout.setRefreshing(true);
+
         Call<Map<String,MachineList>> allMachineCall = MachineService.getService().getAllMachines();
         allMachineCall.enqueue(new Callback<Map<String, MachineList>>() {
             @Override
@@ -110,6 +116,10 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
                 Map<String,MachineList> machineMap = response.body();
                 List<Location> locations = ModelOperations.machineMapToLocationList(machineMap);
                 adapter = new LocationAdapter(locations, LocationActivity.this.getApplicationContext());
+
+                //We conditionally make the progress bar visible,
+                // but its cheap to always dismiss it without checking
+                // if its already gone.
                 mLoadingProgressBar.setVisibility(View.GONE);
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setAdapter(adapter);
