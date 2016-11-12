@@ -31,6 +31,8 @@
     <string name="no">No</string>
     <string name="no_alarm_set">No Alarm Set</string>
     <string name="loading_machines">Loading, please wait...</string>
+    <string name="notify_on_washer_available">Notfy me when a washer is available.</string>
+    <string name="notify_on_dryer_available">Notfy me when a dryer is available.</string>
 
     <array name="options">
         <item>Available</item>
