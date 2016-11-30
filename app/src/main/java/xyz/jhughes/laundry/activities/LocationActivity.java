@@ -26,6 +26,7 @@ import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
+import xyz.jhughes.laundry.BuildConfig;
 import xyz.jhughes.laundry.LaundryParser.Location;
 import xyz.jhughes.laundry.LaundryParser.MachineList;
 import xyz.jhughes.laundry.ModelOperations;
@@ -59,6 +60,36 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(!SharedPrefsHelper.getSharedPrefs(this)
+                .getBoolean("apiBrokenHasBeenShown_v2.2.1", false) || BuildConfig.DEBUG) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder.setTitle("Service interruptions");
+            alertDialogBuilder.setMessage(
+                    "Unfortunately, the iTaP service that we pull our data from has been " +
+                            "unreliable lately. We are working to get this fixed, but in the " +
+                            "meantime, this app may not always be able to get laundry data. " +
+                            "We apologize for the inconvenience and hope to get this resolved " +
+                            "quickly. In the meantime, please keep checking back.");
+            alertDialogBuilder.setCancelable(false);
+            alertDialogBuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                }
+            });
+            alertDialogBuilder.setNegativeButton("Never show again", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    SharedPrefsHelper.getSharedPrefs(LocationActivity.this)
+                            .edit()
+                            .putBoolean("apiBrokenHasBeenShown_v2.2.1", true)
+                            .apply();
+                    dialogInterface.dismiss();
+                }
+            });
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+        }
 
         if (!isNetworkAvailable()) {
             showNoInternetDialog();
