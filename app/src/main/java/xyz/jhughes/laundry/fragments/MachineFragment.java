@@ -159,7 +159,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                     //Check if the view is being filtered and causing the
                     // fragment to appear empty.
                     // This is not shown if the list is empty for any other reason.
-                    if(!options.equals(MachineStates.FILTERABLE_OPTIONS) && adapter.getItemCount() == 0) {
+                    if (!options.equals(MachineStates.FILTERABLE_OPTIONS) && adapter.getItemCount() == 0) {
                         //Filters are too restrictive.
                         mTooFilteredTextView.setVisibility(View.VISIBLE);
                     } else {
@@ -223,12 +223,12 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                     }
                 }
                 if (m == null) {
-                    postSnackbar("All machines available!", Snackbar.LENGTH_LONG);
+                    postSnackbar("No machines to set timer for!", Snackbar.LENGTH_LONG);
                     return;
                 }
                 if (m.getStatus().equals("Not online") || m.getStatus().equals("Out of order")) {
                     postSnackbar("It looks like this location is offline. " +
-                            "Please go to the laundry room to check machines.",
+                                    "Please go to the laundry room to check machines.",
                             Snackbar.LENGTH_LONG);
                     return;
                 }
@@ -241,7 +241,6 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     }
 
     private void showOfflineDialogIfNecessary() {
-
         if (!rootView.getContext().getSharedPreferences("alerts", Context.MODE_PRIVATE).getBoolean("offline_alert_thrown", false)) {
             // 1. Instantiate an AlertDialog.Builder with its constructor
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

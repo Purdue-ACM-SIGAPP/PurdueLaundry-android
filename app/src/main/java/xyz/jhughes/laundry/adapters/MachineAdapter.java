@@ -52,7 +52,6 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
      * @param options String representation of currently visible machine states.
      */
     private void machineHelper(Machine m, Boolean dryers, String options) {
-
         String status = m.getStatus();
         boolean isCorrectType = dryers == m.getType().equals(MachineTypes.DRYER);
         boolean matchesParameters = options.contains(status);
