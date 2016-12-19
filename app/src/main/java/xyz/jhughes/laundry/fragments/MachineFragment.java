@@ -212,7 +212,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                     postSnackbar("All machines available!", Snackbar.LENGTH_LONG);
                     return;
                 }
-                if (m.getStatus().equals("Not online")) {
+                if (m.getStatus().equals("Not online") || m.getStatus().equals("Out of order")) {
                     postSnackbar("It looks like this location is offline. " +
                             "Please go to the laundry room to check machines.",
                             Snackbar.LENGTH_LONG);
