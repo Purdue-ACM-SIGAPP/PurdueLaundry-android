@@ -1,8 +1,8 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="xyz.jhughes.laundry.fragments.MachineFragment">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="xyz.jhughes.laundry.fragments.MachineFragment">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/dryer_list_layout"
@@ -27,4 +27,13 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-</FrameLayout>
+    <TextView
+        android:visibility="gone"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:id="@+id/machine_fragment_too_filtered"
+        android:text="No machines match the provided filter."/>
+
+</RelativeLayout>

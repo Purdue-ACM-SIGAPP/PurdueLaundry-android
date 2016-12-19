@@ -29,6 +29,7 @@ import retrofit.Response;
 import retrofit.Retrofit;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
+import xyz.jhughes.laundry.LaundryParser.MachineStates;
 import xyz.jhughes.laundry.ModelOperations;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.SnackbarPostListener;
@@ -49,6 +50,8 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     RecyclerView recyclerView;
     @Bind(R.id.dryer_list_layout)
     SwipeRefreshLayout mSwipeRefreshLayout;
+    @Bind(R.id.machine_fragment_too_filtered)
+    TextView mTooFilteredTextView;
 
     private boolean isRefreshing;
     private boolean isDryers;
@@ -152,6 +155,17 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                         if (addNotifyButton) addNotifyOnAvailableButton();
                         else removeNotifyOnAvailableButton();
                     }
+
+                    //Check if the view is being filtered and causing the
+                    // fragment to appear empty.
+                    // This is not shown if the list is empty for any other reason.
+                    if (!options.equals(MachineStates.FILTERABLE_OPTIONS) && adapter.getItemCount() == 0) {
+                        //Filters are too restrictive.
+                        mTooFilteredTextView.setVisibility(View.VISIBLE);
+                    } else {
+                        mTooFilteredTextView.setVisibility(View.GONE);
+                    }
+
                     recyclerView.setAdapter(adapter);
                 }
 
@@ -209,12 +223,12 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                     }
                 }
                 if (m == null) {
-                    postSnackbar("All machines available!", Snackbar.LENGTH_LONG);
+                    postSnackbar("No machines to set timer for!", Snackbar.LENGTH_LONG);
                     return;
                 }
                 if (m.getStatus().equals("Not online") || m.getStatus().equals("Out of order")) {
                     postSnackbar("It looks like this location is offline. " +
-                            "Please go to the laundry room to check machines.",
+                                    "Please go to the laundry room to check machines.",
                             Snackbar.LENGTH_LONG);
                     return;
                 }
@@ -227,7 +241,6 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     }
 
     private void showOfflineDialogIfNecessary() {
-
         if (!rootView.getContext().getSharedPreferences("alerts", Context.MODE_PRIVATE).getBoolean("offline_alert_thrown", false)) {
             // 1. Instantiate an AlertDialog.Builder with its constructor
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
