@@ -24,7 +24,7 @@ Dryer icon used is Dryer by Nicholas Navarro from the Noun Project. Modified for
 
 ## Copyright
 
-**This app is copyright Jeffrey Hughes and Purdue ACM Special Interest Group for Applied Computing 2016.**
+**This app is copyright Jeffrey Hughes and Purdue ACM Special Interest Group for Applied Computing 2017.**
 **All rights reserved.**
 
 ## License
