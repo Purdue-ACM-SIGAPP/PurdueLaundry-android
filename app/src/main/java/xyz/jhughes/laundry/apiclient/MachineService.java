@@ -13,7 +13,7 @@ import xyz.jhughes.laundry.LaundryParser.MachineListDeserializer;
  * Singleton impl for the Machine API.
  */
 public class MachineService {
-    private static String API_ROOT = "http://ec2-52-27-152-61.us-west-2.compute.amazonaws.com";
+    private static String API_ROOT = "http://laundry-api.sigapp.club";
     private static MachineAPI REST_CLIENT;
 
     static {
