@@ -153,7 +153,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
                     } else {
                         //server error
                         showErrorMessage(getString(R.string.error_server_message));
-                        //AnalyticsHelper.sendEventHit("Network error", response.message(), "Code: " + httpCode);
+                        AnalyticsHelper.sendEventHit("Network error", response.message(), "Code: " + httpCode);
                     }
 
                 }
@@ -164,7 +164,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
                 Log.e("LocationActivity", "API ERROR - " + t.getMessage());
                 //likely a timeout -- network is available due to prev. check
                 showErrorMessage(getString(R.string.error_server_message));
-                //AnalyticsHelper.sendEventHit("Network error", t.getMessage(), "");
+                AnalyticsHelper.sendEventHit("Network error", t.getMessage(), "");
 
                 mSwipeRefreshLayout.setRefreshing(false);
                 Snackbar snackbar = Snackbar.make(recyclerView, "There was an issue refreshing the dorms, try again later.", Snackbar.LENGTH_SHORT);

@@ -39,6 +39,7 @@ import xyz.jhughes.laundry.SnackbarPostListener;
 import xyz.jhughes.laundry.activities.LocationActivity;
 import xyz.jhughes.laundry.activities.MachineActivity;
 import xyz.jhughes.laundry.adapters.MachineAdapter;
+import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.analytics.ScreenTrackedFragment;
 import xyz.jhughes.laundry.apiclient.MachineService;
 
@@ -181,7 +182,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                         } else {
                             //server error
                             showErrorDialog(getString(R.string.error_server_message));
-                            //AnalyticsHelper.sendEventHit("Network error", response.message(), "Code: " + httpCode);
+                            AnalyticsHelper.sendEventHit("Network error", response.message(), "Code: " + httpCode);
                         }
 
                     }
@@ -195,7 +196,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                     mSwipeRefreshLayout.setRefreshing(false);
                     isRefreshing = false;
                     alertNetworkError();
-                    //AnalyticsHelper.sendEventHit("Network error", t.getMessage(), "");
+                    AnalyticsHelper.sendEventHit("Network error", t.getMessage(), "-1");
                 }
             });
         } else {
