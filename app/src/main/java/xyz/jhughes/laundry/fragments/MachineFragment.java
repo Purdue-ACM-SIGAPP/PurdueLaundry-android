@@ -22,6 +22,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -182,7 +184,13 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                         } else {
                             //server error
                             showErrorDialog(getString(R.string.error_server_message));
-                            AnalyticsHelper.sendEventHit("Network error", response.message(), "Code: " + httpCode);
+                            AnalyticsHelper.getDefaultTracker().send(
+                                    new HitBuilders.ExceptionBuilder()
+                                            .setDescription("Error")
+                                            .set("HTTP Code", String.valueOf(httpCode))
+                                            .set("Message", response.message())
+                                            .setFatal(false)
+                                            .build());
                         }
 
                     }
@@ -196,7 +204,13 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                     mSwipeRefreshLayout.setRefreshing(false);
                     isRefreshing = false;
                     alertNetworkError();
-                    AnalyticsHelper.sendEventHit("Network error", t.getMessage(), "-1");
+                    AnalyticsHelper.getDefaultTracker().send(
+                            new HitBuilders.ExceptionBuilder()
+                                    .setDescription("Error")
+                                    .set("HTTP Code", "-1")
+                                    .set("Message", t.getMessage())
+                                    .setFatal(false)
+                                    .build());
                 }
             });
         } else {

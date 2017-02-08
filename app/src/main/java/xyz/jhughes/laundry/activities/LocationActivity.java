@@ -20,6 +20,8 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+
 import java.util.List;
 import java.util.Map;
 
@@ -122,12 +124,14 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     }
 
     protected void getLaundryCall() {
-        hideErrorMessage();
 
         if(!isNetworkAvailable()) {
-            showErrorMessage("You have no internet connection.");
+            mSwipeRefreshLayout.setRefreshing(false);
+            if(error) showErrorMessage("You have no internet connection.");
+            else showNoInternetDialog();
             return;
         }
+        hideErrorMessage();
 
         Call<Map<String,MachineList>> allMachineCall = MachineService.getService().getAllMachines();
         allMachineCall.enqueue(new Callback<Map<String, MachineList>>() {
@@ -153,7 +157,13 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
                     } else {
                         //server error
                         showErrorMessage(getString(R.string.error_server_message));
-                        AnalyticsHelper.sendEventHit("Network error", response.message(), "Code: " + httpCode);
+                        AnalyticsHelper.getDefaultTracker().send(
+                                new HitBuilders.ExceptionBuilder()
+                                    .setDescription("Error")
+                                    .set("HTTP Code", String.valueOf(httpCode))
+                                    .set("Message", response.message())
+                                    .setFatal(false)
+                                    .build());
                     }
 
                 }
@@ -164,11 +174,15 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
                 Log.e("LocationActivity", "API ERROR - " + t.getMessage());
                 //likely a timeout -- network is available due to prev. check
                 showErrorMessage(getString(R.string.error_server_message));
-                AnalyticsHelper.sendEventHit("Network error", t.getMessage(), "");
+                AnalyticsHelper.getDefaultTracker().send(
+                        new HitBuilders.ExceptionBuilder()
+                                .setDescription("Error")
+                                .set("HTTP Code", "-1")
+                                .set("Message", t.getMessage())
+                                .setFatal(false)
+                                .build());
 
                 mSwipeRefreshLayout.setRefreshing(false);
-                Snackbar snackbar = Snackbar.make(recyclerView, "There was an issue refreshing the dorms, try again later.", Snackbar.LENGTH_SHORT);
-                snackbar.show();
             }
         });
     }
