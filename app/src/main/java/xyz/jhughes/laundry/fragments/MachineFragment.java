@@ -3,15 +3,18 @@ package xyz.jhughes.laundry.fragments;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NavUtils;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +32,8 @@ import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.ModelOperations;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.SnackbarPostListener;
+import xyz.jhughes.laundry.activities.LocationActivity;
+import xyz.jhughes.laundry.activities.MachineActivity;
 import xyz.jhughes.laundry.adapters.MachineAdapter;
 import xyz.jhughes.laundry.analytics.ScreenTrackedFragment;
 import xyz.jhughes.laundry.apiclient.MachineService;
@@ -118,28 +123,65 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                     if (progressDialog.isShowing()) {
                         progressDialog.dismiss();
                     }
+                    if(response.isSuccess()) {
+                        mSwipeRefreshLayout.setRefreshing(false);
+                        isRefreshing = false;
+                        classMachines = response.body();
 
-                    mSwipeRefreshLayout.setRefreshing(false);
-                    isRefreshing = false;
-                    classMachines = response.body();
+                        if (ModelOperations.machinesOffline(classMachines)) {
+                            showOfflineDialogIfNecessary();
+                        }
 
-                    if(ModelOperations.machinesOffline(classMachines)) {
-                        showOfflineDialogIfNecessary();
+                        MachineAdapter adapter = new MachineAdapter(classMachines, rootView.getContext(), isDryers, options, mRoomName, MachineFragment.this);
+                        recyclerView.setAdapter(adapter);
+                    } else {
+                        int httpCode = response.code();
+                        if(httpCode < 500) {
+                            //client error
+                            showErrorDialog(getString(R.string.error_client_message));
+                        } else {
+                            //server error
+                            showErrorDialog(getString(R.string.error_server_message));
+                            //AnalyticsHelper.sendEventHit("Network error", response.message(), "Code: " + httpCode);
+                        }
+
                     }
-
-                    MachineAdapter adapter = new MachineAdapter(classMachines,rootView.getContext(),isDryers,options, mRoomName, MachineFragment.this);
-                    recyclerView.setAdapter(adapter);
-
                 }
 
                 @Override
                 public void onFailure(Throwable t) {
-
+                    if(isNetworkAvailable()) {
+                        showErrorDialog(getString(R.string.error_server_message));
+                        //AnalyticsHelper.sendEventHit("Network error", t.getMessage(), "");
+                    } else {
+                        showNoInternetDialog();
+                    }
                 }
             });
         } else {
             showNoInternetDialog();
         }
+    }
+
+    private void showErrorDialog(final String message) {
+        if(getView().getVisibility() != View.VISIBLE) return;
+        if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+        mSwipeRefreshLayout.setRefreshing(false);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        alertDialogBuilder.setTitle("Connection Error");
+        alertDialogBuilder.setMessage(message);
+        alertDialogBuilder.setCancelable(false);
+        alertDialogBuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                Intent i = new Intent(getActivity(), LocationActivity.class).putExtra("forceMainMenu", true).putExtra("error", message);
+                startActivity(i);
+                getActivity().finish();
+            }
+        });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     private void showOfflineDialogIfNecessary() {
@@ -172,6 +214,8 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
         alertDialogBuilder.setCancelable(false);
         alertDialogBuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                Intent i = new Intent(getActivity(), LocationActivity.class).putExtra("forceMainMenu", true).putExtra("error", "You have no internet connection");
+                startActivity(i);
                 getActivity().finish();
             }
         });

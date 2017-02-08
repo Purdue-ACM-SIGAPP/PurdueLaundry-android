@@ -31,6 +31,9 @@
     <string name="no">No</string>
     <string name="no_alarm_set">No Alarm Set</string>
     <string name="loading_machines">Loading, please wait...</string>
+    <string name="error_client_message">Oops! Looks like you\'re having trouble connecting.\nCheck your network settings and try again.</string>
+    <string name="error_server_message">Oops! We\'re having problems. Please try again later.</string>
+    <string name="location_error_try_again">Try Again</string>
 
     <array name="options">
         <item>Available</item>

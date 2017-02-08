@@ -33,8 +33,10 @@ import xyz.jhughes.laundry.LaundryParser.MachineList;
 import xyz.jhughes.laundry.ModelOperations;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.LocationAdapter;
+import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.analytics.ScreenTrackedActivity;
 import xyz.jhughes.laundry.apiclient.MachineService;
+import xyz.jhughes.laundry.fragments.MachineFragment;
 import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
 /**
@@ -52,6 +54,8 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
 
     private LocationAdapter adapter;
 
+    private boolean error = false;
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -63,8 +67,13 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_location);
+        ButterKnife.bind(this);
 
-        if (!isNetworkAvailable()) {
+        String msg;
+        if((msg = getIntent().getStringExtra("error")) != null) {
+            showErrorMessage(msg);
+        } else if (!isNetworkAvailable()) {
             showNoInternetDialog();
         } else if (!getIntent().getBooleanExtra("forceMainMenu", false)) {
             String lastRoom = SharedPrefsHelper.getSharedPrefs(this)
@@ -78,8 +87,6 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
             }
         }
 
-        setContentView(R.layout.activity_location);
-        ButterKnife.bind(this);
         setScreenName("Location List");
 
         initRecyclerView();
@@ -102,36 +109,68 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     protected void onStart() {
         super.onStart();
         recyclerView.setAdapter(null);
-        mLoadingProgressBar.setVisibility(View.VISIBLE);
-        getLaundryCall();
+        if(!error) {
+            mLoadingProgressBar.setVisibility(View.VISIBLE);
+            getLaundryCall();
+        }
     }
 
     protected void getLaundryCall() {
-        errorTextView.setVisibility(View.GONE);
-        errorButton.setVisibility(View.GONE);
+        hideErrorMessage();
         Call<Map<String,MachineList>> allMachineCall = MachineService.getService().getAllMachines();
         allMachineCall.enqueue(new Callback<Map<String, MachineList>>() {
             @Override
             public void onResponse(Response<Map<String, MachineList>> response, Retrofit retrofit) {
-                Map<String,MachineList> machineMap = response.body();
-                List<Location> locations = ModelOperations.machineMapToLocationList(machineMap);
-                adapter = new LocationAdapter(locations, LocationActivity.this.getApplicationContext());
-                mLoadingProgressBar.setVisibility(View.GONE);
-                recyclerView.setHasFixedSize(true);
-                recyclerView.setAdapter(adapter);
-                mSwipeRefreshLayout.setRefreshing(false);
+                if(response.isSuccess()) {
+                    Map<String,MachineList> machineMap = response.body();
+                    List<Location> locations = ModelOperations.machineMapToLocationList(machineMap);
+                    adapter = new LocationAdapter(locations, LocationActivity.this.getApplicationContext());
+                    mLoadingProgressBar.setVisibility(View.GONE);
+                    recyclerView.setHasFixedSize(true);
+                    recyclerView.setAdapter(adapter);
+                    mSwipeRefreshLayout.setRefreshing(false);
+                } else {
+                    int httpCode = response.code();
+                    if(httpCode < 500) {
+                        //client error
+                        showErrorMessage(getString(R.string.error_client_message));
+                    } else {
+                        //server error
+                        showErrorMessage(getString(R.string.error_server_message));
+                        //AnalyticsHelper.sendEventHit("Network error", response.message(), "Code: " + httpCode);
+                    }
+
+                }
             }
 
             @Override
             public void onFailure(Throwable t) {
                 Log.e("LocationActivity", "API ERROR - " + t.getMessage());
-                recyclerView.setAdapter(null);
-                mLoadingProgressBar.setVisibility(View.GONE);
-                mSwipeRefreshLayout.setRefreshing(false);
-                errorTextView.setVisibility(View.VISIBLE);
-                errorButton.setVisibility(View.VISIBLE);
+                if(isNetworkAvailable()) {
+                    //likely a timeout
+                    showErrorMessage(getString(R.string.error_server_message));
+                    //AnalyticsHelper.sendEventHit("Network error", t.getMessage(), "");
+                }
+                else showNoInternetDialog();
+
             }
         });
+    }
+
+    public void showErrorMessage(String message) {
+        error = true;
+        errorTextView.setText(message);
+        recyclerView.setAdapter(null);
+        mLoadingProgressBar.setVisibility(View.GONE);
+        mSwipeRefreshLayout.setRefreshing(false);
+        errorTextView.setVisibility(View.VISIBLE);
+        errorButton.setVisibility(View.VISIBLE);
+    }
+
+    public void hideErrorMessage() {
+        error = false;
+        errorTextView.setVisibility(View.GONE);
+        errorButton.setVisibility(View.GONE);
     }
 
     @Override
@@ -146,13 +185,14 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     }
 
     private void showNoInternetDialog() {
+        error = true;
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle("Connection Error");
         alertDialogBuilder.setMessage("You have no internet connection");
         alertDialogBuilder.setCancelable(false);
         alertDialogBuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                finish();
+                showErrorMessage("You have no internet connection");
             }
         });
         AlertDialog alertDialog = alertDialogBuilder.create();
@@ -170,6 +210,14 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     public void onClick(View v) {
         if(v.equals(errorButton)) {
             getLaundryCall();
+            mLoadingProgressBar.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String message;
+        Log.e("ATTN", "onactivityresult");
+        if(data != null) Log.e("ATTN:"," result: " + data.getStringExtra("error"));
     }
 }
