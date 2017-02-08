@@ -15,7 +15,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.List;
 import java.util.Map;
@@ -39,12 +41,14 @@ import xyz.jhughes.laundry.storage.SharedPrefsHelper;
  * The main activity of the app. Lists the locations of
  * laundry and an overview of the availabilities.
  */
-public class LocationActivity extends ScreenTrackedActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class LocationActivity extends ScreenTrackedActivity implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     @Bind(R.id.recycler_view) RecyclerView recyclerView;
     @Bind(R.id.location_activity_toolbar) Toolbar toolbar;
     @Bind(R.id.progressBar) ProgressBar mLoadingProgressBar;
     @Bind(R.id.location_list_puller) SwipeRefreshLayout mSwipeRefreshLayout;
+    @Bind((R.id.location_error_text)) TextView errorTextView;
+    @Bind(R.id.location_error_button) Button errorButton;
 
     private LocationAdapter adapter;
 
@@ -82,6 +86,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
         initToolbar();
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
+        errorButton.setOnClickListener(this);
     }
 
     private void initToolbar() {
@@ -102,6 +107,8 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     }
 
     protected void getLaundryCall() {
+        errorTextView.setVisibility(View.GONE);
+        errorButton.setVisibility(View.GONE);
         Call<Map<String,MachineList>> allMachineCall = MachineService.getService().getAllMachines();
         allMachineCall.enqueue(new Callback<Map<String, MachineList>>() {
             @Override
@@ -118,6 +125,11 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
             @Override
             public void onFailure(Throwable t) {
                 Log.e("LocationActivity", "API ERROR - " + t.getMessage());
+                recyclerView.setAdapter(null);
+                mLoadingProgressBar.setVisibility(View.GONE);
+                mSwipeRefreshLayout.setRefreshing(false);
+                errorTextView.setVisibility(View.VISIBLE);
+                errorButton.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -152,5 +164,12 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.equals(errorButton)) {
+            getLaundryCall();
+        }
     }
 }
