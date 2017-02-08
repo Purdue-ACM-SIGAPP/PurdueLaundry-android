@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -109,14 +110,25 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     protected void onStart() {
         super.onStart();
         recyclerView.setAdapter(null);
+        //We only want to clear the adapter/show the loading
+        // if there are no items in the list already.
+        if(recyclerView.getAdapter() == null || recyclerView.getAdapter().getItemCount() <= 0) {
+            recyclerView.setAdapter(null);
+        }
         if(!error) {
-            mLoadingProgressBar.setVisibility(View.VISIBLE);
             getLaundryCall();
+            mLoadingProgressBar.setVisibility(View.VISIBLE);
         }
     }
 
     protected void getLaundryCall() {
         hideErrorMessage();
+
+        if(!isNetworkAvailable()) {
+            showErrorMessage("You have no internet connection.");
+            return;
+        }
+
         Call<Map<String,MachineList>> allMachineCall = MachineService.getService().getAllMachines();
         allMachineCall.enqueue(new Callback<Map<String, MachineList>>() {
             @Override
@@ -125,6 +137,10 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
                     Map<String,MachineList> machineMap = response.body();
                     List<Location> locations = ModelOperations.machineMapToLocationList(machineMap);
                     adapter = new LocationAdapter(locations, LocationActivity.this.getApplicationContext());
+
+                    //We conditionally make the progress bar visible,
+                    // but its cheap to always dismiss it without checking
+                    // if its already gone.
                     mLoadingProgressBar.setVisibility(View.GONE);
                     recyclerView.setHasFixedSize(true);
                     recyclerView.setAdapter(adapter);
@@ -146,13 +162,13 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
             @Override
             public void onFailure(Throwable t) {
                 Log.e("LocationActivity", "API ERROR - " + t.getMessage());
-                if(isNetworkAvailable()) {
-                    //likely a timeout
-                    showErrorMessage(getString(R.string.error_server_message));
-                    //AnalyticsHelper.sendEventHit("Network error", t.getMessage(), "");
-                }
-                else showNoInternetDialog();
+                //likely a timeout -- network is available due to prev. check
+                showErrorMessage(getString(R.string.error_server_message));
+                //AnalyticsHelper.sendEventHit("Network error", t.getMessage(), "");
 
+                mSwipeRefreshLayout.setRefreshing(false);
+                Snackbar snackbar = Snackbar.make(recyclerView, "There was an issue refreshing the dorms, try again later.", Snackbar.LENGTH_SHORT);
+                snackbar.show();
             }
         });
     }
@@ -182,6 +198,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     @Override
     public void onRefresh() {
         getLaundryCall();
+        mSwipeRefreshLayout.setRefreshing(true);
     }
 
     private void showNoInternetDialog() {
@@ -209,15 +226,8 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     @Override
     public void onClick(View v) {
         if(v.equals(errorButton)) {
-            getLaundryCall();
             mLoadingProgressBar.setVisibility(View.VISIBLE);
+            getLaundryCall();
         }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        String message;
-        Log.e("ATTN", "onactivityresult");
-        if(data != null) Log.e("ATTN:"," result: " + data.getStringExtra("error"));
     }
 }

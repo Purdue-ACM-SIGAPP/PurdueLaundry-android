@@ -18,6 +18,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -29,6 +32,7 @@ import retrofit.Response;
 import retrofit.Retrofit;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
+import xyz.jhughes.laundry.LaundryParser.MachineStates;
 import xyz.jhughes.laundry.ModelOperations;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.SnackbarPostListener;
@@ -45,17 +49,28 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
 
     private ArrayList<Machine> classMachines;
 
-    @Bind(R.id.dryer_machines_recycler_view) RecyclerView recyclerView;
-    @Bind(R.id.dryer_list_layout) SwipeRefreshLayout mSwipeRefreshLayout;
+    private MachineAdapter currentAdapter;
+
+    @Bind(R.id.dryer_machines_recycler_view)
+    RecyclerView recyclerView;
+    @Bind(R.id.dryer_list_layout)
+    SwipeRefreshLayout mSwipeRefreshLayout;
+    @Bind(R.id.machine_fragment_too_filtered)
+    TextView mTooFilteredTextView;
 
     private boolean isRefreshing;
     private boolean isDryers;
     private ProgressDialog progressDialog;
 
     private View rootView;
+    private LinearLayout layout;
+    private Button notifyButton;
+
 
     public static String options = "Available|In use|Almost done|End of cycle";
     private String mRoomName;
+
+    private boolean notifyButtonVisible = false;
 
     public MachineFragment() {
         // Required empty public constructor
@@ -93,7 +108,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
         classMachines = new ArrayList<>();
 
         refreshList();
-
+        initializeNotifyOnAvaiableButton();
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         return rootView;
@@ -134,6 +149,30 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
 
                         MachineAdapter adapter = new MachineAdapter(classMachines, rootView.getContext(), isDryers, options, mRoomName, MachineFragment.this);
                         recyclerView.setAdapter(adapter);
+                        currentAdapter = adapter;
+
+                        boolean addNotifyButton = !notifyButtonVisible;
+                        if (addNotifyButton) {
+                            for (Machine m : adapter.getCurrentMachines()) {
+                                if (m.getStatus().equalsIgnoreCase("Available")) {
+                                    addNotifyButton = false;
+                                }
+                            }
+                            if (addNotifyButton) addNotifyOnAvailableButton();
+                            else removeNotifyOnAvailableButton();
+                        }
+
+                        //Check if the view is being filtered and causing the
+                        // fragment to appear empty.
+                        // This is not shown if the list is empty for any other reason.
+                        if (!options.equals(MachineStates.FILTERABLE_OPTIONS) && adapter.getItemCount() == 0) {
+                            //Filters are too restrictive.
+                            mTooFilteredTextView.setVisibility(View.VISIBLE);
+                        } else {
+                            mTooFilteredTextView.setVisibility(View.GONE);
+                        }
+
+                        recyclerView.setAdapter(adapter);
                     } else {
                         int httpCode = response.code();
                         if(httpCode < 500) {
@@ -146,16 +185,17 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                         }
 
                     }
+
                 }
 
                 @Override
                 public void onFailure(Throwable t) {
-                    if(isNetworkAvailable()) {
-                        showErrorDialog(getString(R.string.error_server_message));
-                        //AnalyticsHelper.sendEventHit("Network error", t.getMessage(), "");
-                    } else {
-                        showNoInternetDialog();
-                    }
+                    //likely a timeout -- network is available due to prev. check
+                    showErrorDialog(getString(R.string.error_server_message));
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    isRefreshing = false;
+                    alertNetworkError();
+                    //AnalyticsHelper.sendEventHit("Network error", t.getMessage(), "");
                 }
             });
         } else {
@@ -164,7 +204,6 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     }
 
     private void showErrorDialog(final String message) {
-        if(getView().getVisibility() != View.VISIBLE) return;
         if (progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
@@ -184,9 +223,66 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
         alertDialog.show();
     }
 
-    private void showOfflineDialogIfNecessary() {
+    private void alertNetworkError() {
+        postSnackbar("There was an issue updating the machines, please try again later.", Snackbar.LENGTH_SHORT);
+    }
 
-        if(!rootView.getContext().getSharedPreferences("alerts", Context.MODE_PRIVATE).getBoolean("offline_alert_thrown", false)) {
+    private void removeNotifyOnAvailableButton() {
+        if (layout == null) return;
+        layout.removeView(notifyButton);
+        notifyButtonVisible = false;
+    }
+
+    private void addNotifyOnAvailableButton() {
+        if (layout == null) return;
+        layout.addView(notifyButton, 0);
+        notifyButtonVisible = true;
+    }
+
+    private void initializeNotifyOnAvaiableButton() {
+        final String text = isDryers ? getString(R.string.notify_on_dryer_available) : getString(R.string.notify_on_washer_available);
+        layout = (LinearLayout) rootView.findViewById(R.id.machine_list_wrapper);
+        notifyButton = new Button(getContext());
+        notifyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Machine m = null;
+                int mTime = Integer.MAX_VALUE;
+                for (Machine mach : currentAdapter.getCurrentMachines()) {
+                    if (m == null) {
+                        m = mach;
+                    } else {
+                        try {
+                            int machTime = Integer.parseInt(mach.getTime().substring(0, mach.getTime().indexOf(' ')));
+                            if (machTime < mTime) {
+                                m = mach;
+                                mTime = machTime;
+                            }
+                        } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
+                            continue;
+                        }
+                    }
+                }
+                if (m == null) {
+                    postSnackbar("No machines to set timer for!", Snackbar.LENGTH_LONG);
+                    return;
+                }
+                if (m.getStatus().equals("Not online") || m.getStatus().equals("Out of order")) {
+                    postSnackbar("It looks like this location is offline. " +
+                                    "Please go to the laundry room to check machines.",
+                            Snackbar.LENGTH_LONG);
+                    return;
+                }
+                currentAdapter.registerNotification(m);
+                notifyButtonVisible = true;
+            }
+        });
+        notifyButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        notifyButton.setText(text);
+    }
+
+    private void showOfflineDialogIfNecessary() {
+        if (!rootView.getContext().getSharedPreferences("alerts", Context.MODE_PRIVATE).getBoolean("offline_alert_thrown", false)) {
             // 1. Instantiate an AlertDialog.Builder with its constructor
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -223,7 +319,8 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
         alertDialog.show();
     }
 
-    @Override public void onDestroyView() {
+    @Override
+    public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
     }

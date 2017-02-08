@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Timer;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,25 +28,11 @@ import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.notificationhelpers.NotificationCreator;
 
 public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHolder> {
-    private ArrayList<Machine> currentMachines;
-    private Context mContext;
+
     private final String roomName;
     private final SnackbarPostListener listener;
-
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
-        @Bind(R.id.machine_name_text_view)  TextView nameTextView;
-        @Bind(R.id.machine_status_text_view)  TextView statusTextView;
-        @Bind(R.id.card_view)  CardView cardView;
-
-        private ViewHolder(View v) {
-            super(v);
-            ButterKnife.bind(this, v);
-        }
-    }
+    private ArrayList<Machine> currentMachines;
+    private Context mContext;
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public MachineAdapter(ArrayList<Machine> machines, Context context, Boolean dryers, String options, String roomName, SnackbarPostListener listener) {
@@ -60,8 +45,13 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         }
     }
 
+    /**
+     * Remove the machines that are being filtered out based on the options string provided.
+     * @param m The machine to be tested.
+     * @param dryers Whether it is a dryer or not.
+     * @param options String representation of currently visible machine states.
+     */
     private void machineHelper(Machine m, Boolean dryers, String options) {
-
         String status = m.getStatus();
         boolean isCorrectType = dryers == m.getType().equals(MachineTypes.DRYER);
         boolean matchesParameters = options.contains(status);
@@ -113,25 +103,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
             @Override
             public void onClick(View v) {
                 AnalyticsHelper.sendEventHit(m.getType(), AnalyticsHelper.CLICK, m.getStatus());
-
-                try {
-                    int minutesInFuture = Integer.parseInt(m.getTime().substring(0, m.getTime().indexOf(' ')));
-                    int millisInFuture = minutesInFuture * 60000; //60 seconds * 1000 milliseconds
-
-                    String notificationKey = roomName + " " + m.getName();
-
-                    if(NotificationCreator.notificationExists(notificationKey)) {
-                        listener.postSnackbar(mContext.getString(R.string.reminder_already_set), Snackbar.LENGTH_LONG);
-                    } else {
-                        fireNotificationInFuture(millisInFuture, holder, notificationKey);
-                    }
-                } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
-                    if (m.getStatus().compareTo("Out of order") != 0) {
-                        listener.postSnackbar(mContext.getString(R.string.machine_not_running), Snackbar.LENGTH_SHORT);
-                    } else {
-                        listener.postSnackbar("This machine is offline but may still be functioning. Visit " + m.getName() + " for details.", Snackbar.LENGTH_LONG);
-                    }
-                }
+                registerNotification(m);
             }
         });
 
@@ -147,7 +119,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     }
 
     //Set and Fire Notification
-    private void fireNotificationInFuture(final int milliInFuture, final ViewHolder holder, final String notificationKey) {
+    private void fireNotificationInFuture(final int milliInFuture, final String notificationKey) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext)
                 .setTitle(mContext.getString(R.string.alarm))
                 .setMessage(mContext.getString(R.string.ask_set_alarm))
@@ -171,4 +143,48 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
+
+    public void registerNotification(Machine m) {
+        try {
+            int minutesInFuture = Integer.parseInt(m.getTime().substring(0, m.getTime().indexOf(' ')));
+            int millisInFuture = minutesInFuture * 60000; //60 seconds * 1000 milliseconds
+
+            String notificationKey = roomName + " " + m.getName();
+
+            if (NotificationCreator.notificationExists(notificationKey)) {
+                listener.postSnackbar(mContext.getString(R.string.reminder_already_set), Snackbar.LENGTH_LONG);
+            } else {
+                fireNotificationInFuture(millisInFuture, notificationKey);
+            }
+        } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
+            if (m.getStatus().compareTo("Out of order") != 0) {
+                listener.postSnackbar(mContext.getString(R.string.machine_not_running), Snackbar.LENGTH_SHORT);
+            } else {
+                listener.postSnackbar("This machine is offline but may still be functioning. Visit " + m.getName() + " for details.", Snackbar.LENGTH_LONG);
+            }
+        }
+    }
+
+    public ArrayList<Machine> getCurrentMachines() {
+        return currentMachines;
+    }
+
+    // Provide a reference to the views for each data item
+    // Complex data items may need more than one view per item, and
+    // you provide access to all the views for a data item in a view holder
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        // each data item is just a string in this case
+        @Bind(R.id.machine_name_text_view)
+        TextView nameTextView;
+        @Bind(R.id.machine_status_text_view)
+        TextView statusTextView;
+        @Bind(R.id.card_view)
+        CardView cardView;
+
+        private ViewHolder(View v) {
+            super(v);
+            ButterKnife.bind(this, v);
+        }
+    }
+
 }
