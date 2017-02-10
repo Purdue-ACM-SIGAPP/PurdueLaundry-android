@@ -79,11 +79,9 @@ public class MachineFilter {
         }
 
         public static State getState(String stateString) {
-            if(stateString.equalsIgnoreCase(MachineStates.IN_USE)) return IN_USE;
-            if(stateString.equalsIgnoreCase(MachineStates.AVAILABLE)) return AVAILABLE;
-            if(stateString.equalsIgnoreCase(MachineStates.ALMOST_DONE)) return ALMOST_DONE;
-            if(stateString.equalsIgnoreCase(MachineStates.END_CYCLE)) return END_CYCLE;
-            if(stateString.equalsIgnoreCase(MachineStates.READY)) return READY;
+            for(State state : values()) {
+                if(stateString.equalsIgnoreCase(state.toString())) return state;
+            }
             return null;
         }
     }
