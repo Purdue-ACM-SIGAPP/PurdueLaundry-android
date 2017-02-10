@@ -45,20 +45,4 @@
         android:progressDrawable="@drawable/progress"
         android:layout_centerHorizontal="true" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingBottom="10dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:id="@+id/location_error_text" />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/location_error_text"
-        android:layout_centerHorizontal="true"
-        android:text="@string/location_error_try_again"
-        android:id="@+id/location_error_button"/>
-
 </RelativeLayout>
