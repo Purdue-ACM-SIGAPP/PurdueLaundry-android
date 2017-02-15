@@ -16,6 +16,12 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:id="@+id/machine_fragment_notify_button" />
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/dryer_machines_recycler_view"
                 android:layout_width="match_parent"

@@ -60,20 +60,16 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     SwipeRefreshLayout mSwipeRefreshLayout;
     @Bind(R.id.machine_fragment_too_filtered)
     TextView mTooFilteredTextView;
+    @Bind(R.id.machine_fragment_notify_button)
+    Button notifyButton;
 
     private boolean isRefreshing;
     private boolean isDryers;
     private ProgressDialog progressDialog;
 
     private View rootView;
-    private LinearLayout layout;
-    private Button notifyButton;
 
-
-    public static String options = "Available|In use|Almost done|End of cycle";
     private String mRoomName;
-
-    private boolean notifyButtonVisible = false;
 
     public MachineFragment() {
         // Required empty public constructor
@@ -110,8 +106,8 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
 
         classMachines = new ArrayList<>();
 
-        refreshList();
         initializeNotifyOnAvaiableButton();
+        refreshList();
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         return rootView;
@@ -141,7 +137,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                     if (progressDialog.isShowing()) {
                         progressDialog.dismiss();
                     }
-                    if(response.isSuccess()) {
+                    if (response.isSuccess()) {
                         mSwipeRefreshLayout.setRefreshing(false);
                         isRefreshing = false;
                         classMachines = response.body();
@@ -154,7 +150,17 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                         recyclerView.setAdapter(adapter);
                         currentAdapter = adapter;
 
-                        boolean addNotifyButton = !notifyButtonVisible;
+                        //Check if the view is being filtered and causing the
+                        // fragment to appear empty.
+                        // This is not shown if the list is empty for any other reason.
+                        if (currentAdapter.getCurrentMachines().isEmpty()) {
+                            //Filters are too restrictive.
+                            mTooFilteredTextView.setVisibility(View.VISIBLE);
+                        } else {
+                            mTooFilteredTextView.setVisibility(View.GONE);
+                        }
+
+                        boolean addNotifyButton = notifyButton.getVisibility() != View.VISIBLE;
                         if (addNotifyButton) {
                             for (Machine m : adapter.getCurrentMachines()) {
                                 if (m.getStatus().equalsIgnoreCase("Available")) {
@@ -164,21 +170,10 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                             if (addNotifyButton) addNotifyOnAvailableButton();
                             else removeNotifyOnAvailableButton();
                         }
-
-                        //Check if the view is being filtered and causing the
-                        // fragment to appear empty.
-                        // This is not shown if the list is empty for any other reason.
-                        if (!options.equals(MachineStates.FILTERABLE_OPTIONS) && adapter.getItemCount() == 0) {
-                            //Filters are too restrictive.
-                            mTooFilteredTextView.setVisibility(View.VISIBLE);
-                        } else {
-                            mTooFilteredTextView.setVisibility(View.GONE);
-                        }
-
                         recyclerView.setAdapter(adapter);
                     } else {
                         int httpCode = response.code();
-                        if(httpCode < 500) {
+                        if (httpCode < 500) {
                             //client error
                             showErrorDialog(getString(R.string.error_client_message));
                         } else {
@@ -192,9 +187,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                                             .setFatal(false)
                                             .build());
                         }
-
                     }
-
                 }
 
                 @Override
@@ -243,57 +236,43 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     }
 
     private void removeNotifyOnAvailableButton() {
-        if (layout == null) return;
-        layout.removeView(notifyButton);
-        notifyButtonVisible = false;
+        notifyButton.setVisibility(View.GONE);
     }
 
     private void addNotifyOnAvailableButton() {
-        if (layout == null) return;
-        layout.addView(notifyButton, 0);
-        notifyButtonVisible = true;
+        notifyButton.setVisibility(View.VISIBLE);
     }
 
     private void initializeNotifyOnAvaiableButton() {
         final String text = isDryers ? getString(R.string.notify_on_dryer_available) : getString(R.string.notify_on_washer_available);
-        layout = (LinearLayout) rootView.findViewById(R.id.machine_list_wrapper);
-        notifyButton = new Button(getContext());
+        notifyButton.setText(text);
         notifyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Machine m = null;
                 int mTime = Integer.MAX_VALUE;
-                for (Machine mach : currentAdapter.getCurrentMachines()) {
-                    if (m == null) {
-                        m = mach;
-                    } else {
-                        try {
-                            int machTime = Integer.parseInt(mach.getTime().substring(0, mach.getTime().indexOf(' ')));
-                            if (machTime < mTime) {
-                                m = mach;
-                                mTime = machTime;
-                            }
-                        } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
-                            continue;
+                for (Machine machine : currentAdapter.getCurrentMachines()) {
+                    try {
+                        int machineTime = Integer.parseInt(machine.getTime().substring(0, machine.getTime().indexOf(' ')));
+                        if (machineTime < mTime) {
+                            m = machine;
+                            mTime = machineTime;
                         }
+                    } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
+                        continue;
                     }
                 }
                 if (m == null) {
-                    postSnackbar("No machines to set timer for!", Snackbar.LENGTH_LONG);
+                    postSnackbar(getString(R.string.fragment_no_machine), Snackbar.LENGTH_LONG);
                     return;
                 }
                 if (m.getStatus().equals("Not online") || m.getStatus().equals("Out of order")) {
-                    postSnackbar("It looks like this location is offline. " +
-                                    "Please go to the laundry room to check machines.",
-                            Snackbar.LENGTH_LONG);
+                    postSnackbar(getString(R.string.fragment_offline_location), Snackbar.LENGTH_LONG);
                     return;
                 }
                 currentAdapter.registerNotification(m);
-                notifyButtonVisible = true;
             }
         });
-        notifyButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        notifyButton.setText(text);
     }
 
     private void showOfflineDialogIfNecessary() {

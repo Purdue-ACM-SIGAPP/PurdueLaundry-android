@@ -3,6 +3,7 @@ package xyz.jhughes.laundry.adapters;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -14,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -21,11 +24,12 @@ import butterknife.ButterKnife;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.LaundryParser.MachineStates;
-import xyz.jhughes.laundry.LaundryParser.MachineTypes;
+import xyz.jhughes.laundry.MachineFilter;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.SnackbarPostListener;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.notificationhelpers.NotificationCreator;
+import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
 public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHolder> {
 
@@ -35,33 +39,20 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     private Context mContext;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MachineAdapter(ArrayList<Machine> machines, Context context, Boolean dryers, String options, String roomName, SnackbarPostListener listener) {
+    public MachineAdapter(ArrayList<Machine> machines, Context context, Boolean dryers, String roomName, SnackbarPostListener listener) {
         this.mContext = context;
         this.roomName = roomName;
         this.listener = listener;
+
         currentMachines = new ArrayList<>();
-        for (Machine m : machines) {
-            machineHelper(m, dryers, options);
-        }
-    }
 
-    /**
-     * Remove the machines that are being filtered out based on the options string provided.
-     * @param m The machine to be tested.
-     * @param dryers Whether it is a dryer or not.
-     * @param options String representation of currently visible machine states.
-     */
-    private void machineHelper(Machine m, Boolean dryers, String options) {
-        String status = m.getStatus();
-        boolean isCorrectType = dryers == m.getType().equals(MachineTypes.DRYER);
-        boolean matchesParameters = options.contains(status);
-        boolean isStillAllowed = !matchesParameters
-                && !MachineStates.FILTERABLE_OPTIONS.contains(status)
-                && options.contains(MachineStates.IN_USE);
+        final SharedPreferences p = SharedPrefsHelper.getSharedPrefs(mContext);
+        final Gson gson = new Gson();
+        MachineFilter filter;
+        filter = gson.fromJson(p.getString("filter", null), MachineFilter.class);
+        if(filter == null) filter = new MachineFilter();
 
-        if (isCorrectType && (matchesParameters || isStillAllowed)) {
-            currentMachines.add(m);
-        }
+        currentMachines.addAll(filter.filter(dryers, machines));
     }
 
     // Create new views (invoked by the layout manager)
@@ -92,7 +83,6 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                 break;
             case MachineStates.READY:
                 holder.statusTextView.setText(mContext.getResources().getStringArray(R.array.options)[1]); // this should be replaced too
-
                 break;
             default:
                 holder.statusTextView.setText(m.getStatus());

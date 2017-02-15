@@ -36,6 +36,9 @@
     <string name="location_error_try_again">Try Again</string>
     <string name="notify_on_washer_available">Notfy me when a washer is available.</string>
     <string name="notify_on_dryer_available">Notfy me when a dryer is available.</string>
+    <string name="fragment_no_machine">No machines to set a timer for!</string>
+    <string name="fragment_offline_location">It looks like this location is offline. Please go to the laundry room to check machines.</string>
+    <string name="machine_activity_too_filtered">Please select some machine types to show.</string>
 
     <array name="options">
         <item>Available</item>
