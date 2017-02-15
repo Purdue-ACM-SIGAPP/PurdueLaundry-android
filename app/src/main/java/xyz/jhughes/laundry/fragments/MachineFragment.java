@@ -196,25 +196,23 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
             public void onClick(View v) {
                 Machine m = null;
                 int mTime = Integer.MAX_VALUE;
-                for (Machine mach : currentAdapter.getCurrentMachines()) {
+                for (Machine machine : currentAdapter.getCurrentMachines()) {
                     try {
-                        int machTime = Integer.parseInt(mach.getTime().substring(0, mach.getTime().indexOf(' ')));
-                        if (machTime < mTime) {
-                            m = mach;
-                            mTime = machTime;
+                        int machineTime = Integer.parseInt(machine.getTime().substring(0, machine.getTime().indexOf(' ')));
+                        if (machineTime < mTime) {
+                            m = machine;
+                            mTime = machineTime;
                         }
                     } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
                         continue;
                     }
                 }
                 if (m == null) {
-                    postSnackbar("No machines to set a timer for!", Snackbar.LENGTH_LONG);
+                    postSnackbar(getString(R.string.fragment_no_machine), Snackbar.LENGTH_LONG);
                     return;
                 }
                 if (m.getStatus().equals("Not online") || m.getStatus().equals("Out of order")) {
-                    postSnackbar("It looks like this location is offline. " +
-                                    "Please go to the laundry room to check machines.",
-                            Snackbar.LENGTH_LONG);
+                    postSnackbar(getString(R.string.fragment_offline_location), Snackbar.LENGTH_LONG);
                     return;
                 }
                 currentAdapter.registerNotification(m);

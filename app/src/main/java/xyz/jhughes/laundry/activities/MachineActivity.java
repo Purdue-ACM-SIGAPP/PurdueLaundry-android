@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -109,20 +110,30 @@ public class MachineActivity extends ScreenTrackedActivity {
                                                 boolean isChecked) {
                                 MachineFilter.State option = MachineFilter.State.getState(
                                         getResources().getStringArray(R.array.options)[which]);
-                                if(isChecked && !states.contains(option)) states.add(option);
+                                if(isChecked) {
+                                    if(!states.contains(option))
+                                        states.add(option);
+                                }
                                 else states.remove(option);
                             }
                         })
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        MachineFilter filter = new MachineFilter(states);
-                        SharedPreferences.Editor e = p.edit();
-                        e.putString("filter", gson.toJson(filter));
-                        e.apply();
-                        appSectionsPagerAdapter.notifyDataSetChanged();
-                        AnalyticsHelper.sendEventHit("Filters", AnalyticsHelper.CLICK, MachineFilter.State.toString(states));
-
+                        for(MachineFilter.State s : states) {
+                            Log.e("test", s.toString());
+                        }
+                        if(states.isEmpty()) {
+                            dialog.dismiss();
+                            showTooFilteredDialog();
+                        } else {
+                            MachineFilter filter = new MachineFilter(states);
+                            SharedPreferences.Editor e = p.edit();
+                            e.putString("filter", gson.toJson(filter));
+                            e.apply();
+                            appSectionsPagerAdapter.notifyDataSetChanged();
+                            AnalyticsHelper.sendEventHit("Filters", AnalyticsHelper.CLICK, MachineFilter.State.toString(states));
+                        }
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -132,6 +143,21 @@ public class MachineActivity extends ScreenTrackedActivity {
                     }
                 });
         builder.create().show();
+    }
+
+    private void showTooFilteredDialog() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("Too filtered");
+        alertDialogBuilder.setMessage(R.string.machine_activity_too_filtered);
+        alertDialogBuilder.setCancelable(false);
+        alertDialogBuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+                createDialog();
+            }
+        });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     @Override

@@ -54,8 +54,7 @@ public class MachineFilter {
     public enum State {
 
         IN_USE(MachineStates.IN_USE), AVAILABLE(MachineStates.AVAILABLE),
-        ALMOST_DONE(MachineStates.ALMOST_DONE), END_CYCLE(MachineStates.END_CYCLE),
-        READY(MachineStates.READY);
+        ALMOST_DONE(MachineStates.ALMOST_DONE), END_CYCLE(MachineStates.END_CYCLE);
 
         private final String stateString;
 
