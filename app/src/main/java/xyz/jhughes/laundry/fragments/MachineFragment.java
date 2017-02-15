@@ -3,6 +3,7 @@ package xyz.jhughes.laundry.fragments;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -18,6 +19,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -31,7 +34,9 @@ import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.ModelOperations;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.SnackbarPostListener;
+import xyz.jhughes.laundry.activities.LocationActivity;
 import xyz.jhughes.laundry.adapters.MachineAdapter;
+import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.analytics.ScreenTrackedFragment;
 import xyz.jhughes.laundry.apiclient.MachineService;
 
@@ -127,53 +132,98 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                     if (progressDialog.isShowing()) {
                         progressDialog.dismiss();
                     }
+                    if (response.isSuccess()) {
+                        mSwipeRefreshLayout.setRefreshing(false);
+                        isRefreshing = false;
+                        classMachines = response.body();
 
-                    mSwipeRefreshLayout.setRefreshing(false);
-                    isRefreshing = false;
-                    classMachines = response.body();
-
-                    if (ModelOperations.machinesOffline(classMachines)) {
-                        showOfflineDialogIfNecessary();
-                    }
-
-                    MachineAdapter adapter = new MachineAdapter(classMachines, rootView.getContext(), isDryers, mRoomName, MachineFragment.this);
-                    currentAdapter = adapter;
-
-                    //Check if the view is being filtered and causing the
-                    // fragment to appear empty.
-                    // This is not shown if the list is empty for any other reason.
-                    if (currentAdapter.getCurrentMachines().isEmpty()) {
-                        //Filters are too restrictive.
-                        mTooFilteredTextView.setVisibility(View.VISIBLE);
-                    } else {
-                        mTooFilteredTextView.setVisibility(View.GONE);
-                    }
-
-                    boolean addNotifyButton = notifyButton.getVisibility() != View.VISIBLE;
-                    if (addNotifyButton) {
-                        for (Machine m : adapter.getCurrentMachines()) {
-                            if (m.getStatus().equalsIgnoreCase("Available")) {
-                                addNotifyButton = false;
-                            }
+                        if (ModelOperations.machinesOffline(classMachines)) {
+                            showOfflineDialogIfNecessary();
                         }
-                        if (addNotifyButton) addNotifyOnAvailableButton();
-                        else removeNotifyOnAvailableButton();
-                    }
 
-                    recyclerView.setAdapter(adapter);
+                        MachineAdapter adapter = new MachineAdapter(classMachines, rootView.getContext(), isDryers, mRoomName, MachineFragment.this);
+                        recyclerView.setAdapter(adapter);
+                        currentAdapter = adapter;
+
+                        //Check if the view is being filtered and causing the
+                        // fragment to appear empty.
+                        // This is not shown if the list is empty for any other reason.
+                        if (currentAdapter.getCurrentMachines().isEmpty()) {
+                            //Filters are too restrictive.
+                            mTooFilteredTextView.setVisibility(View.VISIBLE);
+                        } else {
+                            mTooFilteredTextView.setVisibility(View.GONE);
+                        }
+
+                        boolean addNotifyButton = notifyButton.getVisibility() != View.VISIBLE;
+                        if (addNotifyButton) {
+                            for (Machine m : adapter.getCurrentMachines()) {
+                                if (m.getStatus().equalsIgnoreCase("Available")) {
+                                    addNotifyButton = false;
+                                }
+                            }
+                            if (addNotifyButton) addNotifyOnAvailableButton();
+                            else removeNotifyOnAvailableButton();
+                        }
+                        recyclerView.setAdapter(adapter);
+                    } else {
+                        int httpCode = response.code();
+                        if (httpCode < 500) {
+                            //client error
+                            showErrorDialog(getString(R.string.error_client_message));
+                        } else {
+                            //server error
+                            showErrorDialog(getString(R.string.error_server_message));
+                            AnalyticsHelper.getDefaultTracker().send(
+                                    new HitBuilders.ExceptionBuilder()
+                                            .setDescription("Error")
+                                            .set("HTTP Code", String.valueOf(httpCode))
+                                            .set("Message", response.message())
+                                            .setFatal(false)
+                                            .build());
+                        }
+                    }
                 }
 
                 @Override
                 public void onFailure(Throwable t) {
+                    //likely a timeout -- network is available due to prev. check
+                    showErrorDialog(getString(R.string.error_server_message));
                     mSwipeRefreshLayout.setRefreshing(false);
                     isRefreshing = false;
                     alertNetworkError();
-                    //TODO: Add a GA here?
+                    AnalyticsHelper.getDefaultTracker().send(
+                            new HitBuilders.ExceptionBuilder()
+                                    .setDescription("Error")
+                                    .set("HTTP Code", "-1")
+                                    .set("Message", t.getMessage())
+                                    .setFatal(false)
+                                    .build());
                 }
             });
         } else {
             showNoInternetDialog();
         }
+    }
+
+    private void showErrorDialog(final String message) {
+        if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+        mSwipeRefreshLayout.setRefreshing(false);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        alertDialogBuilder.setTitle("Connection Error");
+        alertDialogBuilder.setMessage(message);
+        alertDialogBuilder.setCancelable(false);
+        alertDialogBuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                Intent i = new Intent(getActivity(), LocationActivity.class).putExtra("forceMainMenu", true).putExtra("error", message);
+                startActivity(i);
+                getActivity().finish();
+            }
+        });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     private void alertNetworkError() {
@@ -249,6 +299,8 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
         alertDialogBuilder.setCancelable(false);
         alertDialogBuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                Intent i = new Intent(getActivity(), LocationActivity.class).putExtra("forceMainMenu", true).putExtra("error", "You have no internet connection");
+                startActivity(i);
                 getActivity().finish();
             }
         });
