@@ -120,9 +120,6 @@ public class MachineActivity extends ScreenTrackedActivity {
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        for(MachineFilter.State s : states) {
-                            Log.e("test", s.toString());
-                        }
                         if(states.isEmpty()) {
                             dialog.dismiss();
                             showTooFilteredDialog();
