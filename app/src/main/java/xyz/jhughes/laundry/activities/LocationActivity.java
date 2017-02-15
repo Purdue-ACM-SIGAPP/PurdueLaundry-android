@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -39,7 +38,6 @@ import xyz.jhughes.laundry.adapters.LocationAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.analytics.ScreenTrackedActivity;
 import xyz.jhughes.laundry.apiclient.MachineService;
-import xyz.jhughes.laundry.fragments.MachineFragment;
 import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
 /**
