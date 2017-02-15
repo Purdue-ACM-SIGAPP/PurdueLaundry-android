@@ -13,11 +13,11 @@ import xyz.jhughes.laundry.LaundryParser.MachineList;
  * Retrofit interface for the Machine API.
  */
 public interface MachineAPI {
-    @GET("/laundry/{location}")
+    @GET("/v1/location/{location}")
     Call<ArrayList<Machine>> getMachineStatus(
             @Path("location") String location
     );
 
-    @GET("/laundry/location/all")
+    @GET("/v1/location/all")
     Call<Map<String,MachineList>>getAllMachines();
 }
