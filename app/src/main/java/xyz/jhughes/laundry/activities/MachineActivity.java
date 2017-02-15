@@ -10,18 +10,23 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xyz.jhughes.laundry.LaundryParser.Constants;
-import xyz.jhughes.laundry.LaundryParser.MachineStates;
+import xyz.jhughes.laundry.MachineFilter;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.AppSectionsPagerAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.analytics.ScreenTrackedActivity;
-import xyz.jhughes.laundry.fragments.MachineFragment;
 import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
 /**
@@ -84,31 +89,48 @@ public class MachineActivity extends ScreenTrackedActivity {
     }
 
     public void createDialog() {
-        final boolean[] tempOptions = transformOptions(MachineFragment.options);
+        final SharedPreferences p = SharedPrefsHelper.getSharedPrefs(MachineActivity.this);
+        final Gson gson = new Gson();
+        MachineFilter filter;
+        filter = gson.fromJson(p.getString("filter", null), MachineFilter.class);
+        if(filter == null) filter = new MachineFilter();
+
+        final List<MachineFilter.State> states = new ArrayList<>();
+        states.addAll(filter.getStates());
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // Set the dialog title
         builder.setTitle(R.string.select_options)
                 // Specify the list array, the items to be selected by default (null for none),
                 // and the listener through which to receive callbacks when items are selected
-                .setMultiChoiceItems(R.array.options, tempOptions,
+                .setMultiChoiceItems(R.array.options, filter.getStateBoolean(
+                        getResources().getStringArray(R.array.options)),
                         new DialogInterface.OnMultiChoiceClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which,
                                                 boolean isChecked) {
-                                tempOptions[which] = isChecked;
+                                MachineFilter.State option = MachineFilter.State.getState(
+                                        getResources().getStringArray(R.array.options)[which]);
+                                if(isChecked) {
+                                    if(!states.contains(option))
+                                        states.add(option);
+                                }
+                                else states.remove(option);
                             }
                         })
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        String options = transformOptions(tempOptions);
-                        MachineFragment.options = options;
-                        appSectionsPagerAdapter.notifyDataSetChanged();
-
-                        SharedPreferences.Editor e = SharedPrefsHelper.getSharedPrefs(MachineActivity.this).edit();
-                        e.putString("options", options);
-                        e.apply();
-                        AnalyticsHelper.sendEventHit("Filters", AnalyticsHelper.CLICK, options);
+                        if(states.isEmpty()) {
+                            dialog.dismiss();
+                            showTooFilteredDialog();
+                        } else {
+                            MachineFilter filter = new MachineFilter(states);
+                            SharedPreferences.Editor e = p.edit();
+                            e.putString("filter", gson.toJson(filter));
+                            e.apply();
+                            appSectionsPagerAdapter.notifyDataSetChanged();
+                            AnalyticsHelper.sendEventHit("Filters", AnalyticsHelper.CLICK, MachineFilter.State.toString(states));
+                        }
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -120,39 +142,19 @@ public class MachineActivity extends ScreenTrackedActivity {
         builder.create().show();
     }
 
-    private String transformOptions(boolean[] options) {
-        String result = "";
-        boolean hasFirst = false;
-
-        if (options[0]) {
-            result += MachineStates.AVAILABLE;
-            hasFirst = true;
-        }
-
-        if (options[1]) {
-            result += hasFirst ? MachineStates.SEPARATOR + MachineStates.IN_USE : MachineStates.IN_USE;
-            hasFirst = true;
-        }
-
-        if (options[2]) {
-            result += hasFirst ? MachineStates.SEPARATOR + MachineStates.ALMOST_DONE : MachineStates.ALMOST_DONE;
-            hasFirst = true;
-        }
-
-        if (options[3]) {
-            result += hasFirst ? MachineStates.SEPARATOR + MachineStates.END_CYCLE : MachineStates.END_CYCLE;
-        }
-
-        return result;
-    }
-
-    private boolean[] transformOptions(String options) {
-        return new boolean[]{
-                options.contains(MachineStates.AVAILABLE),
-                options.contains(MachineStates.IN_USE),
-                options.contains(MachineStates.ALMOST_DONE),
-                options.contains(MachineStates.END_CYCLE)
-        };
+    private void showTooFilteredDialog() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("Too filtered");
+        alertDialogBuilder.setMessage(R.string.machine_activity_too_filtered);
+        alertDialogBuilder.setCancelable(false);
+        alertDialogBuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+                createDialog();
+            }
+        });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     @Override
