@@ -135,24 +135,49 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     }
 
     public void registerNotification(Machine m) {
-        try {
-            int minutesInFuture = Integer.parseInt(m.getTime().substring(0, m.getTime().indexOf(' ')));
-            int millisInFuture = minutesInFuture * 60000; //60 seconds * 1000 milliseconds
+        //For available (green) machines
+        System.out.println(m.getStatus());
+        if (m.getStatus().equals("Available")) {
+            waitForMachine(m);
+        } else {
+            try {
+                //For machines that are already running
+                int minutesInFuture = Integer.parseInt(m.getTime().substring(0, m.getTime().indexOf(' ')));
+                int millisInFuture = minutesInFuture * 60000; //60 seconds * 1000 milliseconds
 
-            String notificationKey = roomName + " " + m.getName();
+                String notificationKey = roomName + " " + m.getName();
 
-            if (NotificationCreator.notificationExists(notificationKey)) {
-                listener.postSnackbar(mContext.getString(R.string.reminder_already_set), Snackbar.LENGTH_LONG);
-            } else {
-                fireNotificationInFuture(millisInFuture, notificationKey);
-            }
-        } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
-            if (m.getStatus().compareTo("Out of order") != 0) {
-                listener.postSnackbar(mContext.getString(R.string.machine_not_running), Snackbar.LENGTH_SHORT);
-            } else {
-                listener.postSnackbar("This machine is offline but may still be functioning. Visit " + m.getName() + " for details.", Snackbar.LENGTH_LONG);
+                if (NotificationCreator.notificationExists(notificationKey)) {
+                    listener.postSnackbar(mContext.getString(R.string.reminder_already_set), Snackbar.LENGTH_LONG);
+                } else {
+                    fireNotificationInFuture(millisInFuture, notificationKey);
+                }
+            } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
+                if (m.getStatus().compareTo("Out of order") != 0) {
+                    listener.postSnackbar(mContext.getString(R.string.machine_not_running), Snackbar.LENGTH_SHORT);
+                } else {
+                    listener.postSnackbar("This machine is offline but may still be functioning. Visit " + m.getName() + " for details.", Snackbar.LENGTH_LONG);
+                }
             }
         }
+    }
+
+    public void waitForMachine(Machine m){
+        AlertDialog.Builder machineWaitingDialog = new AlertDialog.Builder(mContext);
+        machineWaitingDialog.setTitle(m.getType() + ": " + m.getName())
+                .setCancelable(true)
+                .setNegativeButton("dismiss", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        //add positive button to refresh
+        //add message to load machine before
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+        //machineWaitingDialog.setView(inflater.inflate(, null)); //figure out how to get view here
+        AlertDialog alertDialog = machineWaitingDialog.create();
+        alertDialog.show();
     }
 
     public ArrayList<Machine> getCurrentMachines() {
