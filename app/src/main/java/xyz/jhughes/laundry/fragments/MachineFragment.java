@@ -157,7 +157,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
 
                         boolean addNotifyButton = notifyButton.getVisibility() != View.VISIBLE;
                         if (addNotifyButton) {
-                            for (Machine m : adapter.getCurrentMachines()) {
+                            for (Machine m : adapter.getAllMachines()) {
                                 if (m.getStatus().equalsIgnoreCase("Available")) {
                                     addNotifyButton = false;
                                 }
@@ -246,7 +246,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
             public void onClick(View v) {
                 Machine m = null;
                 int mTime = Integer.MAX_VALUE;
-                for (Machine machine : currentAdapter.getCurrentMachines()) {
+                for (Machine machine : currentAdapter.getAllMachines()) {
                     try {
                         int machineTime = Integer.parseInt(machine.getTime().substring(0, machine.getTime().indexOf(' ')));
                         if (machineTime < mTime) {
