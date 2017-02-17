@@ -111,7 +111,7 @@ public class MachineActivity extends ScreenTrackedActivity {
                         SharedPreferences.Editor e = p.edit();
                         e.putBoolean("filter", sw.isChecked());
                         e.apply();
-                        appSectionsPagerAdapter.notifyDataSetChanged();
+                        appSectionsPagerAdapter.notifyFilterChanged();
                         updateFilteringTextView();
                         AnalyticsHelper.sendEventHit("Filters", AnalyticsHelper.CLICK, sw.isChecked() ? "Available only" : "All machines");
                     }
