@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -175,7 +176,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         //add positive button to refresh
         //add message to load machine before
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        //machineWaitingDialog.setView(inflater.inflate(, null)); //figure out how to get view here
+        machineWaitingDialog.setView(inflater.inflate(R.layout.view_available_machine, null));
         AlertDialog alertDialog = machineWaitingDialog.create();
         alertDialog.show();
     }
