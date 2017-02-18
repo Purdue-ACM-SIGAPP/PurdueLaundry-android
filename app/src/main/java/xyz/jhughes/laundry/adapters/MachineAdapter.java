@@ -169,15 +169,16 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         //checks the server while the dialog is open and the app is running in the background
 
         AlertDialog.Builder machineWaitingDialog = new AlertDialog.Builder(mContext);
-        machineWaitingDialog.setTitle(m.getName())
+        machineWaitingDialog.setTitle(mContext.getString(R.string.alarm))
+                .setMessage(mContext.getString(R.string.available_timer_message1) + " " + m.getName().toLowerCase() + " " + mContext.getString(R.string.available_timer_message2))
                 .setCancelable(true)
-                .setPositiveButton("refresh", new DialogInterface.OnClickListener() {
+                .setPositiveButton(mContext.getString(R.string.available_timer_refresh), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         //manually call refresh here
                     }
                 })
-                .setNegativeButton("dismiss", new DialogInterface.OnClickListener() {
+                .setNegativeButton(mContext.getString(R.string.available_timer_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
