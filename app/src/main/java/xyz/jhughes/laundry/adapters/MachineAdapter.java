@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -12,8 +13,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -167,7 +166,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     public void waitForMachine(Machine m){
         //Constructs the dialog to wait for a machine
         //checks the server while the dialog is open and the app is running in the background
-
+        final Machine m2 = m;
         AlertDialog.Builder machineWaitingDialog = new AlertDialog.Builder(mContext);
         machineWaitingDialog.setTitle(mContext.getString(R.string.alarm))
                 .setMessage(mContext.getString(R.string.available_timer_message1) + " " + m.getName().toLowerCase() + " " + mContext.getString(R.string.available_timer_message2))
@@ -175,7 +174,10 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                 .setPositiveButton(mContext.getString(R.string.available_timer_refresh), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        //manually call refresh here
+                        refresh();
+                        if (createTimer(m2)){
+                            dialog.cancel();
+                        }
                     }
                 })
                 .setNegativeButton(mContext.getString(R.string.available_timer_cancel), new DialogInterface.OnClickListener() {
@@ -193,7 +195,49 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         number.setText(getNumberFromName(m));
         AlertDialog alertDialog = machineWaitingDialog.create();
         alertDialog.show();
-        //timer refresh system
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                refresh();
+                if (createTimer(m2)){
+                    return;
+                } else {
+                    //do it again or start 5 timers at beginning for 60000, 120000, 180000, etc.
+                    //must reevaluate m2 each time
+
+                }
+            }
+        }, 60000);
+
+        //5 minutes time out
+    }
+
+    public void refresh() {
+        //FIXME ASK SOMEONE
+    }
+
+    public boolean createTimer(Machine m){
+        //this code is copied from above
+        try {
+            //For machines that are already running
+            int minutesInFuture = Integer.parseInt(m.getTime().substring(0, m.getTime().indexOf(' ')));
+            int milliInFuture = minutesInFuture * 60000; //60 seconds * 1000 milliseconds
+
+            String notificationKey = roomName + " " + m.getName();
+
+            if (NotificationCreator.notificationExists(notificationKey)) {
+                listener.postSnackbar(mContext.getString(R.string.reminder_already_set), Snackbar.LENGTH_LONG);
+                return false;
+            } else {
+                mContext.startService(new Intent(mContext, NotificationCreator.class)
+                        .putExtra("machine", notificationKey)
+                        .putExtra("time", milliInFuture));
+                return true;
+            }
+        } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
+            return false;
+        }
     }
 
     public String getNumberFromName(Machine m){
