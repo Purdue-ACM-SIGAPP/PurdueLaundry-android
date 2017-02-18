@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -164,21 +165,47 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     }
 
     public void waitForMachine(Machine m){
+        //Constructs the dialog to wait for a machine
+        //checks the server while the dialog is open and the app is running in the background
+
         AlertDialog.Builder machineWaitingDialog = new AlertDialog.Builder(mContext);
-        machineWaitingDialog.setTitle(m.getType() + ": " + m.getName())
+        machineWaitingDialog.setTitle(m.getName())
                 .setCancelable(true)
+                .setPositiveButton("refresh", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        //manually call refresh here
+                    }
+                })
                 .setNegativeButton("dismiss", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
                 });
-        //add positive button to refresh
+
         //add message to load machine before
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        machineWaitingDialog.setView(inflater.inflate(R.layout.view_available_machine, null));
+        View q = inflater.inflate(R.layout.view_available_machine, null); //FIXME fancy bind stuff
+        machineWaitingDialog.setView(q);
+        TextView number = (TextView) q.findViewById(R.id.machine_name_number); //FIXME fancy bind stuff
+        number.setText(getNumberFromName(m));
         AlertDialog alertDialog = machineWaitingDialog.create();
         alertDialog.show();
+        //timer refresh system
+    }
+
+    public String getNumberFromName(Machine m){
+        String number = "";
+        String name = m.getName();
+        for (int i = 0; i < name.length(); i++){
+            try{
+                number = number + Integer.parseInt(name.substring(i, i + 1));
+            } catch (NumberFormatException e){
+                continue;
+            }
+        }
+        return number;
     }
 
     public ArrayList<Machine> getCurrentMachines() {
