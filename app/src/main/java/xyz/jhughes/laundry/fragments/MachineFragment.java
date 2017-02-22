@@ -208,7 +208,6 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
             if (addNotifyButton) addNotifyOnAvailableButton();
             else removeNotifyOnAvailableButton();
         }
-        recyclerView.setAdapter(adapter);
     }
 
     private void showErrorDialog(final String message) {
