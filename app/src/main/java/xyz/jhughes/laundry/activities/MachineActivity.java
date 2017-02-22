@@ -73,7 +73,12 @@ public class MachineActivity extends ScreenTrackedActivity {
 
     private void updateFilteringTextView() {
         final SharedPreferences p = SharedPrefsHelper.getSharedPrefs(MachineActivity.this);
-        boolean filtering = p.getBoolean("filter", false);
+        boolean filtering = false;
+        try {
+            filtering = p.getBoolean("filter", false);
+        } catch (ClassCastException e) {
+            filtering = false;
+        }
         findViewById(R.id.machine_activity_filtering_textview).setVisibility(
                 filtering ? View.VISIBLE : View.GONE);
     }
