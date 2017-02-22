@@ -42,6 +42,12 @@ public class AppSectionsPagerAdapter extends FragmentPagerAdapter {
         return mFragments[i];
     }
 
+    public void notifyFilterChanged() {
+        for(MachineFragment m : mFragments) {
+            m.updateRecyclerView();
+        }
+    }
+
     // This is used to allow the view page to refresh when an item is chosen from the drawer
     public int getItemPosition(Object object) {
         return POSITION_NONE;
