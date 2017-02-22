@@ -101,7 +101,12 @@ public class MachineActivity extends ScreenTrackedActivity {
 
     public void createDialog() {
         final SharedPreferences p = SharedPrefsHelper.getSharedPrefs(MachineActivity.this);
-        boolean filtering = p.getBoolean("filter", false);
+        boolean filtering = false;
+        try {
+            filtering = p.getBoolean("filter", false);
+        } catch (ClassCastException e) {
+            filtering = false;
+        }
         View layout = LayoutInflater.from(this).inflate(R.layout.dialog_filter, null);
         final Switch sw = ((Switch) layout.findViewById(R.id.filter_dialog_switch));
         sw.setChecked(filtering);
