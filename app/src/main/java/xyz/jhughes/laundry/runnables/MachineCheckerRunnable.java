@@ -24,12 +24,14 @@ public class MachineCheckerRunnable implements Runnable {
     private final Machine m;
     private final String roomName;
     private final OnMachineInUse listener;
+    private Handler handler;
     private int counter = 10;
 
-    public MachineCheckerRunnable(Machine m, String roomName, OnMachineInUse listener){
+    public MachineCheckerRunnable(Machine m, String roomName, Handler handler, OnMachineInUse listener){
         this.listener = listener;
         this.m = m;
         this.roomName = roomName;
+        this.handler = handler;
     }
 
     @Override
@@ -49,7 +51,6 @@ public class MachineCheckerRunnable implements Runnable {
                         counter--;
                         if (counter != 0) {
                             Log.d("MachineCheckerRunnable",""+ counter);
-                            Handler handler = new Handler();
                             handler.postDelayed(MachineCheckerRunnable.this, 1000);
                         }
                     }
