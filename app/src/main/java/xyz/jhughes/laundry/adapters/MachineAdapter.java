@@ -22,10 +22,15 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.LaundryParser.MachineStates;
 import xyz.jhughes.laundry.MachineFilter;
+import xyz.jhughes.laundry.apiclient.MachineService;
 import xyz.jhughes.laundry.notificationhelpers.OnMachineInUse;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.SnackbarPostListener;
@@ -173,29 +178,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         machineWaitingDialog.setTitle(mContext.getString(R.string.alarm))
                 .setMessage(mContext.getString(R.string.available_timer_message1) + " " + m.getName().toLowerCase() + " " + mContext.getString(R.string.available_timer_message2))
                 .setCancelable(true)
-                /*.setPositiveButton(mContext.getString(R.string.available_timer_refresh), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        call.enqueue(new Callback<ArrayList<Machine>>() {
-            @Override
-            public void onResponse(Response<ArrayList<Machine>> response, Retrofit retrofit) {
-                ArrayList<Machine> body = response.body();
-                if (body.contains(m)){
-                    Machine m2 = body.get(body.indexOf(m));
-                    if (m2.getStatus().equals(MachineStates.IN_USE)){ //
-                        registerNotification(m2);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-
-            }
-        });
-                        }
-                    }
-                })*/
+                .setPositiveButton(mContext.getString(R.string.available_timer_refresh), null)
                 .setNegativeButton(mContext.getString(R.string.available_timer_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
@@ -203,15 +186,39 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                         dialog.cancel();
                     }
                 });
-
         //add message to load machine before
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        View q = inflater.inflate(R.layout.view_available_machine, null); //FIXME fancy bind stuff
+        View q = inflater.inflate(R.layout.view_available_machine, null);
         machineWaitingDialog.setView(q);
-        TextView number = (TextView) q.findViewById(R.id.machine_name_number); //FIXME fancy bind stuff
+        TextView number = (TextView) q.findViewById(R.id.machine_name_number);
         number.setText(getNumberFromName(m));
         AlertDialog alertDialog = machineWaitingDialog.create();
         alertDialog.show();
+
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String apiLocationFormat = Constants.getApiLocation(MachineAdapter.this.roomName);
+                Call<ArrayList<Machine>> call = MachineService.getService().getMachineStatus(apiLocationFormat);
+                call.enqueue(new Callback<ArrayList<Machine>>() {
+                    @Override
+                    public void onResponse(Response<ArrayList<Machine>> response, Retrofit retrofit) {
+                        ArrayList<Machine> body = response.body();
+                        if (body.contains(m2)){
+                            Machine m3 = body.get(body.indexOf(m2));
+                            if (m3.getStatus().equals(MachineStates.IN_USE)){ //
+                                registerNotification(m3);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+
+                    }
+                });
+            }
+        });
 
         handler.postDelayed(new MachineCheckerRunnable(m, this.roomName, handler, new OnMachineInUse() {
             @Override
