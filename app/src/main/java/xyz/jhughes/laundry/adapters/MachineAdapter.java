@@ -168,6 +168,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         //Constructs the dialog to wait for a machine
         //checks the server while the dialog is open and the app is running in the background
         final Machine m2 = m;
+        final Handler handler = new Handler();
         AlertDialog.Builder machineWaitingDialog = new AlertDialog.Builder(mContext);
         machineWaitingDialog.setTitle(mContext.getString(R.string.alarm))
                 .setMessage(mContext.getString(R.string.available_timer_message1) + " " + m.getName().toLowerCase() + " " + mContext.getString(R.string.available_timer_message2))
@@ -175,15 +176,30 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                 /*.setPositiveButton(mContext.getString(R.string.available_timer_refresh), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        refresh();
-                        if (createTimer(m2)){
-                            dialog.cancel();
+                        call.enqueue(new Callback<ArrayList<Machine>>() {
+            @Override
+            public void onResponse(Response<ArrayList<Machine>> response, Retrofit retrofit) {
+                ArrayList<Machine> body = response.body();
+                if (body.contains(m)){
+                    Machine m2 = body.get(body.indexOf(m));
+                    if (m2.getStatus().equals(MachineStates.IN_USE)){ //
+                        registerNotification(m2);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
                         }
                     }
                 })*/
                 .setNegativeButton(mContext.getString(R.string.available_timer_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
+                        handler.removeCallbacksAndMessages(null);
                         dialog.cancel();
                     }
                 });
@@ -196,8 +212,8 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         number.setText(getNumberFromName(m));
         AlertDialog alertDialog = machineWaitingDialog.create();
         alertDialog.show();
-        final Handler handler = new Handler();
-        handler.postDelayed(new MachineCheckerRunnable(m, this.roomName, new OnMachineInUse() {
+
+        handler.postDelayed(new MachineCheckerRunnable(m, this.roomName, handler, new OnMachineInUse() {
             @Override
             public void onMachineInUse(Machine m) {
                 registerNotification(m);
