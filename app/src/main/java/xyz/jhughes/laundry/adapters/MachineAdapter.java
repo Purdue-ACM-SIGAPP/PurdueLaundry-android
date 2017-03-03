@@ -26,10 +26,12 @@ import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.LaundryParser.MachineStates;
 import xyz.jhughes.laundry.MachineFilter;
+import xyz.jhughes.laundry.notificationhelpers.OnMachineInUse;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.SnackbarPostListener;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.notificationhelpers.NotificationCreator;
+import xyz.jhughes.laundry.runnables.MachineCheckerRunnable;
 import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
 public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHolder> {
@@ -137,7 +139,6 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
 
     public void registerNotification(Machine m) {
         //For available (green) machines
-        System.out.println(m.getStatus());
         if (m.getStatus().equals("Available")) {
             waitForMachine(m);
         } else {
@@ -171,7 +172,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         machineWaitingDialog.setTitle(mContext.getString(R.string.alarm))
                 .setMessage(mContext.getString(R.string.available_timer_message1) + " " + m.getName().toLowerCase() + " " + mContext.getString(R.string.available_timer_message2))
                 .setCancelable(true)
-                .setPositiveButton(mContext.getString(R.string.available_timer_refresh), new DialogInterface.OnClickListener() {
+                /*.setPositiveButton(mContext.getString(R.string.available_timer_refresh), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         refresh();
@@ -179,7 +180,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                             dialog.cancel();
                         }
                     }
-                })
+                })*/
                 .setNegativeButton(mContext.getString(R.string.available_timer_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
@@ -196,49 +197,14 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         AlertDialog alertDialog = machineWaitingDialog.create();
         alertDialog.show();
         final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
+        handler.postDelayed(new MachineCheckerRunnable(m, this.roomName, new OnMachineInUse() {
             @Override
-            public void run() {
-                refresh();
-                if (createTimer(m2)){
-                    return;
-                } else {
-                    //do it again or start 5 timers at beginning for 60000, 120000, 180000, etc.
-                    //must reevaluate m2 each time
-
-                }
+            public void onMachineInUse(Machine m) {
+                registerNotification(m);
             }
-        }, 60000);
-
-        //5 minutes time out
+        }), 1000);
     }
 
-    public void refresh() {
-        //FIXME ASK SOMEONE
-    }
-
-    public boolean createTimer(Machine m){
-        //this code is copied from above
-        try {
-            //For machines that are already running
-            int minutesInFuture = Integer.parseInt(m.getTime().substring(0, m.getTime().indexOf(' ')));
-            int milliInFuture = minutesInFuture * 60000; //60 seconds * 1000 milliseconds
-
-            String notificationKey = roomName + " " + m.getName();
-
-            if (NotificationCreator.notificationExists(notificationKey)) {
-                listener.postSnackbar(mContext.getString(R.string.reminder_already_set), Snackbar.LENGTH_LONG);
-                return false;
-            } else {
-                mContext.startService(new Intent(mContext, NotificationCreator.class)
-                        .putExtra("machine", notificationKey)
-                        .putExtra("time", milliInFuture));
-                return true;
-            }
-        } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
-            return false;
-        }
-    }
 
     public String getNumberFromName(Machine m){
         String number = "";
