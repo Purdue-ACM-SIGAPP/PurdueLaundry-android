@@ -153,9 +153,10 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                             showErrorDialog(getString(R.string.error_server_message));
                             AnalyticsHelper.getDefaultTracker().send(
                                     new HitBuilders.ExceptionBuilder()
-                                            .setDescription("Error")
-                                            .set("HTTP Code", String.valueOf(httpCode))
-                                            .set("Message", response.message())
+                                            .setDescription("Error: {" +
+                                            " HTTP Code: " + String.valueOf(httpCode) +
+                                            " Message: " + response.message() +
+                                            " }")
                                             .setFatal(false)
                                             .build());
                         }
@@ -171,9 +172,10 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                     alertNetworkError();
                     AnalyticsHelper.getDefaultTracker().send(
                             new HitBuilders.ExceptionBuilder()
-                                    .setDescription("Error")
-                                    .set("HTTP Code", "-1")
-                                    .set("Message", t.getMessage())
+                                    .setDescription("Error: {" +
+                                            " HTTP Code: -1" +
+                                            " Message: " + t.getMessage() +
+                                            " }")
                                     .setFatal(false)
                                     .build());
                 }
