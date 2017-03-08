@@ -52,6 +52,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:7.0.1'
     //Additional dependencies
     compile 'com.google.code.gson:gson:2.4'
+    //Testing Libraries
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.2'
