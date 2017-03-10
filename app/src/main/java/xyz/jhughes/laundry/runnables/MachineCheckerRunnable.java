@@ -51,7 +51,7 @@ public class MachineCheckerRunnable implements Runnable {
                         counter--;
                         if (counter != 0) {
                             Log.d("MachineCheckerRunnable",""+ counter);
-                            handler.postDelayed(MachineCheckerRunnable.this, 1000);
+                            handler.postDelayed(MachineCheckerRunnable.this, 60000);
                         }
                     }
                 }
