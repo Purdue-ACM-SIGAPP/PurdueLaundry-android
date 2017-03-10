@@ -117,7 +117,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     }
 
     //Set and Fire Notification
-    private void fireNotificationInFuture(final int milliInFuture, final String notificationKey) {
+    private void notificationWithDialog(final int milliInFuture, final String notificationKey) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext)
                 .setTitle(mContext.getString(R.string.alarm))
                 .setMessage(mContext.getString(R.string.ask_set_alarm))
@@ -157,7 +157,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                 if (NotificationCreator.notificationExists(notificationKey)) {
                     listener.postSnackbar(mContext.getString(R.string.reminder_already_set), Snackbar.LENGTH_LONG);
                 } else {
-                    fireNotificationInFuture(millisInFuture, notificationKey);
+                    notificationWithDialog(millisInFuture, notificationKey);
                 }
             } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
                 if (m.getStatus().compareTo("Out of order") != 0) {
@@ -167,6 +167,22 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                 }
             }
         }
+    }
+
+    public boolean createNotification(Machine m){
+        try {
+            int minutesInFuture = Integer.parseInt(m.getTime().substring(0, m.getTime().indexOf(' ')));
+            int milliInFuture = minutesInFuture * 60000; //60 seconds * 1000 milliseconds
+
+            String notificationKey = roomName + " " + m.getName();
+            mContext.startService(new Intent(mContext, NotificationCreator.class)
+                    .putExtra("machine", notificationKey)
+                    .putExtra("time", milliInFuture));
+            return true;
+        } catch (NumberFormatException | StringIndexOutOfBoundsException e){
+            return false;
+        }
+
     }
 
     public void waitForMachine(Machine m){
@@ -207,7 +223,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                         if (body.contains(m2)){
                             Machine m3 = body.get(body.indexOf(m2));
                             if (m3.getStatus().equals(MachineStates.IN_USE)){ //
-                                registerNotification(m3);
+                                createNotification(m3);
                             }
                         }
                     }
@@ -223,9 +239,9 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         handler.postDelayed(new MachineCheckerRunnable(m, this.roomName, handler, new OnMachineInUse() {
             @Override
             public void onMachineInUse(Machine m) {
-                registerNotification(m);
+                createNotification(m);
             }
-        }), 1000);
+        }), 60000);
     }
 
 
