@@ -25,7 +25,9 @@ public class MachineCheckerRunnable implements Runnable {
     private final String roomName;
     private final OnMachineInUse listener;
     private Handler handler;
-    private int counter = 10;
+    private int timeout = 5;
+    private final int TIME = 60000; //How long between server pings
+                                    //note that the first post delayed time is determined in the machine adapter class
 
     public MachineCheckerRunnable(Machine m, String roomName, Handler handler, OnMachineInUse listener){
         this.listener = listener;
@@ -48,10 +50,9 @@ public class MachineCheckerRunnable implements Runnable {
                     if (m2.getStatus().equals(MachineStates.IN_USE)){ //
                         listener.onMachineInUse(m2);
                     } else {
-                        counter--;
-                        if (counter != 0) {
-                            Log.d("MachineCheckerRunnable",""+ counter);
-                            handler.postDelayed(MachineCheckerRunnable.this, 60000);
+                        timeout--;
+                        if (timeout != 0) {
+                            handler.postDelayed(MachineCheckerRunnable.this, TIME);
                         }
                     }
                 }
