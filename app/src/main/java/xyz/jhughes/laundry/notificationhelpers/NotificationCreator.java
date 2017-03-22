@@ -25,9 +25,12 @@ public class NotificationCreator extends Service {
     private static HashMap<String, Integer> notifcationIds = new HashMap<>();
     private static HashMap<Integer, CountDownTimer> timers = new HashMap<>();
     private static int id = 0;
+    private static NotificationCreator self;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        self = this;
+
         NotificationManagerCompat.from(this).cancelAll();
 
         final String machine = (String) intent.getExtras().get("machine");
@@ -38,10 +41,14 @@ public class NotificationCreator extends Service {
         CountDownTimer timer = new CountDownTimer(timeLeft, 1000) {
             public void onTick(long millisUntilFinished) {
                 updateTimeNotification(machine, NotificationCreator.this, millisUntilFinished);
+                System.out.println(timers.toString());
             }
 
             public void onFinish() {
                 updateTimeNotification(machine, NotificationCreator.this, 0);
+                if (timers.isEmpty()) {
+                    stopSelf();
+                }
             }
         }.start();
 
@@ -55,7 +62,7 @@ public class NotificationCreator extends Service {
     private static void updateTimeNotification(String machine, Context context, long timeLeft) {
         int id = notifcationIds.get(machine);
         String countDown;
-        System.out.println(timeLeft);
+        //System.out.println(timeLeft);
         if (timeLeft > 0) {
             countDown = String.format("%01d minutes left", TimeUnit.MILLISECONDS.toMinutes(timeLeft));
         } else {
@@ -97,6 +104,12 @@ public class NotificationCreator extends Service {
         if (timers.get(id) != null) //This could be called when the app has been cleared.
             timers.get(id).cancel();
         timers.remove(id);
+
+        System.out.println(self.toString());
+
+        if (timers.isEmpty()) {
+            self.stopSelf();
+        }
     }
 
     public static boolean notificationExists(String machine) {
