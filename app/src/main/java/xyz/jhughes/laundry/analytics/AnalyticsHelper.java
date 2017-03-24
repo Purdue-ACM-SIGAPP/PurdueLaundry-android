@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
 
 import xyz.jhughes.laundry.BuildConfig;
@@ -65,7 +64,7 @@ public class AnalyticsHelper {
     }
 
     /**
-     * Sends a basic event hit for the given category, action, and name.
+     * Sends a basic event hit for the given category, action, and name. Sends a 0 for result.
      *
      * NOTE: When using this method, strings should be added as constants
      * for the sake of consistency across hits.
@@ -75,6 +74,21 @@ public class AnalyticsHelper {
      * @param label Label of the event.
      */
     public static void sendEventHit(String category, String action, String label) {
+        sendEventHit(category, action, label, 0);
+    }
+
+    /**
+     * Sends a basic event hit for the given category, action, and name.
+     *
+     * NOTE: When using this method, strings should be added as constants
+     * for the sake of consistency across hits.
+     *
+     * @param category Category of the event.
+     * @param action Action of the event.
+     * @param label Label of the event.
+     * @param value Value of the event.
+     */
+    public static void sendEventHit(String category, String action, String label, long value) {
         checkState();
         try {
             // Get tracker.
@@ -83,6 +97,7 @@ public class AnalyticsHelper {
                     .setCategory(category)
                     .setAction(action)
                     .setLabel(label)
+                    .setValue(value)
                     .build());
         } catch(Exception e) {
             Log.e("AnalyticsException", e.getMessage());

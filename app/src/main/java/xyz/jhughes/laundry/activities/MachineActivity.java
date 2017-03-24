@@ -10,18 +10,21 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Switch;
+import android.widget.ToggleButton;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xyz.jhughes.laundry.LaundryParser.Constants;
-import xyz.jhughes.laundry.LaundryParser.MachineStates;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.AppSectionsPagerAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.analytics.ScreenTrackedActivity;
-import xyz.jhughes.laundry.fragments.MachineFragment;
 import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
 /**
@@ -65,6 +68,14 @@ public class MachineActivity extends ScreenTrackedActivity {
 
         setUpViewPager();
         setScreenName(Constants.getApiLocation(currentRoom));
+        updateFilteringTextView();
+    }
+
+    private void updateFilteringTextView() {
+        final SharedPreferences p = SharedPrefsHelper.getSharedPrefs(MachineActivity.this);
+        boolean filtering = p.getBoolean("filter", false);
+        findViewById(R.id.machine_activity_filtering_textview).setVisibility(
+                filtering ? View.VISIBLE : View.GONE);
     }
 
     private void setUpViewPager() {
@@ -84,31 +95,25 @@ public class MachineActivity extends ScreenTrackedActivity {
     }
 
     public void createDialog() {
-        final boolean[] tempOptions = transformOptions(MachineFragment.options);
+        final SharedPreferences p = SharedPrefsHelper.getSharedPrefs(MachineActivity.this);
+        boolean filtering = p.getBoolean("filter", false);
+        View layout = LayoutInflater.from(this).inflate(R.layout.dialog_filter, null);
+        final Switch sw = ((Switch) layout.findViewById(R.id.filter_dialog_switch));
+        sw.setChecked(filtering);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // Set the dialog title
         builder.setTitle(R.string.select_options)
-                // Specify the list array, the items to be selected by default (null for none),
-                // and the listener through which to receive callbacks when items are selected
-                .setMultiChoiceItems(R.array.options, tempOptions,
-                        new DialogInterface.OnMultiChoiceClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which,
-                                                boolean isChecked) {
-                                tempOptions[which] = isChecked;
-                            }
-                        })
+                .setView(layout)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        String options = transformOptions(tempOptions);
-                        MachineFragment.options = options;
-                        appSectionsPagerAdapter.notifyDataSetChanged();
-
-                        SharedPreferences.Editor e = SharedPrefsHelper.getSharedPrefs(MachineActivity.this).edit();
-                        e.putString("options", options);
+                        SharedPreferences.Editor e = p.edit();
+                        e.putBoolean("filter", sw.isChecked());
                         e.apply();
-                        AnalyticsHelper.sendEventHit("Filters", AnalyticsHelper.CLICK, options);
+                        appSectionsPagerAdapter.notifyFilterChanged();
+                        updateFilteringTextView();
+                        AnalyticsHelper.sendEventHit("Filters", AnalyticsHelper.CLICK, sw.isChecked() ? "Available only" : "All machines");
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -118,41 +123,6 @@ public class MachineActivity extends ScreenTrackedActivity {
                     }
                 });
         builder.create().show();
-    }
-
-    private String transformOptions(boolean[] options) {
-        String result = "";
-        boolean hasFirst = false;
-
-        if (options[0]) {
-            result += MachineStates.AVAILABLE;
-            hasFirst = true;
-        }
-
-        if (options[1]) {
-            result += hasFirst ? MachineStates.SEPARATOR + MachineStates.IN_USE : MachineStates.IN_USE;
-            hasFirst = true;
-        }
-
-        if (options[2]) {
-            result += hasFirst ? MachineStates.SEPARATOR + MachineStates.ALMOST_DONE : MachineStates.ALMOST_DONE;
-            hasFirst = true;
-        }
-
-        if (options[3]) {
-            result += hasFirst ? MachineStates.SEPARATOR + MachineStates.END_CYCLE : MachineStates.END_CYCLE;
-        }
-
-        return result;
-    }
-
-    private boolean[] transformOptions(String options) {
-        return new boolean[]{
-                options.contains(MachineStates.AVAILABLE),
-                options.contains(MachineStates.IN_USE),
-                options.contains(MachineStates.ALMOST_DONE),
-                options.contains(MachineStates.END_CYCLE)
-        };
     }
 
     @Override

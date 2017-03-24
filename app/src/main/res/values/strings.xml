@@ -12,7 +12,7 @@
     <string name="title_activity_infromation">InfromationActivity</string>
     <string name="MachineImageInformation">Image for Machine</string>
     <string name="display_parameters">Display Only</string>
-    <string name="select_options">Filter by</string>
+    <string name="select_options">Filter</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="MachineID">Machine XXX</string>
@@ -31,6 +31,14 @@
     <string name="no">No</string>
     <string name="no_alarm_set">No Alarm Set</string>
     <string name="loading_machines">Loading, please wait...</string>
+    <string name="error_client_message">Oops! Looks like you\'re having trouble connecting.\nCheck your network settings and try again.</string>
+    <string name="error_server_message">Oops! We\'re having problems. Please try again later.</string>
+    <string name="location_error_try_again">Try Again</string>
+    <string name="notify_on_washer_available">Notfy me when a washer is available.</string>
+    <string name="notify_on_dryer_available">Notfy me when a dryer is available.</string>
+    <string name="fragment_no_machine">No machines to set a timer for!</string>
+    <string name="fragment_offline_location">It looks like this location is offline. Please go to the laundry room to check machines.</string>
+    <string name="machine_activity_too_filtered">Please select some machine types to show.</string>
 
     <array name="options">
         <item>Available</item>

@@ -12,6 +12,8 @@ We would love contributions to this app! We are always looking for improvements.
 
 If you are interested in being involved in discussion about this app please submit an issue requesting access to our Slack account.
 
+Development on this app is managed through Github issues and milestones. If you are looking for something to do with Laundry, check the milestones for the next release and pick an issue from that list. 
+
 ## Server contributions
 
 The server for this application is available [here](https://github.com/Purdue-ACM-SIGAPP/purdue-laundry-api) and accepts PRs as well.
@@ -24,7 +26,7 @@ Dryer icon used is Dryer by Nicholas Navarro from the Noun Project. Modified for
 
 ## Copyright
 
-**This app is copyright Jeffrey Hughes and Purdue ACM Special Interest Group for Applied Computing 2016.**
+**This app is copyright Jeffrey Hughes and Purdue ACM Special Interest Group for Applied Computing 2017.**
 **All rights reserved.**
 
 ## License
