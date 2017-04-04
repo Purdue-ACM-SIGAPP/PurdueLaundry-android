@@ -41,14 +41,11 @@ public class NotificationCreator extends Service {
         CountDownTimer timer = new CountDownTimer(timeLeft, 1000) {
             public void onTick(long millisUntilFinished) {
                 updateTimeNotification(machine, NotificationCreator.this, millisUntilFinished);
-                System.out.println(timers.toString());
             }
 
             public void onFinish() {
                 updateTimeNotification(machine, NotificationCreator.this, 0);
-                if (timers.isEmpty()) {
-                    stopSelf();
-                }
+                stopTimer(id, machine);
             }
         }.start();
 
@@ -104,8 +101,6 @@ public class NotificationCreator extends Service {
         if (timers.get(id) != null) //This could be called when the app has been cleared.
             timers.get(id).cancel();
         timers.remove(id);
-
-        System.out.println(self.toString());
 
         if (timers.isEmpty()) {
             self.stopSelf();
