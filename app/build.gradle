@@ -8,7 +8,7 @@ repositories {
 
 android {
     compileSdkVersion 24
-    buildToolsVersion '24.0.2'
+    buildToolsVersion '25.0.0'
 
     defaultConfig {
         applicationId "xyz.jhughes.laundry"
@@ -44,7 +44,7 @@ dependencies {
 
     //Retrofit and related libraries for REST client.
     compile 'com.squareup.retrofit2:retrofit:2.2.0'
-    compile 'com.squareup.okhttp:okhttp:1.6.0'
+    compile 'com.squareup.okhttp:okhttp:2.2.0'
     compile 'com.squareup.retrofit2:converter-gson:2.2.0'
 
     //Image rendering.
