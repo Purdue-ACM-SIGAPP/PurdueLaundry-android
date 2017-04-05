@@ -16,13 +16,24 @@ import xyz.jhughes.laundry.LaundryParser.MachineListDeserializer;
 public class MachineService {
     private static String API_ROOT = "http://laundry-api.sigapp.club";
     private static MachineAPI REST_CLIENT;
+    private static MockLaundryApiService MOCK_CLIENT;
 
     static {
         setupRestClient();
     }
 
     public static MachineAPI getService() {
+        /*if (BuildConfig.DEBUG){
+            return getMockService();
+        }*/
         return REST_CLIENT;
+    }
+
+    public static MachineAPI getMockService(){
+        if (MOCK_CLIENT == null){
+            MOCK_CLIENT = new MockLaundryApiService();
+        }
+        return MOCK_CLIENT;
     }
 
     private static void setupRestClient() {
