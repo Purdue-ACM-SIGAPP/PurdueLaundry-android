@@ -2,14 +2,14 @@ package xyz.jhughes.laundry.apiclient;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
 
 import java.io.IOException;
 
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import xyz.jhughes.laundry.LaundryParser.MachineList;
@@ -48,13 +48,18 @@ public class MachineService {
                 Response response = chain.proceed(request);
                 long t2 = System.nanoTime();
 
-                AnalyticsHelper.sendTimedEvent("api", "requestTimeNano", response.request().url().getPath(), t2-t1);
+                AnalyticsHelper.sendTimedEvent(
+                        "api",
+                        "requestTimeNano",
+                        response.request().url().encodedPath(),
+                        t2-t1);
 
                 return response;
             }
         });
 
         Retrofit retrofit = new Retrofit.Builder()
+                .client(okClient)
                 .baseUrl(API_ROOT)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
