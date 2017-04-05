@@ -1,18 +1,17 @@
 package xyz.jhughes.laundry.runnables;
 
 import android.os.Handler;
-import android.util.Log;
 
 import java.util.ArrayList;
 
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import xyz.jhughes.laundry.BuildConfig;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.LaundryParser.MachineStates;
-import xyz.jhughes.laundry.notificationhelpers.OnMachineInUse;
+import xyz.jhughes.laundry.notificationhelpers.OnMachineChangedToInUse;
 import xyz.jhughes.laundry.apiclient.MachineService;
 
 /**
@@ -23,13 +22,13 @@ public class MachineCheckerRunnable implements Runnable {
 
     private final Machine m;
     private final String roomName;
-    private final OnMachineInUse listener;
+    private final OnMachineChangedToInUse listener;
     private Handler handler;
     private int timeout = 5;
-    private final int TIME = 60000; //How long between server pings
-                                    //note that the first post delayed time is determined in the machine adapter class
+    public static final int TIME = 60000; //How long between server pings
+                                    //note that the first post delayed time is pulled from here
 
-    public MachineCheckerRunnable(Machine m, String roomName, Handler handler, OnMachineInUse listener){
+    public MachineCheckerRunnable(Machine m, String roomName, Handler handler, OnMachineChangedToInUse listener){
         this.listener = listener;
         this.m = m;
         this.roomName = roomName;
@@ -40,10 +39,9 @@ public class MachineCheckerRunnable implements Runnable {
     public void run() {
         String apiLocationFormat = Constants.getApiLocation(this.roomName);
         Call<ArrayList<Machine>> call = MachineService.getService().getMachineStatus(apiLocationFormat);
-
         call.enqueue(new Callback<ArrayList<Machine>>() {
             @Override
-            public void onResponse(Response<ArrayList<Machine>> response, Retrofit retrofit) {
+            public void onResponse(Call<ArrayList<Machine>> call, Response<ArrayList<Machine>> response) {
                 ArrayList<Machine> body = response.body();
                 if (body.contains(m)){
                     Machine m2 = body.get(body.indexOf(m));
@@ -51,17 +49,20 @@ public class MachineCheckerRunnable implements Runnable {
                         listener.onMachineInUse(m2);
                     } else {
                         timeout--;
-                        if (timeout != 0) {
+                        if (timeout > 0) {
                             handler.postDelayed(MachineCheckerRunnable.this, TIME);
+                        } else {
+                            listener.onTimeout();
                         }
                     }
                 }
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<ArrayList<Machine>> call, Throwable t) {
 
             }
+
         });
     }
 }
