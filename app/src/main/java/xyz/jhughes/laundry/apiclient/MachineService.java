@@ -38,25 +38,28 @@ public class MachineService {
                 .registerTypeAdapter(MachineList.class, new MachineListDeserializer())
                 .create();
 
-        OkHttpClient okClient = new OkHttpClient();
-        okClient.networkInterceptors().add(new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                Request request = chain.request();
+        OkHttpClient okClient =
+                new OkHttpClient
+                        .Builder()
+                        .addInterceptor(new Interceptor() {
+                            @Override
+                            public Response intercept(Chain chain) throws IOException {
+                                Request request = chain.request();
 
-                long t1 = System.nanoTime();
-                Response response = chain.proceed(request);
-                long t2 = System.nanoTime();
+                                long t1 = System.currentTimeMillis();
+                                Response response = chain.proceed(request);
+                                long t2 = System.currentTimeMillis();
 
-                AnalyticsHelper.sendTimedEvent(
-                        "api",
-                        "requestTimeNano",
-                        response.request().url().encodedPath(),
-                        t2-t1);
+                                AnalyticsHelper.sendTimedEvent(
+                                        "api",
+                                        "requestTimeMillis",
+                                        response.request().url().encodedPath(),
+                                        t2-t1);
 
-                return response;
-            }
-        });
+                                return response;
+                            }
+                        })
+                        .build();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .client(okClient)
