@@ -30,6 +30,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="no_alarm_set">No Alarm Set</string>
+    <string name="alarm_set">Alarm Set</string>
     <string name="loading_machines">Loading, please wait...</string>
     <string name="error_client_message">Oops! Looks like you\'re having trouble connecting.\nCheck your network settings and try again.</string>
     <string name="error_server_message">Oops! We\'re having problems. Please try again later.</string>
