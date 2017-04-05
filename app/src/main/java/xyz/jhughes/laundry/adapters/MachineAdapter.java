@@ -22,16 +22,16 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.LaundryParser.MachineStates;
 import xyz.jhughes.laundry.MachineFilter;
 import xyz.jhughes.laundry.apiclient.MachineService;
-import xyz.jhughes.laundry.notificationhelpers.OnMachineInUse;
+import xyz.jhughes.laundry.notificationhelpers.ScreenOrientationLockToggleListener;
+import xyz.jhughes.laundry.notificationhelpers.OnMachineChangedToInUse;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.SnackbarPostListener;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
@@ -43,14 +43,16 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
 
     private final String roomName;
     private final SnackbarPostListener listener;
+    private final ScreenOrientationLockToggleListener lockListener;
     private ArrayList<Machine> currentMachines;
     private Context mContext;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MachineAdapter(ArrayList<Machine> machines, Context context, Boolean dryers, String roomName, SnackbarPostListener listener) {
+    public MachineAdapter(ArrayList<Machine> machines, Context context, Boolean dryers, String roomName, SnackbarPostListener listener, ScreenOrientationLockToggleListener lockListener) {
         this.mContext = context;
         this.roomName = roomName;
         this.listener = listener;
+        this.lockListener = lockListener;
 
         currentMachines = new ArrayList<>();
 
@@ -190,6 +192,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         //checks the server while the dialog is open and the app is running in the background
         final Machine m2 = m;
         final Handler handler = new Handler();
+        lockListener.onLock();
         AlertDialog.Builder machineWaitingDialog = new AlertDialog.Builder(mContext);
         machineWaitingDialog.setTitle(mContext.getString(R.string.alarm))
                 .setMessage(mContext.getString(R.string.available_timer_message1) + " " + m.getName().toLowerCase() + " " + mContext.getString(R.string.available_timer_message2))
@@ -208,9 +211,14 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         machineWaitingDialog.setView(q);
         TextView number = (TextView) q.findViewById(R.id.machine_name_number);
         number.setText(getNumberFromName(m));
-        AlertDialog alertDialog = machineWaitingDialog.create();
+        final AlertDialog alertDialog = machineWaitingDialog.create();
         alertDialog.show();
-
+        alertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                lockListener.onUnlock();
+            }
+        });
         alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -218,30 +226,34 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                 Call<ArrayList<Machine>> call = MachineService.getService().getMachineStatus(apiLocationFormat);
                 call.enqueue(new Callback<ArrayList<Machine>>() {
                     @Override
-                    public void onResponse(Response<ArrayList<Machine>> response, Retrofit retrofit) {
+                    public void onResponse(Call<ArrayList<Machine>> call, Response<ArrayList<Machine>> response) {
                         ArrayList<Machine> body = response.body();
                         if (body.contains(m2)){
                             Machine m3 = body.get(body.indexOf(m2));
                             if (m3.getStatus().equals(MachineStates.IN_USE)){ //
+                                lockListener.onUnlock();
                                 createNotification(m3);
                             }
                         }
                     }
 
                     @Override
-                    public void onFailure(Throwable t) {
+                    public void onFailure(Call<ArrayList<Machine>> call, Throwable t) {
 
                     }
                 });
             }
         });
 
-        handler.postDelayed(new MachineCheckerRunnable(m, this.roomName, handler, new OnMachineInUse() {
+        handler.postDelayed(new MachineCheckerRunnable(m, this.roomName, handler, new OnMachineChangedToInUse() {
             @Override
             public void onMachineInUse(Machine m) {
+                lockListener.onUnlock();
                 createNotification(m);
+            } public void onTimeout(){
+                alertDialog.cancel();
             }
-        }), 60000);
+        }), MachineCheckerRunnable.TIME);
     }
 
 
