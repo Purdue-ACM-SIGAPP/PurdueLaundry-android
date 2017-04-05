@@ -59,7 +59,6 @@ public class NotificationCreator extends Service {
     private static void updateTimeNotification(String machine, Context context, long timeLeft) {
         int id = notifcationIds.get(machine);
         String countDown;
-        //System.out.println(timeLeft);
         if (timeLeft > 0) {
             countDown = String.format("%01d minutes left", TimeUnit.MILLISECONDS.toMinutes(timeLeft));
         } else {
