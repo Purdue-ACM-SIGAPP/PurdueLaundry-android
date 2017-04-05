@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -14,8 +15,10 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -25,10 +28,9 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.ModelOperations;
@@ -39,11 +41,12 @@ import xyz.jhughes.laundry.adapters.MachineAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.analytics.ScreenTrackedFragment;
 import xyz.jhughes.laundry.apiclient.MachineService;
+import xyz.jhughes.laundry.notificationhelpers.ScreenOrientationLockToggleListener;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MachineFragment extends ScreenTrackedFragment implements SwipeRefreshLayout.OnRefreshListener, SnackbarPostListener {
+public class MachineFragment extends ScreenTrackedFragment implements SwipeRefreshLayout.OnRefreshListener, SnackbarPostListener, ScreenOrientationLockToggleListener {
 
     private ArrayList<Machine> classMachines;
 
@@ -128,11 +131,11 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
 
             call.enqueue(new Callback<ArrayList<Machine>>() {
                 @Override
-                public void onResponse(Response<ArrayList<Machine>> response, Retrofit retrofit) {
+                public void onResponse(Call<ArrayList<Machine>> call, Response<ArrayList<Machine>> response) {
                     if (progressDialog.isShowing()) {
                         progressDialog.dismiss();
                     }
-                    if (response.isSuccess()) {
+                    if (response.isSuccessful()) {
                         mSwipeRefreshLayout.setRefreshing(false);
                         isRefreshing = false;
                         classMachines = response.body();
@@ -141,7 +144,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                             showOfflineDialogIfNecessary();
                         }
 
-                        MachineAdapter adapter = new MachineAdapter(classMachines, rootView.getContext(), isDryers, mRoomName, MachineFragment.this);
+                        MachineAdapter adapter = new MachineAdapter(classMachines, rootView.getContext(), isDryers, mRoomName, MachineFragment.this, MachineFragment.this);
                         recyclerView.setAdapter(adapter);
                         currentAdapter = adapter;
 
@@ -186,7 +189,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                 }
 
                 @Override
-                public void onFailure(Throwable t) {
+                public void onFailure(Call<ArrayList<Machine>> call, Throwable t) {
                     //likely a timeout -- network is available due to prev. check
                     showErrorDialog(getString(R.string.error_server_message));
                     mSwipeRefreshLayout.setRefreshing(false);
@@ -318,5 +321,30 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     public void postSnackbar(String status, int length) {
         Snackbar snackbar = Snackbar.make(rootView, status, length);
         snackbar.show();
+    }
+
+    public void onLock(){
+        int orientation = getActivity().getRequestedOrientation();
+        int rotation = ((WindowManager) getActivity().getSystemService(
+                Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+        switch (rotation) {
+            case Surface.ROTATION_0:
+                orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+                break;
+            case Surface.ROTATION_90:
+                orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+                break;
+            case Surface.ROTATION_180:
+                orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
+                break;
+            default:
+                orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
+                break;
+        }
+        getActivity().setRequestedOrientation(orientation);
+    }
+
+    public void onUnlock(){
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
     }
 }
