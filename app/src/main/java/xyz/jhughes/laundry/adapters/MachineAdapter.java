@@ -177,9 +177,15 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
             int milliInFuture = minutesInFuture * 60000; //60 seconds * 1000 milliseconds
 
             String notificationKey = roomName + " " + m.getName();
-            mContext.startService(new Intent(mContext, NotificationCreator.class)
-                    .putExtra("machine", notificationKey)
-                    .putExtra("time", milliInFuture));
+
+            if (NotificationCreator.notificationExists(notificationKey)) {
+                listener.postSnackbar(mContext.getString(R.string.reminder_already_set), Snackbar.LENGTH_LONG);
+            } else {
+                mContext.startService(new Intent(mContext, NotificationCreator.class)
+                        .putExtra("machine", notificationKey)
+                        .putExtra("time", milliInFuture));
+                Toast.makeText(mContext, mContext.getString(R.string.alarm_set), Toast.LENGTH_SHORT).show();
+            }
             return true;
         } catch (NumberFormatException | StringIndexOutOfBoundsException e){
             return false;
@@ -231,8 +237,8 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                         if (body.contains(m2)){
                             Machine m3 = body.get(body.indexOf(m2));
                             if (m3.getStatus().equals(MachineStates.IN_USE)){ //
-                                lockListener.onUnlock();
                                 createNotification(m3);
+                                alertDialog.cancel();
                             }
                         }
                     }
@@ -248,8 +254,8 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         handler.postDelayed(new MachineCheckerRunnable(m, this.roomName, handler, new OnMachineChangedToInUse() {
             @Override
             public void onMachineInUse(Machine m) {
-                lockListener.onUnlock();
                 createNotification(m);
+                alertDialog.cancel();
             } public void onTimeout(){
                 alertDialog.cancel();
             }
