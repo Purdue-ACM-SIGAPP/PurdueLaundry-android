@@ -151,17 +151,11 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
                     if(httpCode < 500) {
                         //client error
                         showErrorMessage(getString(R.string.error_client_message));
+                        AnalyticsHelper.sendEventHit("api", "apiCodes", "/location/all", httpCode);
                     } else {
                         //server error
                         showErrorMessage(getString(R.string.error_server_message));
-                        AnalyticsHelper.getDefaultTracker().send(
-                                new HitBuilders.ExceptionBuilder()
-                                        .setDescription("Error: {" +
-                                                " HTTP Code: " + String.valueOf(httpCode) +
-                                                " Message: " + response.message() +
-                                                " }")
-                                        .setFatal(false)
-                                        .build());
+                        AnalyticsHelper.sendEventHit("api", "apiCodes", "/location/all", httpCode);
                     }
 
                 }
@@ -172,14 +166,8 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
                 Log.e("LocationActivity", "API ERROR - " + t.getMessage());
                 //likely a timeout -- network is available due to prev. check
                 showErrorMessage(getString(R.string.error_server_message));
-                AnalyticsHelper.getDefaultTracker().send(
-                        new HitBuilders.ExceptionBuilder()
-                                .setDescription("Error: {" +
-                                        " HTTP Code: -1" +
-                                        " Message: " + t.getMessage() +
-                                        " }")
-                                .setFatal(false)
-                                .build());
+
+                AnalyticsHelper.sendErrorHit(t, false);
 
                 mSwipeRefreshLayout.setRefreshing(false);
             }
