@@ -12,6 +12,7 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.NotificationCompat;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -25,11 +26,11 @@ public class NotificationCreator extends Service {
     private static HashMap<String, Integer> notifcationIds = new HashMap<>();
     private static HashMap<Integer, CountDownTimer> timers = new HashMap<>();
     private static int id = 0;
-    private static NotificationCreator self;
+    private static WeakReference<NotificationCreator> self;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        self = this;
+        self = new WeakReference<>(this);
 
         NotificationManagerCompat.from(this).cancelAll();
 
@@ -101,8 +102,8 @@ public class NotificationCreator extends Service {
             timers.get(id).cancel();
         timers.remove(id);
 
-        if (timers.isEmpty()) {
-            self.stopSelf();
+        if (timers.isEmpty() && self.get() != null) {
+            self.get().stopSelf();
         }
     }
 
