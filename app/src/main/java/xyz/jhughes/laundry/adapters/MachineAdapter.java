@@ -201,7 +201,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         lockListener.onLock();
         AlertDialog.Builder machineWaitingDialog = new AlertDialog.Builder(mContext);
         machineWaitingDialog.setTitle(mContext.getString(R.string.alarm))
-                .setMessage(mContext.getString(R.string.available_timer_message1) + " " + m.getName().toLowerCase() + " " + mContext.getString(R.string.available_timer_message2))
+                .setMessage(mContext.getString(R.string.available_timer_message1) + " " + m.getName() + " " + mContext.getString(R.string.available_timer_message2))
                 .setCancelable(true)
                 .setPositiveButton(mContext.getString(R.string.available_timer_refresh), null)
                 .setNegativeButton(mContext.getString(R.string.available_timer_cancel), new DialogInterface.OnClickListener() {
@@ -245,7 +245,6 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
 
                     @Override
                     public void onFailure(Call<ArrayList<Machine>> call, Throwable t) {
-
                     }
                 });
             }
