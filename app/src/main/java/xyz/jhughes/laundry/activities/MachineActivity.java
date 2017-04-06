@@ -107,7 +107,7 @@ public class MachineActivity extends ScreenTrackedActivity {
             //show onboarding snackbar.
             mOnboardingSnackbar = Snackbar
                     .make(mMainContent,
-                            "Tap a running machine be notified when it finishes.",
+                            "Tap a running machine to be notified when it finishes.",
                             Snackbar.LENGTH_INDEFINITE)
                     .addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
                         /**
