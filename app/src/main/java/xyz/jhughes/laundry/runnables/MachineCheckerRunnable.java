@@ -60,7 +60,12 @@ public class MachineCheckerRunnable implements Runnable {
 
             @Override
             public void onFailure(Call<ArrayList<Machine>> call, Throwable t) {
-
+                timeout--;
+                if (timeout > 0) {
+                    handler.postDelayed(MachineCheckerRunnable.this, TIME);
+                } else {
+                    listener.onTimeout();
+                }
             }
 
         });
