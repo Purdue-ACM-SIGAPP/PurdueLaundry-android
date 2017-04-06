@@ -2,6 +2,7 @@ package xyz.jhughes.laundry.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.BaseTransientBottomBar;
@@ -32,6 +33,13 @@ import xyz.jhughes.laundry.storage.SharedPrefsHelper;
  * This activity tracks screen views. The fragments ALSO track screen views.
  */
 public class MachineActivity extends ScreenTrackedActivity {
+    private static final String SHOW_ONBOARDING_COUNTDOWN = "show_onboarding_countdown";
+
+    /**
+     * The number of times to show the snackbar explaining how to start a timer
+     * unless the user manually dismisses it.
+     */
+    private static final int ONBOARDING_COUNTDOWN = 5;
 
     private String currentRoom;
     private AppSectionsPagerAdapter appSectionsPagerAdapter;
@@ -47,6 +55,8 @@ public class MachineActivity extends ScreenTrackedActivity {
     CoordinatorLayout mMainContent;
 
     Snackbar filterWarningBar;
+
+    Snackbar mOnboardingSnackbar;
 
     @Override
     protected void onPause() {
@@ -75,6 +85,76 @@ public class MachineActivity extends ScreenTrackedActivity {
         setUpViewPager();
         setScreenName(Constants.getApiLocation(currentRoom));
         updateFilteringWarning();
+
+        showOnboardingIfNecessary();
+    }
+
+
+    /**
+     * When the user first accesses the Machines Activity, we should show
+     * a snackbar telling them how to create a timer. We hope this will increase
+     * the use of timers.
+     */
+    private void showOnboardingIfNecessary() {
+        int numberOfTimesToShowOnboarding =
+                SharedPrefsHelper.getSharedPrefs(this).getInt(SHOW_ONBOARDING_COUNTDOWN, ONBOARDING_COUNTDOWN);
+
+        if((mOnboardingSnackbar != null && !mOnboardingSnackbar.isShown()))
+            return;
+
+        //add BuildConfig.DEBUG to this statement to make it display always for testing.
+        if(numberOfTimesToShowOnboarding > 0) {
+            //show onboarding snackbar.
+            mOnboardingSnackbar = Snackbar
+                    .make(mMainContent,
+                            "Tap a running machine to be notified when it finishes.",
+                            Snackbar.LENGTH_INDEFINITE)
+                    .addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                        /**
+                         * If the user dismisses the snackbar, we should respect their
+                         * desire to not show the tutorial again.
+                         * We do this by setting the countdown to zero.
+                         */
+                        @Override
+                        public void onDismissed(Snackbar transientBottomBar, int event) {
+                            super.onDismissed(transientBottomBar, event);
+                            if(event == DISMISS_EVENT_SWIPE) {
+                                SharedPrefsHelper
+                                        .getSharedPrefs(MachineActivity.this)
+                                        .edit()
+                                        .putInt(SHOW_ONBOARDING_COUNTDOWN,
+                                                0)
+                                        .apply();
+                            }
+                        }
+                    })
+                    .setAction("Don't show again", new View.OnClickListener() {
+
+                        /**
+                         * If the user dismisses the snackbar, we should respect their
+                         * desire to not show the tutorial again.
+                         * We do this by setting the countdown to zero.
+                         */
+                        @Override
+                        public void onClick(View v) {
+                            SharedPrefsHelper
+                                    .getSharedPrefs(MachineActivity.this)
+                                    .edit()
+                                    .putInt(SHOW_ONBOARDING_COUNTDOWN,
+                                            0)
+                                    .apply();
+                        }
+                    });
+
+            mOnboardingSnackbar.show();
+
+            SharedPrefsHelper
+                    .getSharedPrefs(this)
+                    .edit()
+                    .putInt(SHOW_ONBOARDING_COUNTDOWN,
+                            --numberOfTimesToShowOnboarding)
+                    .apply();
+        }
     }
 
     private void updateFilteringWarning() {
