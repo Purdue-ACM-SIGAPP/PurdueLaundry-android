@@ -4,19 +4,20 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.BaseTransientBottomBar;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Switch;
-import android.widget.ToggleButton;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -41,6 +42,11 @@ public class MachineActivity extends ScreenTrackedActivity {
     TabLayout tabLayout;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+
+    @Bind(R.id.main_content)
+    CoordinatorLayout mMainContent;
+
+    Snackbar filterWarningBar;
 
     @Override
     protected void onPause() {
@@ -68,14 +74,38 @@ public class MachineActivity extends ScreenTrackedActivity {
 
         setUpViewPager();
         setScreenName(Constants.getApiLocation(currentRoom));
-        updateFilteringTextView();
+        updateFilteringWarning();
     }
 
-    private void updateFilteringTextView() {
+    private void updateFilteringWarning() {
         final SharedPreferences p = SharedPrefsHelper.getSharedPrefs(MachineActivity.this);
         boolean filtering = p.getBoolean("filter", false);
-        findViewById(R.id.machine_activity_filtering_textview).setVisibility(
-                filtering ? View.VISIBLE : View.GONE);
+
+        if(filterWarningBar == null) {
+            filterWarningBar = Snackbar.make(mMainContent, "Only showing available machines.", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("Show all", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            setFilter(false);
+                        }
+                    })
+                    .addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                        @Override
+                        public void onDismissed(Snackbar transientBottomBar, int event) {
+                            super.onDismissed(transientBottomBar, event);
+                            filterWarningBar = null;
+                        }
+                    });
+        }
+
+        if(filtering) {
+            filterWarningBar.show();
+        }
+        else {
+            filterWarningBar.dismiss();
+        }
+//        findViewById(R.id.machine_activity_filtering_textview).setVisibility(
+//                filtering ? View.VISIBLE : View.GONE);
     }
 
     private void setUpViewPager() {
@@ -94,6 +124,16 @@ public class MachineActivity extends ScreenTrackedActivity {
         }
     }
 
+    private void setFilter(boolean filterState) {
+        final SharedPreferences p = SharedPrefsHelper.getSharedPrefs(MachineActivity.this);
+        SharedPreferences.Editor e = p.edit();
+        e.putBoolean("filter", filterState);
+        e.apply();
+        appSectionsPagerAdapter.notifyFilterChanged();
+        updateFilteringWarning();
+        AnalyticsHelper.sendEventHit("Filters", AnalyticsHelper.CLICK, filterState ? "Available only" : "All machines");
+    }
+
     public void createDialog() {
         final SharedPreferences p = SharedPrefsHelper.getSharedPrefs(MachineActivity.this);
         boolean filtering = p.getBoolean("filter", false);
@@ -108,12 +148,7 @@ public class MachineActivity extends ScreenTrackedActivity {
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        SharedPreferences.Editor e = p.edit();
-                        e.putBoolean("filter", sw.isChecked());
-                        e.apply();
-                        appSectionsPagerAdapter.notifyFilterChanged();
-                        updateFilteringTextView();
-                        AnalyticsHelper.sendEventHit("Filters", AnalyticsHelper.CLICK, sw.isChecked() ? "Available only" : "All machines");
+                        setFilter(sw.isChecked());
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
