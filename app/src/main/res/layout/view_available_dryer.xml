@@ -7,7 +7,7 @@
     <ImageView
         android:layout_width="165dp"
         android:layout_height="195dp"
-        app:srcCompat="@drawable/laundry_machine_cropped"
+        app:srcCompat="@drawable/drying_machine_cropped"
         android:id="@+id/laundry_machine_image"
         android:scaleType="fitCenter"
         android:layout_centerHorizontal="true"
