@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -87,17 +88,12 @@ public class MachineActivity extends ScreenTrackedActivity {
                         public void onClick(View v) {
                             setFilter(false);
                         }
-                    }).setCallback(new Snackbar.Callback() {
-
+                    })
+                    .addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
                         @Override
-                        public void onDismissed(Snackbar snackbar, int event) {
-                            //see Snackbar.Callback docs for event details
+                        public void onDismissed(Snackbar transientBottomBar, int event) {
+                            super.onDismissed(transientBottomBar, event);
                             filterWarningBar = null;
-                        }
-
-                        @Override
-                        public void onShown(Snackbar snackbar) {
-
                         }
                     });
         }
