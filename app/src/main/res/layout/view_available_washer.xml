@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:id = "@+id/view_available_machine">
+
+    <ImageView
+        android:layout_width="165dp"
+        android:layout_height="195dp"
+        app:srcCompat="@drawable/laundry_machine_cropped"
+        android:id="@+id/laundry_machine_image"
+        android:scaleType="fitCenter"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:cropToPadding="false"
+        android:adjustViewBounds="false"
+        android:alpha = "0.9"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/machine_name_number"
+        android:layout_alignBottom="@+id/laundry_machine_image"
+        android:textSize = "40sp"
+        android:textColor="#212121"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="42dp" />
+
+
+</RelativeLayout>
