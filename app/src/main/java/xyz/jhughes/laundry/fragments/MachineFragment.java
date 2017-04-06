@@ -148,17 +148,11 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                         if (httpCode < 500) {
                             //client error
                             showErrorDialog(getString(R.string.error_client_message));
+                            AnalyticsHelper.sendEventHit("api", "errorCodes", "/location/" + mRoomName, httpCode);
                         } else {
                             //server error
                             showErrorDialog(getString(R.string.error_server_message));
-                            AnalyticsHelper.getDefaultTracker().send(
-                                    new HitBuilders.ExceptionBuilder()
-                                            .setDescription("Error: {" +
-                                                    " HTTP Code: " + String.valueOf(httpCode) +
-                                                    " Message: " + response.message() +
-                                                    " }")
-                                            .setFatal(false)
-                                            .build());
+                            AnalyticsHelper.sendEventHit("api", "errorCodes", "/location/" + mRoomName, httpCode);
                         }
                     }
                 }
@@ -170,14 +164,8 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                     mSwipeRefreshLayout.setRefreshing(false);
                     isRefreshing = false;
                     alertNetworkError();
-                    AnalyticsHelper.getDefaultTracker().send(
-                            new HitBuilders.ExceptionBuilder()
-                                    .setDescription("Error: {" +
-                                            " HTTP Code: -1" +
-                                            " Message: " + t.getMessage() +
-                                            " }")
-                                    .setFatal(false)
-                                    .build());
+
+                    AnalyticsHelper.sendErrorHit(t, false);
                 }
             });
         } else {
