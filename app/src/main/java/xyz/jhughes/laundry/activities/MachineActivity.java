@@ -168,6 +168,13 @@ public class MachineActivity extends ScreenTrackedActivity {
                         public void onClick(View v) {
                             setFilter(false);
                         }
+                    })
+                    .addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                        @Override
+                        public void onDismissed(Snackbar transientBottomBar, int event) {
+                            super.onDismissed(transientBottomBar, event);
+                            filterWarningBar = null;
+                        }
                     });
         }
 
