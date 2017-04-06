@@ -87,6 +87,18 @@ public class MachineActivity extends ScreenTrackedActivity {
                         public void onClick(View v) {
                             setFilter(false);
                         }
+                    }).setCallback(new Snackbar.Callback() {
+
+                        @Override
+                        public void onDismissed(Snackbar snackbar, int event) {
+                            //see Snackbar.Callback docs for event details
+                            filterWarningBar = null;
+                        }
+
+                        @Override
+                        public void onShown(Snackbar snackbar) {
+
+                        }
                     });
         }
 
