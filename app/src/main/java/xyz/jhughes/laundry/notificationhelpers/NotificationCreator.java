@@ -52,20 +52,22 @@ public class NotificationCreator extends Service {
         return START_REDELIVER_INTENT;
     }
 
-    private static void updateTimeNotification(String machine, Context context, long timeLeft) {
+    private static void updateTimeNotification(String machine, Context context, long timeLeftInMillis) {
         int id = notifcationIds.get(machine);
         String countDown;
-        System.out.println(timeLeft);
-        if (timeLeft > 0) {
-            countDown = String.format("%01d minutes left", TimeUnit.MILLISECONDS.toMinutes(timeLeft));
+        System.out.println(timeLeftInMillis);
+        if (timeLeftInMillis < 1000) {
+            countDown = "Less than 1 minute remaining.";
+        } else if (timeLeftInMillis >= 1000) {
+            countDown = String.format("%01d minutes left", TimeUnit.MILLISECONDS.toMinutes(timeLeftInMillis));
         } else {
-            timeLeft = 0;
+            timeLeftInMillis = 0;
             countDown = " is finished!";
         }
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         Intent cancelIntent = new Intent(context, NotificationCancelReceiver.class);
-        cancelIntent.putExtra("timeLeft", timeLeft);
+        cancelIntent.putExtra("timeLeft", timeLeftInMillis);
         cancelIntent.putExtra("notificationId", id);
         cancelIntent.putExtra("machine", machine);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, cancelIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -80,12 +82,12 @@ public class NotificationCreator extends Service {
                 .setOngoing(true)
                 .setPriority(id);
 
-        if (timeLeft == 0) {
+        if (timeLeftInMillis == 0) {
             builder.setOngoing(false);
         }
 
         // if time up or at 5 minutes
-        if (timeLeft == 0 || (countDown.equals("5:00"))) {
+        if (timeLeftInMillis == 0) {
             AnalyticsHelper.sendEventHit("Reminders", "Passive", "Timer Finished");
             builder.setVibrate(new long[]{1000, 1000, 1000});
         }
