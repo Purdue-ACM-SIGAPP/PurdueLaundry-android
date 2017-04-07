@@ -26,6 +26,7 @@ import retrofit2.Response;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.LaundryParser.MachineStates;
+import xyz.jhughes.laundry.LaundryParser.MachineTypes;
 import xyz.jhughes.laundry.MachineFilter;
 import xyz.jhughes.laundry.apiclient.MachineService;
 import xyz.jhughes.laundry.notificationhelpers.ScreenOrientationLockToggleListener;
@@ -220,7 +221,12 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                 });
         //add message to load machine before
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        View q = inflater.inflate(R.layout.view_available_machine, null);
+        View q;
+        if (m.getType().equals(MachineTypes.WASHER)) {
+            q = inflater.inflate(R.layout.view_available_washer, null);
+        } else {
+            q = inflater.inflate(R.layout.view_available_dryer, null);
+        }
         machineWaitingDialog.setView(q);
         TextView number = (TextView) q.findViewById(R.id.machine_name_number);
         number.setText(getNumberFromName(m));
