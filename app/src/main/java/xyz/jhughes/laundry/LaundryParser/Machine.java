@@ -91,4 +91,17 @@ public class Machine implements Serializable {
         result = 31 * result + type.hashCode();
         return result;
     }
+
+    public String getNumberFromName(){
+        String number = "";
+        String name = getName();
+        for (int i = 0; i < name.length(); i++){
+            try{
+                number = number + Integer.parseInt(name.substring(i, i + 1));
+            } catch (NumberFormatException e){
+                continue;
+            }
+        }
+        return number;
+    }
 }
