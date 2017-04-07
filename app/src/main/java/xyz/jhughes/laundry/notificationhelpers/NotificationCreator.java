@@ -69,6 +69,7 @@ public class NotificationCreator extends Service {
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         Intent cancelIntent = new Intent(context, NotificationCancelReceiver.class);
+        cancelIntent.putExtra("timeLeft", timeLeft);
         cancelIntent.putExtra("notificationId", id);
         cancelIntent.putExtra("machine", machine);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, cancelIntent, PendingIntent.FLAG_UPDATE_CURRENT);

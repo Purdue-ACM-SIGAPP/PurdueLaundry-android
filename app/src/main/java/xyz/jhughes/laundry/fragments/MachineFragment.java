@@ -25,10 +25,10 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.ModelOperations;
@@ -128,11 +128,11 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
 
             call.enqueue(new Callback<ArrayList<Machine>>() {
                 @Override
-                public void onResponse(Response<ArrayList<Machine>> response, Retrofit retrofit) {
+                public void onResponse(Call<ArrayList<Machine>> call, Response<ArrayList<Machine>> response) {
                     if (progressDialog.isShowing()) {
                         progressDialog.dismiss();
                     }
-                    if (response.isSuccess()) {
+                    if (response.isSuccessful()) {
                         mSwipeRefreshLayout.setRefreshing(false);
                         isRefreshing = false;
                         classMachines = response.body();
@@ -148,34 +148,24 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                         if (httpCode < 500) {
                             //client error
                             showErrorDialog(getString(R.string.error_client_message));
+                            AnalyticsHelper.sendEventHit("api", "errorCodes", "/location/" + mRoomName, httpCode);
                         } else {
                             //server error
                             showErrorDialog(getString(R.string.error_server_message));
-                            AnalyticsHelper.getDefaultTracker().send(
-                                    new HitBuilders.ExceptionBuilder()
-                                            .setDescription("Error")
-                                            .set("HTTP Code", String.valueOf(httpCode))
-                                            .set("Message", response.message())
-                                            .setFatal(false)
-                                            .build());
+                            AnalyticsHelper.sendEventHit("api", "errorCodes", "/location/" + mRoomName, httpCode);
                         }
                     }
                 }
 
                 @Override
-                public void onFailure(Throwable t) {
+                public void onFailure(Call<ArrayList<Machine>> call, Throwable t) {
                     //likely a timeout -- network is available due to prev. check
                     showErrorDialog(getString(R.string.error_server_message));
                     mSwipeRefreshLayout.setRefreshing(false);
                     isRefreshing = false;
                     alertNetworkError();
-                    AnalyticsHelper.getDefaultTracker().send(
-                            new HitBuilders.ExceptionBuilder()
-                                    .setDescription("Error")
-                                    .set("HTTP Code", "-1")
-                                    .set("Message", t.getMessage())
-                                    .setFatal(false)
-                                    .build());
+
+                    AnalyticsHelper.sendErrorHit(t, false);
                 }
             });
         } else {
