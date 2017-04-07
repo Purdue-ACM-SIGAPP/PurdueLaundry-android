@@ -29,7 +29,6 @@ import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 import xyz.jhughes.laundry.LaundryParser.Location;
 import xyz.jhughes.laundry.LaundryParser.MachineList;
 import xyz.jhughes.laundry.ModelOperations;
@@ -157,11 +156,12 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
                         showErrorMessage(getString(R.string.error_server_message));
                         AnalyticsHelper.getDefaultTracker().send(
                                 new HitBuilders.ExceptionBuilder()
-                                    .setDescription("Error")
-                                    .set("HTTP Code", String.valueOf(httpCode))
-                                    .set("Message", response.message())
-                                    .setFatal(false)
-                                    .build());
+                                        .setDescription("Error: {" +
+                                                " HTTP Code: " + String.valueOf(httpCode) +
+                                                " Message: " + response.message() +
+                                                " }")
+                                        .setFatal(false)
+                                        .build());
                     }
 
                 }
@@ -174,9 +174,10 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
                 showErrorMessage(getString(R.string.error_server_message));
                 AnalyticsHelper.getDefaultTracker().send(
                         new HitBuilders.ExceptionBuilder()
-                                .setDescription("Error")
-                                .set("HTTP Code", "-1")
-                                .set("Message", t.getMessage())
+                                .setDescription("Error: {" +
+                                        " HTTP Code: -1" +
+                                        " Message: " + t.getMessage() +
+                                        " }")
                                 .setFatal(false)
                                 .build());
 

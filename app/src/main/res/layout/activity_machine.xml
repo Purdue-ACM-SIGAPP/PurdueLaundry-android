@@ -30,4 +30,13 @@
         android:layout_weight="1"
         android:background="@color/gray" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:gravity="center"
+        android:text="Only showing available machines."
+        android:id="@+id/machine_activity_filtering_textview"
+        android:background="@color/bgGray"/>
+
 </LinearLayout>

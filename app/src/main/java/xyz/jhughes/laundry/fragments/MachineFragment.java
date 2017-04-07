@@ -31,6 +31,7 @@ import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.ModelOperations;
@@ -144,31 +145,8 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                             showOfflineDialogIfNecessary();
                         }
 
-                        MachineAdapter adapter = new MachineAdapter(classMachines, rootView.getContext(), isDryers, mRoomName, MachineFragment.this, MachineFragment.this);
-                        recyclerView.setAdapter(adapter);
-                        currentAdapter = adapter;
+                        updateRecyclerView();
 
-                        //Check if the view is being filtered and causing the
-                        // fragment to appear empty.
-                        // This is not shown if the list is empty for any other reason.
-                        if (currentAdapter.getCurrentMachines().isEmpty()) {
-                            //Filters are too restrictive.
-                            mTooFilteredTextView.setVisibility(View.VISIBLE);
-                        } else {
-                            mTooFilteredTextView.setVisibility(View.GONE);
-                        }
-
-                        boolean addNotifyButton = notifyButton.getVisibility() != View.VISIBLE;
-                        if (addNotifyButton) {
-                            for (Machine m : adapter.getCurrentMachines()) {
-                                if (m.getStatus().equalsIgnoreCase("Available")) {
-                                    addNotifyButton = false;
-                                }
-                            }
-                            if (addNotifyButton) addNotifyOnAvailableButton();
-                            else removeNotifyOnAvailableButton();
-                        }
-                        recyclerView.setAdapter(adapter);
                     } else {
                         int httpCode = response.code();
                         if (httpCode < 500) {
@@ -179,9 +157,10 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                             showErrorDialog(getString(R.string.error_server_message));
                             AnalyticsHelper.getDefaultTracker().send(
                                     new HitBuilders.ExceptionBuilder()
-                                            .setDescription("Error")
-                                            .set("HTTP Code", String.valueOf(httpCode))
-                                            .set("Message", response.message())
+                                            .setDescription("Error: {" +
+                                                    " HTTP Code: " + String.valueOf(httpCode) +
+                                                    " Message: " + response.message() +
+                                                    " }")
                                             .setFatal(false)
                                             .build());
                         }
@@ -197,15 +176,43 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                     alertNetworkError();
                     AnalyticsHelper.getDefaultTracker().send(
                             new HitBuilders.ExceptionBuilder()
-                                    .setDescription("Error")
-                                    .set("HTTP Code", "-1")
-                                    .set("Message", t.getMessage())
+                                    .setDescription("Error: {" +
+                                            " HTTP Code: -1" +
+                                            " Message: " + t.getMessage() +
+                                            " }")
                                     .setFatal(false)
                                     .build());
                 }
             });
         } else {
             showNoInternetDialog();
+        }
+    }
+
+    public void updateRecyclerView() {
+        MachineAdapter adapter = new MachineAdapter(classMachines, rootView.getContext(), isDryers, mRoomName, MachineFragment.this);
+        recyclerView.setAdapter(adapter);
+        currentAdapter = adapter;
+
+        //Check if the view is being filtered and causing the
+        // fragment to appear empty.
+        // This is not shown if the list is empty for any other reason.
+        if (currentAdapter.getCurrentMachines().isEmpty()) {
+            //Filters are too restrictive.
+            mTooFilteredTextView.setVisibility(View.VISIBLE);
+        } else {
+            mTooFilteredTextView.setVisibility(View.GONE);
+        }
+
+        boolean addNotifyButton = notifyButton.getVisibility() != View.VISIBLE;
+        if (addNotifyButton) {
+            for (Machine m : adapter.getAllMachines()) {
+                if (m.getStatus().equalsIgnoreCase("Available")) {
+                    addNotifyButton = false;
+                }
+            }
+            if (addNotifyButton) addNotifyOnAvailableButton();
+            else removeNotifyOnAvailableButton();
         }
     }
 
@@ -249,7 +256,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
             public void onClick(View v) {
                 Machine m = null;
                 int mTime = Integer.MAX_VALUE;
-                for (Machine machine : currentAdapter.getCurrentMachines()) {
+                for (Machine machine : currentAdapter.getAllMachines()) {
                     try {
                         int machineTime = Integer.parseInt(machine.getTime().substring(0, machine.getTime().indexOf(' ')));
                         if (machineTime < mTime) {

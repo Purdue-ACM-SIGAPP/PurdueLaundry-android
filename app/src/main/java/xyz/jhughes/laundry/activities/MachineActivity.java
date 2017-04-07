@@ -10,18 +10,17 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import com.google.gson.Gson;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.view.View;
+import android.widget.Switch;
+import android.widget.ToggleButton;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xyz.jhughes.laundry.LaundryParser.Constants;
-import xyz.jhughes.laundry.MachineFilter;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.AppSectionsPagerAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
@@ -69,6 +68,14 @@ public class MachineActivity extends ScreenTrackedActivity {
 
         setUpViewPager();
         setScreenName(Constants.getApiLocation(currentRoom));
+        updateFilteringTextView();
+    }
+
+    private void updateFilteringTextView() {
+        final SharedPreferences p = SharedPrefsHelper.getSharedPrefs(MachineActivity.this);
+        boolean filtering = p.getBoolean("filter", false);
+        findViewById(R.id.machine_activity_filtering_textview).setVisibility(
+                filtering ? View.VISIBLE : View.GONE);
     }
 
     private void setUpViewPager() {
@@ -89,47 +96,24 @@ public class MachineActivity extends ScreenTrackedActivity {
 
     public void createDialog() {
         final SharedPreferences p = SharedPrefsHelper.getSharedPrefs(MachineActivity.this);
-        final Gson gson = new Gson();
-        MachineFilter filter;
-        filter = gson.fromJson(p.getString("filter", null), MachineFilter.class);
-        if(filter == null) filter = new MachineFilter();
+        boolean filtering = p.getBoolean("filter", false);
+        View layout = LayoutInflater.from(this).inflate(R.layout.dialog_filter, null);
+        final Switch sw = ((Switch) layout.findViewById(R.id.filter_dialog_switch));
+        sw.setChecked(filtering);
 
-        final List<MachineFilter.State> states = new ArrayList<>();
-        states.addAll(filter.getStates());
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // Set the dialog title
         builder.setTitle(R.string.select_options)
-                // Specify the list array, the items to be selected by default (null for none),
-                // and the listener through which to receive callbacks when items are selected
-                .setMultiChoiceItems(R.array.options, filter.getStateBoolean(
-                        getResources().getStringArray(R.array.options)),
-                        new DialogInterface.OnMultiChoiceClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which,
-                                                boolean isChecked) {
-                                MachineFilter.State option = MachineFilter.State.getState(
-                                        getResources().getStringArray(R.array.options)[which]);
-                                if(isChecked) {
-                                    if(!states.contains(option))
-                                        states.add(option);
-                                }
-                                else states.remove(option);
-                            }
-                        })
+                .setView(layout)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        if(states.isEmpty()) {
-                            dialog.dismiss();
-                            showTooFilteredDialog();
-                        } else {
-                            MachineFilter filter = new MachineFilter(states);
-                            SharedPreferences.Editor e = p.edit();
-                            e.putString("filter", gson.toJson(filter));
-                            e.apply();
-                            appSectionsPagerAdapter.notifyDataSetChanged();
-                            AnalyticsHelper.sendEventHit("Filters", AnalyticsHelper.CLICK, MachineFilter.State.toString(states));
-                        }
+                        SharedPreferences.Editor e = p.edit();
+                        e.putBoolean("filter", sw.isChecked());
+                        e.apply();
+                        appSectionsPagerAdapter.notifyFilterChanged();
+                        updateFilteringTextView();
+                        AnalyticsHelper.sendEventHit("Filters", AnalyticsHelper.CLICK, sw.isChecked() ? "Available only" : "All machines");
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -139,21 +123,6 @@ public class MachineActivity extends ScreenTrackedActivity {
                     }
                 });
         builder.create().show();
-    }
-
-    private void showTooFilteredDialog() {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setTitle("Too filtered");
-        alertDialogBuilder.setMessage(R.string.machine_activity_too_filtered);
-        alertDialogBuilder.setCancelable(false);
-        alertDialogBuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
-                createDialog();
-            }
-        });
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
     }
 
     @Override
