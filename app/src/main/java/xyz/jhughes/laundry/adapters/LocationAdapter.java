@@ -29,6 +29,8 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
 
     private List<Location> mDataset;
 
+    boolean isHandlingClick = false;
+
     // Provide a suitable constructor (depends on the kind of dataset)
     public LocationAdapter(List<Location> mDataset, Context mContext) {
         this.mContext = mContext;
@@ -71,12 +73,15 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, MachineActivity.class);
-                Bundle b = new Bundle();
-                b.putString("locationName", locationName);
-                intent.putExtras(b);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                mContext.startActivity(intent);
+                if(!isHandlingClick) {
+                    isHandlingClick = true;
+                    Intent intent = new Intent(mContext, MachineActivity.class);
+                    Bundle b = new Bundle();
+                    b.putString("locationName", locationName);
+                    intent.putExtras(b);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    mContext.startActivity(intent);
+                }
             }
         });
     }
