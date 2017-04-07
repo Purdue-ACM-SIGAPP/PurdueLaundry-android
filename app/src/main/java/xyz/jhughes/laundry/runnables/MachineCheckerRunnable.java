@@ -11,6 +11,7 @@ import xyz.jhughes.laundry.BuildConfig;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.LaundryParser.MachineStates;
+import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.notificationhelpers.OnMachineChangedToInUse;
 import xyz.jhughes.laundry.apiclient.MachineService;
 
@@ -60,12 +61,14 @@ public class MachineCheckerRunnable implements Runnable {
 
             @Override
             public void onFailure(Call<ArrayList<Machine>> call, Throwable t) {
+                //continue trying with next ping in background
                 timeout--;
                 if (timeout > 0) {
                     handler.postDelayed(MachineCheckerRunnable.this, TIME);
                 } else {
                     listener.onTimeout();
                 }
+                AnalyticsHelper.sendErrorHit(t, false);
             }
 
         });
