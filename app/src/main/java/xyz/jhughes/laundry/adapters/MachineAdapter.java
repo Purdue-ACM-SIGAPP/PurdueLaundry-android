@@ -228,7 +228,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         }
         machineWaitingDialog.setView(q);
         TextView number = (TextView) q.findViewById(R.id.machine_name_number);
-        number.setText(getNumberFromName(m));
+        number.setText(m.getNumberFromName());
         final AlertDialog alertDialog = machineWaitingDialog.create();
         alertDialog.show();
         alertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -257,6 +257,8 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
 
                     @Override
                     public void onFailure(Call<ArrayList<Machine>> call, Throwable t) {
+                        //User presses refresh but call fails
+                        AnalyticsHelper.sendErrorHit(t, false);
                     }
                 });
             }
@@ -274,18 +276,6 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     }
 
 
-    public String getNumberFromName(Machine m){
-        String number = "";
-        String name = m.getName();
-        for (int i = 0; i < name.length(); i++){
-            try{
-                number = number + Integer.parseInt(name.substring(i, i + 1));
-            } catch (NumberFormatException e){
-                continue;
-            }
-        }
-        return number;
-    }
 
     public ArrayList<Machine> getCurrentMachines() {
         return currentMachines;
