@@ -206,8 +206,8 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         final Machine m2 = m;
         final Handler handler = new Handler();
         mOnOrientationlockListener.onLock();
-        AlertDialog.Builder machineWaitingDialog = new AlertDialog.Builder(mContext);
-        machineWaitingDialog.setTitle(mContext.getString(R.string.alarm))
+        AlertDialog.Builder machineWaitingDialogBuilder = new AlertDialog.Builder(mContext);
+        machineWaitingDialogBuilder.setTitle(mContext.getString(R.string.alarm))
                 .setMessage(mContext.getString(R.string.available_timer_message1) + " " + m.getName() + " " + mContext.getString(R.string.available_timer_message2))
                 .setCancelable(true)
                 .setPositiveButton(mContext.getString(R.string.available_timer_refresh), null)
@@ -226,18 +226,18 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         } else {
             q = inflater.inflate(R.layout.view_available_dryer, null);
         }
-        machineWaitingDialog.setView(q);
+        machineWaitingDialogBuilder.setView(q);
         TextView number = (TextView) q.findViewById(R.id.machine_name_number);
         number.setText(m.getNumberFromName());
-        final AlertDialog alertDialog = machineWaitingDialog.create();
-        alertDialog.show();
-        alertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+        final AlertDialog machineWaitingDialog = machineWaitingDialogBuilder.create();
+        machineWaitingDialog.show();
+        machineWaitingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
                 mOnOrientationlockListener.onUnlock();
             }
         });
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+        machineWaitingDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String apiLocationFormat = Constants.getApiLocation(MachineAdapter.this.roomName);
@@ -250,7 +250,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                             Machine m3 = body.get(body.indexOf(m2));
                             if (m3.getStatus().equals(MachineStates.IN_USE)){ //
                                 createNotification(m3);
-                                alertDialog.cancel();
+                                machineWaitingDialog.cancel();
                             }
                         }
                     }
@@ -268,9 +268,9 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
             @Override
             public void onMachineInUse(Machine m) {
                 createNotification(m);
-                alertDialog.cancel();
+                machineWaitingDialog.cancel();
             } public void onTimeout(){
-                alertDialog.cancel();
+                machineWaitingDialog.cancel();
             }
         }), MachineCheckerRunnable.TIME);
     }
