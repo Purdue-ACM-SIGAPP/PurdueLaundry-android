@@ -27,7 +27,7 @@ import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.LaundryParser.MachineStates;
 import xyz.jhughes.laundry.LaundryParser.MachineTypes;
-import xyz.jhughes.laundry.MachineFilter;
+
 import xyz.jhughes.laundry.apiclient.MachineService;
 import xyz.jhughes.laundry.notificationhelpers.ScreenOrientationLockToggleListener;
 import xyz.jhughes.laundry.notificationhelpers.OnMachineChangedToInUse;
