@@ -190,7 +190,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     }
 
     public void updateRecyclerView() {
-        MachineAdapter adapter = new MachineAdapter(classMachines, rootView.getContext(), isDryers, mRoomName, MachineFragment.this);
+        MachineAdapter adapter = new MachineAdapter(classMachines, rootView.getContext(), isDryers, mRoomName, MachineFragment.this, MachineFragment.this);
         recyclerView.setAdapter(adapter);
         currentAdapter = adapter;
 
