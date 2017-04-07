@@ -31,7 +31,6 @@ import xyz.jhughes.laundry.LaundryParser.MachineTypes;
 import xyz.jhughes.laundry.apiclient.MachineService;
 import xyz.jhughes.laundry.notificationhelpers.ScreenOrientationLockToggleListener;
 import xyz.jhughes.laundry.notificationhelpers.OnMachineChangedToInUse;
-import xyz.jhughes.laundry.LaundryParser.MachineTypes;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.SnackbarPostListener;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
@@ -43,16 +42,16 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
 
     private final String roomName;
     private final SnackbarPostListener listener;
-    private final ScreenOrientationLockToggleListener lockListener;
+    private final ScreenOrientationLockToggleListener mOnOrientationlockListener;
     private ArrayList<Machine> currentMachines, allMachines;
     private Context mContext;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MachineAdapter(ArrayList<Machine> machines, Context context, Boolean dryers, String roomName, SnackbarPostListener listener, ScreenOrientationLockToggleListener lockListener) {
+    public MachineAdapter(ArrayList<Machine> machines, Context context, Boolean dryers, String roomName, SnackbarPostListener listener, ScreenOrientationLockToggleListener mOnOrientationlockListener) {
         this.mContext = context;
         this.roomName = roomName;
         this.listener = listener;
-        this.lockListener = lockListener;
+        this.mOnOrientationlockListener = mOnOrientationlockListener;
 
         currentMachines = new ArrayList<>();
         allMachines = new ArrayList<>();
@@ -206,7 +205,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         //checks the server while the dialog is open and the app is running in the background
         final Machine m2 = m;
         final Handler handler = new Handler();
-        lockListener.onLock();
+        mOnOrientationlockListener.onLock();
         AlertDialog.Builder machineWaitingDialog = new AlertDialog.Builder(mContext);
         machineWaitingDialog.setTitle(mContext.getString(R.string.alarm))
                 .setMessage(mContext.getString(R.string.available_timer_message1) + " " + m.getName() + " " + mContext.getString(R.string.available_timer_message2))
@@ -235,7 +234,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         alertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                lockListener.onUnlock();
+                mOnOrientationlockListener.onUnlock();
             }
         });
         alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
