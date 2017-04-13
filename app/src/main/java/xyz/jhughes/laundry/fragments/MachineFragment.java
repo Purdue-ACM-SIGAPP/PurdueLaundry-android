@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -14,8 +15,10 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -39,11 +42,12 @@ import xyz.jhughes.laundry.adapters.MachineAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.analytics.ScreenTrackedFragment;
 import xyz.jhughes.laundry.apiclient.MachineService;
+import xyz.jhughes.laundry.notificationhelpers.ScreenOrientationLockToggleListener;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MachineFragment extends ScreenTrackedFragment implements SwipeRefreshLayout.OnRefreshListener, SnackbarPostListener {
+public class MachineFragment extends ScreenTrackedFragment implements SwipeRefreshLayout.OnRefreshListener, SnackbarPostListener, ScreenOrientationLockToggleListener {
 
     private ArrayList<Machine> classMachines;
 
@@ -174,7 +178,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     }
 
     public void updateRecyclerView() {
-        MachineAdapter adapter = new MachineAdapter(classMachines, rootView.getContext(), isDryers, mRoomName, MachineFragment.this);
+        MachineAdapter adapter = new MachineAdapter(classMachines, rootView.getContext(), isDryers, mRoomName, MachineFragment.this, MachineFragment.this);
         recyclerView.setAdapter(adapter);
         currentAdapter = adapter;
 
@@ -312,5 +316,32 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     public void postSnackbar(String status, int length) {
         Snackbar snackbar = Snackbar.make(rootView, status, length);
         snackbar.show();
+    }
+
+    //http://stackoverflow.com/a/14150037
+    //locks the screen to the current rotation
+    public void onLock(){
+        int orientation = getActivity().getRequestedOrientation();
+        int rotation = ((WindowManager) getActivity().getSystemService(
+                Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
+        switch (rotation) {
+            case Surface.ROTATION_0:
+                orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+                break;
+            case Surface.ROTATION_90:
+                orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+                break;
+            case Surface.ROTATION_180:
+                orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
+                break;
+            default:
+                orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
+                break;
+        }
+        getActivity().setRequestedOrientation(orientation);
+    }
+
+    public void onUnlock(){
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
     }
 }
