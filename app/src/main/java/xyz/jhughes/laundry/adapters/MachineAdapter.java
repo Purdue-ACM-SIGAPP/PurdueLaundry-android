@@ -200,10 +200,9 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
 
     }
 
-    public void waitForMachine(Machine m){
+    public void waitForMachine(final Machine m){
         //Constructs the dialog to wait for a machine
         //checks the server while the dialog is open and the app is running in the background
-        final Machine m2 = m;
         final Handler handler = new Handler();
         mOnOrientationlockListener.onLock();
         AlertDialog.Builder machineWaitingDialogBuilder = new AlertDialog.Builder(mContext);
@@ -214,6 +213,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                 .setNegativeButton(mContext.getString(R.string.available_timer_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
+                        AnalyticsHelper.sendEventHit("Automatic Timer", "Click", "Timed cancelled");
                         handler.removeCallbacksAndMessages(null);
                         dialog.cancel();
                     }
@@ -240,14 +240,15 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         machineWaitingDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AnalyticsHelper.sendEventHit("Automatic Timer", "Click", "Refresh");
                 String apiLocationFormat = Constants.getApiLocation(MachineAdapter.this.roomName);
                 Call<ArrayList<Machine>> call = MachineService.getService().getMachineStatus(apiLocationFormat);
                 call.enqueue(new Callback<ArrayList<Machine>>() {
                     @Override
                     public void onResponse(Call<ArrayList<Machine>> call, Response<ArrayList<Machine>> response) {
                         ArrayList<Machine> body = response.body();
-                        if (body.contains(m2)){
-                            Machine m3 = body.get(body.indexOf(m2));
+                        if (body.contains(m)){
+                            Machine m3 = body.get(body.indexOf(m));
                             if (m3.getStatus().equals(MachineStates.IN_USE)){ //
                                 createNotification(m3);
                                 machineWaitingDialog.cancel();
@@ -263,13 +264,15 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                 });
             }
         });
-
+        //This handler will start the loop TIME for checking the status of the machine
         handler.postDelayed(new MachineCheckerRunnable(m, this.roomName, handler, new OnMachineChangedToInUse() {
             @Override
             public void onMachineInUse(Machine m) {
+                AnalyticsHelper.sendEventHit("Automatic Timer", "Click", "Timer created", 0);
                 createNotification(m);
                 machineWaitingDialog.cancel();
             } public void onTimeout(){
+                AnalyticsHelper.sendEventHit("Automatic Timer", "Click", "Timed out");
                 machineWaitingDialog.cancel();
             }
         }), MachineCheckerRunnable.TIME);
