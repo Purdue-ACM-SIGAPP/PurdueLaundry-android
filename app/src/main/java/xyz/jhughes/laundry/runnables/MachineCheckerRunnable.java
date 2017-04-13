@@ -46,7 +46,8 @@ public class MachineCheckerRunnable implements Runnable {
                 ArrayList<Machine> body = response.body();
                 if (body.contains(m)){
                     Machine m2 = body.get(body.indexOf(m));
-                    if (m2.getStatus().equals(MachineStates.IN_USE)){ //
+                    if (m2.getStatus().equals(MachineStates.IN_USE)){
+                        AnalyticsHelper.sendEventHit("Automatic Timer", "Click", "Timer created", 6-timeout);
                         listener.onMachineInUse(m2);
                     } else {
                         timeout--;
