@@ -318,6 +318,8 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
         snackbar.show();
     }
 
+    //http://stackoverflow.com/a/14150037
+    //locks the screen to the current rotation
     public void onLock(){
         int orientation = getActivity().getRequestedOrientation();
         int rotation = ((WindowManager) getActivity().getSystemService(
