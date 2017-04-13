@@ -268,11 +268,13 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         handler.postDelayed(new MachineCheckerRunnable(m, this.roomName, handler, new OnMachineChangedToInUse() {
             @Override
             public void onMachineInUse(Machine m) {
-                AnalyticsHelper.sendEventHit("Automatic Timer", "Click", "Timer created", 0);
+                //logged before call in MachineCheckerRunnable
                 createNotification(m);
                 machineWaitingDialog.cancel();
-            } public void onTimeout(){
-                AnalyticsHelper.sendEventHit("Automatic Timer", "Click", "Timed out");
+            }
+
+            public void onTimeout(){
+                AnalyticsHelper.sendEventHit("Automatic Timer", "Timer state", "Timed out");
                 machineWaitingDialog.cancel();
             }
         }), MachineCheckerRunnable.TIME);
