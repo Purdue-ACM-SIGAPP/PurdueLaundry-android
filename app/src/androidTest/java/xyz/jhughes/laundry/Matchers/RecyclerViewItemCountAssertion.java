@@ -7,6 +7,8 @@ import android.view.View;
 
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 
 public class RecyclerViewItemCountAssertion implements ViewAssertion {
         private final int expectedCount;
@@ -23,6 +25,7 @@ public class RecyclerViewItemCountAssertion implements ViewAssertion {
 
             RecyclerView recyclerView = (RecyclerView) view;
             RecyclerView.Adapter adapter = recyclerView.getAdapter();
+            assertThat(adapter, is(not(nullValue())));
             assertThat(adapter.getItemCount(), is(expectedCount));
         }
 }

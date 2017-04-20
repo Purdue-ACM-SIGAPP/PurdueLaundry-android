@@ -15,8 +15,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -24,7 +22,7 @@ import butterknife.ButterKnife;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.LaundryParser.MachineStates;
-import xyz.jhughes.laundry.MachineFilter;
+import xyz.jhughes.laundry.LaundryParser.MachineTypes;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.SnackbarPostListener;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
@@ -35,7 +33,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
 
     private final String roomName;
     private final SnackbarPostListener listener;
-    private ArrayList<Machine> currentMachines;
+    private ArrayList<Machine> currentMachines, allMachines;
     private Context mContext;
 
     // Provide a suitable constructor (depends on the kind of dataset)
@@ -45,14 +43,22 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         this.listener = listener;
 
         currentMachines = new ArrayList<>();
+        allMachines = new ArrayList<>();
 
         final SharedPreferences p = SharedPrefsHelper.getSharedPrefs(mContext);
-        final Gson gson = new Gson();
-        MachineFilter filter;
-        filter = gson.fromJson(p.getString("filter", null), MachineFilter.class);
-        if(filter == null) filter = new MachineFilter();
+        boolean filterByAvailable = p.getBoolean("filter", false);
 
-        currentMachines.addAll(filter.filter(dryers, machines));
+        filter(dryers, filterByAvailable, machines);
+    }
+
+    private void filter(boolean dryers, boolean available, ArrayList<Machine> machines) {
+        for(Machine m : machines) {
+            if(dryers != m.getType().equals(MachineTypes.DRYER)) continue;
+            allMachines.add(m);
+            if(!available) currentMachines.add(m);
+            else if(m.getStatus().equals(MachineStates.AVAILABLE)) currentMachines.add(m);
+
+        }
     }
 
     // Create new views (invoked by the layout manager)
@@ -157,6 +163,10 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
 
     public ArrayList<Machine> getCurrentMachines() {
         return currentMachines;
+    }
+
+    public ArrayList<Machine> getAllMachines() {
+        return allMachines;
     }
 
     // Provide a reference to the views for each data item

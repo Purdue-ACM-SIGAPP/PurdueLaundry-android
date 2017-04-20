@@ -1,9 +1,12 @@
 package xyz.jhughes.laundry.Activities;
 
+import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.Espresso;
+import android.support.test.espresso.IdlingResource;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.ViewMatchers;
@@ -17,6 +20,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import okhttp3.OkHttpClient;
 import xyz.jhughes.laundry.LaundryParser.Rooms;
 import xyz.jhughes.laundry.Matchers.RecyclerViewItemCountAssertion;
 import xyz.jhughes.laundry.Matchers.RecyclerViewMatcher;
@@ -54,6 +58,10 @@ public class LocationTests {
         SharedPreferences.Editor editor = prefs.edit();
         editor.clear();
         editor.commit();
+
+        OkHttpClient client = new OkHttpClient();
+        IdlingResource
+
         Intents.init();
         Intent intent = new Intent();
         mLocationActivityRule.launchActivity(intent);
