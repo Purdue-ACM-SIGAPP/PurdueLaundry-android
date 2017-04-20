@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -19,28 +20,38 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.LaundryParser.MachineStates;
 import xyz.jhughes.laundry.LaundryParser.MachineTypes;
+
+import xyz.jhughes.laundry.apiclient.MachineService;
+import xyz.jhughes.laundry.notificationhelpers.ScreenOrientationLockToggleListener;
+import xyz.jhughes.laundry.notificationhelpers.OnMachineChangedToInUse;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.SnackbarPostListener;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.notificationhelpers.NotificationCreator;
+import xyz.jhughes.laundry.runnables.MachineCheckerRunnable;
 import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
 public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHolder> {
 
     private final String roomName;
     private final SnackbarPostListener listener;
+    private final ScreenOrientationLockToggleListener mOnOrientationlockListener;
     private ArrayList<Machine> currentMachines, allMachines;
     private Context mContext;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MachineAdapter(ArrayList<Machine> machines, Context context, Boolean dryers, String roomName, SnackbarPostListener listener) {
+    public MachineAdapter(ArrayList<Machine> machines, Context context, Boolean dryers, String roomName, SnackbarPostListener listener, ScreenOrientationLockToggleListener mOnOrientationlockListener) {
         this.mContext = context;
         this.roomName = roomName;
         this.listener = listener;
+        this.mOnOrientationlockListener = mOnOrientationlockListener;
 
         currentMachines = new ArrayList<>();
         allMachines = new ArrayList<>();
@@ -115,7 +126,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     }
 
     //Set and Fire Notification
-    private void fireNotificationInFuture(final int milliInFuture, final String notificationKey) {
+    private void notificationWithDialog(final int milliInFuture, final String notificationKey) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext)
                 .setTitle(mContext.getString(R.string.alarm))
                 .setMessage(mContext.getString(R.string.ask_set_alarm))
@@ -141,25 +152,135 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     }
 
     public void registerNotification(Machine m) {
+        //For available (green) machines
+        if (m.getStatus().equals("Available")) {
+            waitForMachine(m);
+        } else {
+            try {
+                //For machines that are already running
+                int minutesInFuture = Integer.parseInt(m.getTime().substring(0, m.getTime().indexOf(' ')));
+                int millisInFuture = minutesInFuture * 60000; //60 seconds * 1000 milliseconds
+
+                String notificationKey = roomName + " " + m.getName();
+
+                if (NotificationCreator.notificationExists(notificationKey)) {
+                    listener.postSnackbar(mContext.getString(R.string.reminder_already_set), Snackbar.LENGTH_LONG);
+                } else {
+                    notificationWithDialog(millisInFuture, notificationKey);
+                }
+            } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
+                if (m.getStatus().compareTo("Out of order") != 0) {
+                    listener.postSnackbar(mContext.getString(R.string.machine_not_running), Snackbar.LENGTH_SHORT);
+                } else {
+                    listener.postSnackbar("This machine is offline but may still be functioning. Visit " + m.getName() + " for details.", Snackbar.LENGTH_LONG);
+                }
+            }
+        }
+    }
+
+    public boolean createNotification(Machine m){
         try {
             int minutesInFuture = Integer.parseInt(m.getTime().substring(0, m.getTime().indexOf(' ')));
-            int millisInFuture = minutesInFuture * 60000; //60 seconds * 1000 milliseconds
+            int milliInFuture = minutesInFuture * 60000; //60 seconds * 1000 milliseconds
 
             String notificationKey = roomName + " " + m.getName();
 
             if (NotificationCreator.notificationExists(notificationKey)) {
                 listener.postSnackbar(mContext.getString(R.string.reminder_already_set), Snackbar.LENGTH_LONG);
             } else {
-                fireNotificationInFuture(millisInFuture, notificationKey);
+                mContext.startService(new Intent(mContext, NotificationCreator.class)
+                        .putExtra("machine", notificationKey)
+                        .putExtra("time", milliInFuture));
+                Toast.makeText(mContext, mContext.getString(R.string.alarm_set), Toast.LENGTH_SHORT).show();
             }
-        } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
-            if (m.getStatus().compareTo("Out of order") != 0) {
-                listener.postSnackbar(mContext.getString(R.string.machine_not_running), Snackbar.LENGTH_SHORT);
-            } else {
-                listener.postSnackbar("This machine is offline but may still be functioning. Visit " + m.getName() + " for details.", Snackbar.LENGTH_LONG);
-            }
+            return true;
+        } catch (NumberFormatException | StringIndexOutOfBoundsException e){
+            return false;
         }
+
     }
+
+    public void waitForMachine(final Machine m){
+        //Constructs the dialog to wait for a machine
+        //checks the server while the dialog is open and the app is running in the background
+        final Handler handler = new Handler();
+        mOnOrientationlockListener.onLock();
+        AlertDialog.Builder machineWaitingDialogBuilder = new AlertDialog.Builder(mContext);
+        machineWaitingDialogBuilder.setTitle(mContext.getString(R.string.alarm))
+                .setMessage(mContext.getString(R.string.available_timer_message1) + " " + m.getName() + " " + mContext.getString(R.string.available_timer_message2))
+                .setCancelable(true)
+                .setPositiveButton(mContext.getString(R.string.available_timer_refresh), null)
+                .setNegativeButton(mContext.getString(R.string.available_timer_cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        AnalyticsHelper.sendEventHit("Automatic Timer", "Click", "Timed cancelled");
+                        handler.removeCallbacksAndMessages(null);
+                        dialog.cancel();
+                    }
+                });
+        //add message to load machine before
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+        View q;
+        if (m.getType().equals(MachineTypes.WASHER)) {
+            q = inflater.inflate(R.layout.view_available_washer, null);
+        } else {
+            q = inflater.inflate(R.layout.view_available_dryer, null);
+        }
+        machineWaitingDialogBuilder.setView(q);
+        TextView number = (TextView) q.findViewById(R.id.machine_name_number);
+        number.setText(m.getNumberFromName());
+        final AlertDialog machineWaitingDialog = machineWaitingDialogBuilder.create();
+        machineWaitingDialog.show();
+        machineWaitingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                mOnOrientationlockListener.onUnlock();
+            }
+        });
+        machineWaitingDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AnalyticsHelper.sendEventHit("Automatic Timer", "Click", "Refresh");
+                String apiLocationFormat = Constants.getApiLocation(MachineAdapter.this.roomName);
+                Call<ArrayList<Machine>> call = MachineService.getService().getMachineStatus(apiLocationFormat);
+                call.enqueue(new Callback<ArrayList<Machine>>() {
+                    @Override
+                    public void onResponse(Call<ArrayList<Machine>> call, Response<ArrayList<Machine>> response) {
+                        ArrayList<Machine> body = response.body();
+                        if (body.contains(m)){
+                            Machine m3 = body.get(body.indexOf(m));
+                            if (m3.getStatus().equals(MachineStates.IN_USE)){ //
+                                createNotification(m3);
+                                machineWaitingDialog.cancel();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ArrayList<Machine>> call, Throwable t) {
+                        //User presses refresh but call fails
+                        AnalyticsHelper.sendErrorHit(t, false);
+                    }
+                });
+            }
+        });
+        //This handler will start the loop TIME for checking the status of the machine
+        handler.postDelayed(new MachineCheckerRunnable(m, this.roomName, handler, new OnMachineChangedToInUse() {
+            @Override
+            public void onMachineInUse(Machine m) {
+                //logged before call in MachineCheckerRunnable
+                createNotification(m);
+                machineWaitingDialog.cancel();
+            }
+
+            public void onTimeout(){
+                AnalyticsHelper.sendEventHit("Automatic Timer", "Timer state", "Timed out");
+                machineWaitingDialog.cancel();
+            }
+        }), MachineCheckerRunnable.TIME);
+    }
+
+
 
     public ArrayList<Machine> getCurrentMachines() {
         return currentMachines;

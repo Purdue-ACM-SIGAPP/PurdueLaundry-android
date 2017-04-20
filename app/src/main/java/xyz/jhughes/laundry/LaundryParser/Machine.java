@@ -72,4 +72,36 @@ public class Machine implements Serializable {
     public String toJson() {
         return new Gson().toJson(this);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Machine machine = (Machine) o;
+
+        if (!getName().equals(machine.getName())) return false;
+        return type.equals(machine.type);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + type.hashCode();
+        return result;
+    }
+
+    public String getNumberFromName(){
+        String number = "";
+        String name = getName();
+        for (int i = 0; i < name.length(); i++){
+            try{
+                number = number + Integer.parseInt(name.substring(i, i + 1));
+            } catch (NumberFormatException e){
+                continue;
+            }
+        }
+        return number;
+    }
 }
