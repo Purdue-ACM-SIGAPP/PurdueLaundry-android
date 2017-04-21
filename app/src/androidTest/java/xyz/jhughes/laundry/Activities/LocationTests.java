@@ -14,6 +14,8 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.TextView;
 
+import com.squareup.okhttp.mockwebserver.MockWebServer;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -47,21 +49,22 @@ public class LocationTests {
     @Rule
     public ActivityTestRule<LocationActivity> mLocationActivityRule = new ActivityTestRule<LocationActivity>(LocationActivity.class, true, false);
 
+    private MockWebServer mockWebServer;
+
     public static RecyclerViewMatcher withRecyclerView(final int recyclerViewId) {
         return new RecyclerViewMatcher(recyclerViewId);
     }
 
     @Before
-    public void setupLocationActivity() {
+    public void setupLocationActivity() throws Exception{
+        mockWebServer = new MockWebServer();
+        mockWebServer.start();
+
         SharedPreferences prefs =
                 InstrumentationRegistry.getTargetContext().getSharedPreferences("xyz.jhughes.laundry", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.clear();
         editor.commit();
-
-        OkHttpClient client = new OkHttpClient();
-        IdlingResource
-
         Intents.init();
         Intent intent = new Intent();
         mLocationActivityRule.launchActivity(intent);
