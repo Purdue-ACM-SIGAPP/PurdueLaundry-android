@@ -12,9 +12,9 @@ public class NotificationCancelReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         int notificationId = intent.getIntExtra("notificationId", -1);
         long timeLeft = intent.getLongExtra("timeLeft", -1);
-        String machine = intent.getStringExtra("machine");
+        String title = intent.getStringExtra("title");
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationCreator.stopTimer(notificationId, machine);
+        NotificationCreator.stopTimer(notificationId, title);
         manager.cancel(notificationId);
         AnalyticsHelper.sendEventHit("Reminders", AnalyticsHelper.CLICK, "CANCEL", timeLeft);
     }
