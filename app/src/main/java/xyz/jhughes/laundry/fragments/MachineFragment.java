@@ -22,8 +22,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.android.gms.analytics.HitBuilders;
-
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -31,7 +29,6 @@ import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.ModelOperations;
@@ -105,7 +102,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
 
         classMachines = new ArrayList<>();
 
-        initializeNotifyOnAvaiableButton();
+        initializeNotifyOnAvailableButton();
         refreshList();
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
@@ -236,7 +233,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
         notifyButton.setVisibility(View.VISIBLE);
     }
 
-    private void initializeNotifyOnAvaiableButton() {
+    private void initializeNotifyOnAvailableButton() {
         final String text = isDryers ? getString(R.string.notify_on_dryer_available) : getString(R.string.notify_on_washer_available);
         notifyButton.setText(text);
         notifyButton.setOnClickListener(new View.OnClickListener() {
