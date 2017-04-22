@@ -38,6 +38,9 @@ import xyz.jhughes.laundry.notificationhelpers.NotificationCreator;
 import xyz.jhughes.laundry.runnables.MachineCheckerRunnable;
 import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
+import static xyz.jhughes.laundry.LaundryParser.MachineStates.AVAILABLE;
+import static xyz.jhughes.laundry.LaundryParser.MachineStates.OUT_OF_ORDER;
+
 public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHolder> {
 
     private final String roomName;
@@ -67,7 +70,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
             if(dryers != m.getType().equals(MachineTypes.DRYER)) continue;
             allMachines.add(m);
             if(!available) currentMachines.add(m);
-            else if(m.getStatus().equals(MachineStates.AVAILABLE)) currentMachines.add(m);
+            else if(m.getStatus().equals(AVAILABLE)) currentMachines.add(m);
 
         }
     }
@@ -153,7 +156,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
 
     public void registerNotification(Machine m) {
         //For available (green) machines
-        if (m.getStatus().equals("Available")) {
+        if (m.getStatus().equals(AVAILABLE)) {
             waitForMachine(m);
         } else {
             try {
@@ -169,7 +172,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                     notificationWithDialog(millisInFuture, notificationKey);
                 }
             } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
-                if (m.getStatus().compareTo("Out of order") != 0) {
+                if (m.getStatus().compareTo(OUT_OF_ORDER) != 0) {
                     listener.postSnackbar(mContext.getString(R.string.machine_not_running), Snackbar.LENGTH_SHORT);
                 } else {
                     listener.postSnackbar("This machine is offline but may still be functioning. Visit " + m.getName() + " for details.", Snackbar.LENGTH_LONG);

@@ -12,10 +12,12 @@ import xyz.jhughes.laundry.LaundryParser.MachineList;
 import xyz.jhughes.laundry.LaundryParser.MachineStates;
 import xyz.jhughes.laundry.LaundryParser.MachineTypes;
 
+import static xyz.jhughes.laundry.LaundryParser.MachineStates.NOT_ONLINE;
+
 public class ModelOperations {
     public static boolean machinesOffline(List<Machine> machines) {
         for (Machine m : machines) {
-            if (!(m.getStatus().equals("Not online"))) {
+            if (!(m.getStatus().equals(NOT_ONLINE))) {
                 return false;
             }
         }

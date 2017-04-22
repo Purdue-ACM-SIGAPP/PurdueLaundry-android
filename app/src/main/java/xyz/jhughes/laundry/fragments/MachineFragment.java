@@ -44,6 +44,10 @@ import xyz.jhughes.laundry.analytics.ScreenTrackedFragment;
 import xyz.jhughes.laundry.apiclient.MachineService;
 import xyz.jhughes.laundry.notificationhelpers.ScreenOrientationLockToggleListener;
 
+import static xyz.jhughes.laundry.LaundryParser.MachineStates.AVAILABLE;
+import static xyz.jhughes.laundry.LaundryParser.MachineStates.NOT_ONLINE;
+import static xyz.jhughes.laundry.LaundryParser.MachineStates.OUT_OF_ORDER;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -195,7 +199,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
         boolean addNotifyButton = notifyButton.getVisibility() != View.VISIBLE;
         if (addNotifyButton) {
             for (Machine m : adapter.getAllMachines()) {
-                if (m.getStatus().equalsIgnoreCase("Available")) {
+                if (m.getStatus().equalsIgnoreCase(AVAILABLE)) {
                     addNotifyButton = false;
                 }
             }
@@ -259,7 +263,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                     postSnackbar(getString(R.string.fragment_no_machine), Snackbar.LENGTH_LONG);
                     return;
                 }
-                if (m.getStatus().equals("Not online") || m.getStatus().equals("Out of order")) {
+                if (m.getStatus().equals(NOT_ONLINE) || m.getStatus().equals(OUT_OF_ORDER)) {
                     postSnackbar(getString(R.string.fragment_offline_location), Snackbar.LENGTH_LONG);
                     return;
                 }
