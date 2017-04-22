@@ -1,18 +1,14 @@
 package xyz.jhughes.laundry.Activities;
 
-import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.Espresso;
-import android.support.test.espresso.IdlingResource;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.squareup.okhttp.mockwebserver.MockResponse;
@@ -24,15 +20,16 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import okhttp3.OkHttpClient;
 import xyz.jhughes.laundry.JSONFileExtracter;
 import xyz.jhughes.laundry.LaundryParser.Rooms;
+import xyz.jhughes.laundry.Matchers.RecyclerViewAdapterNotNullAssertion;
+import xyz.jhughes.laundry.Matchers.RecyclerViewAdapterNullAssertion;
 import xyz.jhughes.laundry.Matchers.RecyclerViewItemCountAssertion;
 import xyz.jhughes.laundry.Matchers.RecyclerViewMatcher;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.activities.LocationActivity;
+import xyz.jhughes.laundry.apiclient.MachineConstants;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -40,7 +37,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.bouncycastle.crypto.tls.ConnectionEnd.server;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.not;
@@ -64,7 +60,7 @@ public class LocationTests {
     public void setupLocationActivity() throws Exception{
         mockWebServer = new MockWebServer();
         mockWebServer.start();
-        mockWebServer.url("/").toString();
+        MachineConstants.API_ROOT = mockWebServer.url("/").toString();
 
         SharedPreferences prefs =
                 InstrumentationRegistry.getTargetContext().getSharedPreferences("xyz.jhughes.laundry", Context.MODE_PRIVATE);
@@ -108,10 +104,29 @@ public class LocationTests {
 
         Intent intent = new Intent();
         mLocationActivityRule.launchActivity(intent);
+
         checkLocationActivity();
         ViewInteraction locationRecyclerView = onView(allOf(withId(R.id.recycler_view),isDisplayed()));
         String[] locations = Rooms.getRoomsConstantsInstance().getListOfRooms();
+        locationRecyclerView.check(new RecyclerViewAdapterNotNullAssertion());
         locationRecyclerView.check(new RecyclerViewItemCountAssertion(locations.length));
+    }
+
+    @Test
+    public void verifyNoResponseLocationRecyclerViewItems() throws Exception{
+
+        String fileName = "404_response.json";
+
+        mockWebServer.enqueue(new MockResponse()
+                .setResponseCode(404)
+                .setBody(JSONFileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
+
+        Intent intent = new Intent();
+        mLocationActivityRule.launchActivity(intent);
+
+        checkLocationActivity();
+        ViewInteraction locationRecyclerView = onView(allOf(withId(R.id.recycler_view),isDisplayed()));
+        locationRecyclerView.check(new RecyclerViewAdapterNullAssertion());
     }
 
     @Test

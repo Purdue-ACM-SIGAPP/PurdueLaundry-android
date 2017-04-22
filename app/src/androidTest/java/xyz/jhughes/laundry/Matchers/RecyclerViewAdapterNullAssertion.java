@@ -10,11 +10,9 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 
-public class RecyclerViewItemCountAssertion implements ViewAssertion {
-        private final int expectedCount;
+public class RecyclerViewAdapterNullAssertion implements ViewAssertion {
 
-        public RecyclerViewItemCountAssertion(int expectedCount) {
-            this.expectedCount = expectedCount;
+        public RecyclerViewAdapterNullAssertion() {
         }
 
         @Override
@@ -25,6 +23,6 @@ public class RecyclerViewItemCountAssertion implements ViewAssertion {
 
             RecyclerView recyclerView = (RecyclerView) view;
             RecyclerView.Adapter adapter = recyclerView.getAdapter();
-            assertThat(adapter.getItemCount(), is(expectedCount));
+            assertThat(adapter, is(nullValue()));
         }
 }

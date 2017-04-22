@@ -16,12 +16,13 @@ import xyz.jhughes.laundry.LaundryParser.MachineList;
 import xyz.jhughes.laundry.LaundryParser.MachineListDeserializer;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 
+import static xyz.jhughes.laundry.apiclient.MachineConstants.API_ROOT;
+
 
 /**
  * Singleton impl for the Machine API.
  */
 public class MachineService {
-    private static String API_ROOT = "http://laundry-api.sigapp.club";
     private static MachineAPI REST_CLIENT;
     private static MockLaundryApiService MOCK_CLIENT;
 
