@@ -38,7 +38,6 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
@@ -102,7 +101,7 @@ public class LocationTests {
     @Test
     public void verifyLocationRecyclerViewItems() throws Exception{
 
-        String fileName = "all_machine_valid.json";
+        String fileName = "all_machines_valid.json";
 
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(200)
@@ -139,7 +138,7 @@ public class LocationTests {
     @Test
     public void testNetworkOff() throws Exception{
 
-        String fileName = "all_machine_valid.json";
+        String fileName = "all_machines_valid.json";
 
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(HttpURLConnection.HTTP_INTERNAL_ERROR)
@@ -156,7 +155,7 @@ public class LocationTests {
     @Test
     public void testNetworkOffThenOn() throws Exception{
 
-        String fileName = "all_machine_valid.json";
+        String fileName = "all_machines_valid.json";
 
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(HttpURLConnection.HTTP_INTERNAL_ERROR)
@@ -179,8 +178,8 @@ public class LocationTests {
 
     /* Test to check if all locations loaded */
     @Test
-    public void verifyLocationRecyclerViewItemLoaded() throws Exception {
-        String fileName = "all_machine_valid.json";
+    public void verifyLocationsLoaded() throws Exception {
+        String fileName = "all_machines_valid.json";
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(200)
                 .setBody(JSONFileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
@@ -206,10 +205,39 @@ public class LocationTests {
         }
     }
 
+    /* Test to check if all locations are offline */
+    @Test
+    public void verifyOfflineLocationsLoaded() throws Exception {
+        String fileName = "all_machines_offline.json";
+        mockWebServer.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .setBody(JSONFileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
+
+        Intent intent = new Intent();
+        mLocationActivityRule.launchActivity(intent);
+        checkLocationActivity();
+
+        RecyclerViewMatcher recyclerViewMatcher = withRecyclerView(R.id.recycler_view);
+
+        String[] locations = Rooms.getRoomsConstantsInstance().getListOfRooms();
+
+        for (int i = 0; i < locations.length; i++) {
+            recyclerViewMatcher.atPositionOnView(i, R.id.image_view_location).matches(isDisplayed());
+            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_location_name).matches(allOf(isDisplayed(), withText(locations[i])));
+            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_offline).matches(isDisplayed());
+            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_washer).matches(not(isDisplayed()));
+            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_washer_count).matches(not(isDisplayed()));
+            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_washer_total).matches(not(isDisplayed()));
+            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_dryer).matches(not(isDisplayed()));
+            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_dryer_count).matches(not(isDisplayed()));
+            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_dryer_total).matches(not(isDisplayed()));
+        }
+    }
+
     /* Test to see if launching a machine activity works */
     @Test
     public void verifyLaunchMachineActivity() throws Exception {
-        String fileName = "all_machine_valid.json";
+        String fileName = "all_machines_valid.json";
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(200)
                 .setBody(JSONFileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
