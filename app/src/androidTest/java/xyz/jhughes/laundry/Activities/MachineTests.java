@@ -87,6 +87,12 @@ public class MachineTests {
         Intents.release();
     }
 
+    private void checkLocationActivity() {
+        onView(allOf(ViewMatchers.withId(R.id.location_activity_toolbar))).check(matches(isDisplayed()));
+        onView(allOf(instanceOf(TextView.class), withParent(withId(R.id.location_activity_toolbar))))
+                .check(matches(withText(R.string.title_activity_main)));
+    }
+
     private void checkMachineActivity(String roomName) {
         onView(allOf(ViewMatchers.withId(R.id.toolbar))).check(matches(isDisplayed()));
         onView(allOf(instanceOf(TextView.class), withParent(withId(R.id.toolbar))))
@@ -204,7 +210,7 @@ public class MachineTests {
         Intent intent = new Intent();
         intent.putExtra("locationName", location);
         mMachineActivityRule.launchActivity(intent);
-        onView(allOf(withText(R.string.error_client_message),isDisplayed()));
+        onView(allOf(withText(R.string.error_client_message), isDisplayed()));
 
     }
 
@@ -221,32 +227,55 @@ public class MachineTests {
         Intent intent = new Intent();
         intent.putExtra("locationName", location);
         mMachineActivityRule.launchActivity(intent);
-        onView(allOf(withText(R.string.error_server_message),isDisplayed()));
+        onView(allOf(withText(R.string.error_server_message), isDisplayed()));
     }
 
     /* Test to check if offline then online works */
     @Test
     public void testNetworkOffThenOn() throws Exception {
 
-        String fileName = "all_machines_valid.json";
+        String fileName = "earhart_machines.json";
 
         mockWebServer.enqueue(new MockResponse()
-                .setResponseCode(HttpURLConnection.HTTP_INTERNAL_ERROR)
+                .setResponseCode(HttpURLConnection.HTTP_UNAVAILABLE)
                 .setBody(JSONFileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
 
         Intent intent = new Intent();
+        intent.putExtra("locationName", location);
         mMachineActivityRule.launchActivity(intent);
-        checkMachineActivity(location);
+        mockWebServer.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .setBody(JSONFileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
+        onView(allOf(withText(R.string.error_server_message), isDisplayed()));
+        onView(allOf(withText("Okay"), isDisplayed())).perform(click());
+
         onView(withId(R.id.location_error_text)).check(matches(isDisplayed()));
         onView(withId(R.id.location_error_button)).check(matches(isDisplayed()));
+
+        fileName = "all_machines_valid.json";
 
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(200)
                 .setBody(JSONFileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
 
         onView(withId(R.id.location_error_button)).perform(click());
+        checkLocationActivity();
+
+        fileName = "earhart_machines.json";
+        mockWebServer.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .setBody(JSONFileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
+
         ViewInteraction locationRecyclerView = onView(allOf(withId(R.id.recycler_view), isDisplayed()));
         locationRecyclerView.check(new RecyclerViewAdapterNotNullAssertion());
+
+//        ViewInteraction earhartCard = onView(allOf(isDescendantOfA(withId(R.id.recycler_view)), withId(R.id.card_view), hasDescendant(withText("Earhart Hall"))));
+//        earhartCard.perform(click());
+
+//        checkLocationActivity();
+
+//        onView(withText(R.string.loading_machines)).perform(pressBack());
+//        checkMachineActivity(location);
     }
 
     /* Test to check if all locations loaded */
