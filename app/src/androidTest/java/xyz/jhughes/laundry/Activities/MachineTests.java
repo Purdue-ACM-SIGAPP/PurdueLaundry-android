@@ -9,6 +9,7 @@ import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
 import com.squareup.okhttp.mockwebserver.MockResponse;
@@ -23,6 +24,7 @@ import org.junit.runner.RunWith;
 import java.net.HttpURLConnection;
 
 import xyz.jhughes.laundry.JSONFileExtracter;
+import xyz.jhughes.laundry.LaundryParser.MachineStates;
 import xyz.jhughes.laundry.LaundryParser.Rooms;
 import xyz.jhughes.laundry.Matchers.RecyclerViewAdapterNotNullAssertion;
 import xyz.jhughes.laundry.Matchers.RecyclerViewAdapterNullAssertion;
@@ -278,78 +280,60 @@ public class MachineTests {
 //        checkMachineActivity(location);
     }
 
-    /* Test to check if all locations loaded */
+    /* Test To Verify All States Are Displaying Under Washers */
     @Test
-    public void verifyMachinesLoaded() throws Exception {
-        String fileName = "all_machines_valid.json";
+    public void testAllMachineStates() throws Exception {
+        String fileName = "earhart_machines_custom_states.json";
+
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(200)
                 .setBody(JSONFileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
-
         Intent intent = new Intent();
+        intent.putExtra("locationName", location);
         mMachineActivityRule.launchActivity(intent);
+
+        onView(withText(R.string.loading_machines)).perform(pressBack());
+
         checkMachineActivity(location);
 
-        RecyclerViewMatcher recyclerViewMatcher = withRecyclerView(R.id.recycler_view);
+        /*Check if washer recycler view has 16 dryers */
+        onView(withText("Washers")).check(matches(isDisplayed()));
 
-        String[] locations = Rooms.getRoomsConstantsInstance().getListOfRooms();
+        onView(allOf(withId(R.id.dryer_list_layout), isDescendantOfA(nthChildOf(withId(R.id.viewpager), 0))))
+                .check(matches(isDisplayed()));
 
-        for (int i = 0; i < locations.length; i++) {
-            recyclerViewMatcher.atPositionOnView(i, R.id.image_view_location).matches(isDisplayed());
-            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_location_name).matches(allOf(isDisplayed(), withText(locations[i])));
-            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_offline).matches(not(isDisplayed()));
-            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_washer).matches(isDisplayed());
-            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_washer_count).matches(isDisplayed());
-            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_washer_total).matches(isDisplayed());
-            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_dryer).matches(isDisplayed());
-            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_dryer_count).matches(isDisplayed());
-            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_dryer_total).matches(isDisplayed());
-        }
-    }
+        ViewInteraction locationRecyclerView = onView(allOf(withId(R.id.dryer_machines_recycler_view), isDescendantOfA(nthChildOf(withId(R.id.viewpager), 0)), isDisplayed()));
+        locationRecyclerView.check(new RecyclerViewAdapterNotNullAssertion());
+        locationRecyclerView.check(new RecyclerViewItemCountAssertion(7));
 
-    /* Test to check if all locations are offline */
-    @Test
-    public void verifyOfflineMachinesLoaded() throws Exception {
-        String fileName = "all_machines_offline.json";
-        mockWebServer.enqueue(new MockResponse()
-                .setResponseCode(200)
-                .setBody(JSONFileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
+        RecyclerViewMatcher washerRecyclerViewMatcher = withRecyclerView(R.id.dryer_machines_recycler_view);
+        washerRecyclerViewMatcher.atPositionOnView(0, R.id.machine_status_text_view).matches(allOf(withText(MachineStates.AVAILABLE), isDisplayed()));
+        washerRecyclerViewMatcher.atPositionOnView(1, R.id.machine_status_text_view).matches(allOf(withText(MachineStates.IN_USE), isDisplayed()));
+        washerRecyclerViewMatcher.atPositionOnView(2, R.id.machine_status_text_view).matches(allOf(withText(MachineStates.ALMOST_DONE), isDisplayed()));
+        washerRecyclerViewMatcher.atPositionOnView(3, R.id.machine_status_text_view).matches(allOf(withText(MachineStates.END_CYCLE), isDisplayed()));
+        washerRecyclerViewMatcher.atPositionOnView(4, R.id.machine_status_text_view).matches(allOf(withText(MachineStates.READY), isDisplayed()));
+        washerRecyclerViewMatcher.atPositionOnView(5, R.id.machine_status_text_view).matches(allOf(withText(MachineStates.NOT_ONLINE), isDisplayed()));
+        washerRecyclerViewMatcher.atPositionOnView(6, R.id.machine_status_text_view).matches(allOf(withText(MachineStates.OUT_OF_ORDER), isDisplayed()));
 
-        Intent intent = new Intent();
-        mMachineActivityRule.launchActivity(intent);
-        checkMachineActivity(location);
+        /* Switch Tabs */
+        onView(withId(R.id.viewpager)).perform(swipeLeft());
 
-        RecyclerViewMatcher recyclerViewMatcher = withRecyclerView(R.id.recycler_view);
+        /* Check if dryer recycler view has 16 dryers */
+        onView(withText("Dryers")).check(matches(isDisplayed()));
+        onView(allOf(withId(R.id.dryer_list_layout), isDescendantOfA(nthChildOf(withId(R.id.viewpager), 1))))
+                .check(matches(isDisplayed()));
 
-        String[] locations = Rooms.getRoomsConstantsInstance().getListOfRooms();
+        locationRecyclerView = onView(allOf(withId(R.id.dryer_machines_recycler_view), isDescendantOfA(nthChildOf(withId(R.id.viewpager), 0)), isDisplayed()));
+        locationRecyclerView.check(new RecyclerViewAdapterNotNullAssertion());
+        locationRecyclerView.check(new RecyclerViewItemCountAssertion(7));
 
-        for (int i = 0; i < locations.length; i++) {
-            recyclerViewMatcher.atPositionOnView(i, R.id.image_view_location).matches(isDisplayed());
-            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_location_name).matches(allOf(isDisplayed(), withText(locations[i])));
-            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_offline).matches(isDisplayed());
-            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_washer).matches(not(isDisplayed()));
-            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_washer_count).matches(not(isDisplayed()));
-            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_washer_total).matches(not(isDisplayed()));
-            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_dryer).matches(not(isDisplayed()));
-            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_dryer_count).matches(not(isDisplayed()));
-            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_dryer_total).matches(not(isDisplayed()));
-        }
-    }
-
-    /* Test to see if launching a machine activity works */
-    @Test
-    public void verifyLaunchMachineActivity() throws Exception {
-        String fileName = "all_machines_valid.json";
-        mockWebServer.enqueue(new MockResponse()
-                .setResponseCode(200)
-                .setBody(JSONFileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
-
-        Intent intent = new Intent();
-        mMachineActivityRule.launchActivity(intent);
-        checkMachineActivity(location);
-
-        RecyclerViewMatcher recyclerViewMatcher = withRecyclerView(R.id.recycler_view);
-        onView(recyclerViewMatcher.atPosition(0)).perform(click());
-        intended(hasComponent(MachineActivity.class.getName()));
+        RecyclerViewMatcher dryerRecyclerViewMatcher = withRecyclerView(R.id.dryer_machines_recycler_view);
+        dryerRecyclerViewMatcher.atPositionOnView(0, R.id.machine_status_text_view).matches(allOf(withText(MachineStates.AVAILABLE), isDisplayed()));
+        dryerRecyclerViewMatcher.atPositionOnView(1, R.id.machine_status_text_view).matches(allOf(withText(MachineStates.IN_USE), isDisplayed()));
+        dryerRecyclerViewMatcher.atPositionOnView(2, R.id.machine_status_text_view).matches(allOf(withText(MachineStates.ALMOST_DONE), isDisplayed()));
+        dryerRecyclerViewMatcher.atPositionOnView(3, R.id.machine_status_text_view).matches(allOf(withText(MachineStates.END_CYCLE), isDisplayed()));
+        dryerRecyclerViewMatcher.atPositionOnView(4, R.id.machine_status_text_view).matches(allOf(withText(MachineStates.READY), isDisplayed()));
+        dryerRecyclerViewMatcher.atPositionOnView(5, R.id.machine_status_text_view).matches(allOf(withText(MachineStates.NOT_ONLINE), isDisplayed()));
+        dryerRecyclerViewMatcher.atPositionOnView(6, R.id.machine_status_text_view).matches(allOf(withText(MachineStates.OUT_OF_ORDER), isDisplayed()));
     }
 }
