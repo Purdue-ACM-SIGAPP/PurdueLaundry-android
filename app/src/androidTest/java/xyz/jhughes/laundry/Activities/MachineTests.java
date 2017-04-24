@@ -208,21 +208,20 @@ public class MachineTests {
 
     }
 
-    /* Test to check expected offline behavoir */
+    /* Test to check expected offline behavior */
     @Test
     public void testNetworkOff() throws Exception {
 
-        String fileName = "all_machines_valid.json";
+        String fileName = "earhart_machines.json";
 
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(HttpURLConnection.HTTP_INTERNAL_ERROR)
                 .setBody(JSONFileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
 
         Intent intent = new Intent();
+        intent.putExtra("locationName", location);
         mMachineActivityRule.launchActivity(intent);
-        checkMachineActivity(location);
-        onView(withId(R.id.location_error_text)).check(matches(isDisplayed()));
-        onView(withId(R.id.location_error_button)).check(matches(isDisplayed()));
+        onView(allOf(withText(R.string.error_server_message),isDisplayed()));
     }
 
     /* Test to check if offline then online works */
