@@ -88,7 +88,6 @@ public class MachineTests {
     }
 
     private void checkMachineActivity(String roomName) {
-        onView(withText(R.string.loading_machines)).perform(pressBack());
         onView(allOf(ViewMatchers.withId(R.id.toolbar))).check(matches(isDisplayed()));
         onView(allOf(instanceOf(TextView.class), withParent(withId(R.id.toolbar))))
                 .check(matches(withText(roomName)));
@@ -105,6 +104,9 @@ public class MachineTests {
         Intent intent = new Intent();
         intent.putExtra("locationName", location);
         mMachineActivityRule.launchActivity(intent);
+
+        onView(withText(R.string.loading_machines)).perform(pressBack());
+
         checkMachineActivity(location);
 
         /* Check if all views under the washers tab are in default states */
@@ -153,20 +155,41 @@ public class MachineTests {
     @Test
     public void verifyMachineRecyclerViewItems() throws Exception {
 
-        String fileName = "all_machines_valid.json";
+        String fileName = "earhart_machines.json";
 
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(200)
                 .setBody(JSONFileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
-
         Intent intent = new Intent();
+        intent.putExtra("locationName", location);
         mMachineActivityRule.launchActivity(intent);
 
+        onView(withText(R.string.loading_machines)).perform(pressBack());
+
         checkMachineActivity(location);
-        ViewInteraction locationRecyclerView = onView(allOf(withId(R.id.recycler_view), isDisplayed()));
+
+        /*Check if washer recycler view has 16 dryers */
+        onView(withText("Washers")).check(matches(isDisplayed()));
+
+        onView(allOf(withId(R.id.dryer_list_layout), isDescendantOfA(nthChildOf(withId(R.id.viewpager), 0))))
+                .check(matches(isDisplayed()));
+
+        ViewInteraction locationRecyclerView = onView(allOf(withId(R.id.dryer_machines_recycler_view), isDescendantOfA(nthChildOf(withId(R.id.viewpager), 0)), isDisplayed()));
         String[] locations = Rooms.getRoomsConstantsInstance().getListOfRooms();
         locationRecyclerView.check(new RecyclerViewAdapterNotNullAssertion());
-        locationRecyclerView.check(new RecyclerViewItemCountAssertion(locations.length));
+        locationRecyclerView.check(new RecyclerViewItemCountAssertion(16));
+
+        /* Switch Tabs */
+        onView(withId(R.id.viewpager)).perform(swipeLeft());
+
+        /* Check if dryer recycler view has 16 dryers */
+        onView(withText("Dryers")).check(matches(isDisplayed()));
+        onView(allOf(withId(R.id.dryer_list_layout), isDescendantOfA(nthChildOf(withId(R.id.viewpager), 1))))
+                .check(matches(isDisplayed()));
+
+        locationRecyclerView = onView(allOf(withId(R.id.dryer_machines_recycler_view), isDescendantOfA(nthChildOf(withId(R.id.viewpager), 0)), isDisplayed()));
+        locationRecyclerView.check(new RecyclerViewAdapterNotNullAssertion());
+        locationRecyclerView.check(new RecyclerViewItemCountAssertion(16));
     }
 
     @Test
@@ -179,11 +202,10 @@ public class MachineTests {
                 .setBody(JSONFileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
 
         Intent intent = new Intent();
+        intent.putExtra("locationName", location);
         mMachineActivityRule.launchActivity(intent);
+        onView(allOf(withText(R.string.error_client_message),isDisplayed()));
 
-        checkMachineActivity(location);
-        ViewInteraction locationRecyclerView = onView(allOf(withId(R.id.recycler_view), isDisplayed()));
-        locationRecyclerView.check(new RecyclerViewAdapterNullAssertion());
     }
 
     /* Test to check expected offline behavoir */
