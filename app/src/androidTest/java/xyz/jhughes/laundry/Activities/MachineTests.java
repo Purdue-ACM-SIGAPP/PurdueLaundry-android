@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewInteraction;
+import android.support.test.espresso.core.deps.guava.util.concurrent.ExecutionError;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
@@ -335,5 +336,45 @@ public class MachineTests {
         dryerRecyclerViewMatcher.atPositionOnView(4, R.id.machine_status_text_view).matches(allOf(withText(MachineStates.READY), isDisplayed()));
         dryerRecyclerViewMatcher.atPositionOnView(5, R.id.machine_status_text_view).matches(allOf(withText(MachineStates.NOT_ONLINE), isDisplayed()));
         dryerRecyclerViewMatcher.atPositionOnView(6, R.id.machine_status_text_view).matches(allOf(withText(MachineStates.OUT_OF_ORDER), isDisplayed()));
+    }
+
+    /* Test that verifies if alarm tutorials appear */
+    @Test
+    public void testAlarmTutorial() throws Exception {
+        String fileName = "earhart_machines.json";
+
+        mockWebServer.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .setBody(JSONFileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
+        Intent intent = new Intent();
+        intent.putExtra("locationName", location);
+        mMachineActivityRule.launchActivity(intent);
+
+        onView(withText(R.string.loading_machines)).perform(pressBack());
+
+        checkMachineActivity(location);
+
+
+        /*Check if dryer recycler view has 16 dryers */
+        onView(withText("Washers")).check(matches(isDisplayed()));
+
+        onView(allOf(withId(R.id.dryer_list_layout), isDescendantOfA(nthChildOf(withId(R.id.viewpager), 0))))
+                .check(matches(isDisplayed()));
+
+        ViewInteraction locationRecyclerView = onView(allOf(withId(R.id.dryer_machines_recycler_view), isDescendantOfA(nthChildOf(withId(R.id.viewpager), 0)), isDisplayed()));
+        locationRecyclerView.check(new RecyclerViewAdapterNotNullAssertion());
+        locationRecyclerView.check(new RecyclerViewItemCountAssertion(16));
+
+        ViewInteraction inProgressWasher = onView(allOf(isDescendantOfA(withId(R.id.card_view)), withText("Washer 12")));
+        inProgressWasher.check(matches(isDisplayed()));
+        inProgressWasher.perform(click());
+
+        onView(allOf(withText("Load Washer 12 to start a timer for when the machine is finished"),isDisplayed()));
+        onView(withText(R.string.alarm)).check(matches(isDisplayed()));
+        onView(withText(R.string.available_timer_refresh)).check(matches(isDisplayed()));
+        onView(withText(R.string.available_timer_cancel)).check(matches(isDisplayed()));
+        onView(withText(R.string.available_timer_refresh)).perform(click());
+        onView(withText(R.string.available_timer_cancel)).perform(click());
+        onView(allOf(withText("Load Washer 12 to start a timer for when the machine is finished"), not(isDisplayed())));
     }
 }
