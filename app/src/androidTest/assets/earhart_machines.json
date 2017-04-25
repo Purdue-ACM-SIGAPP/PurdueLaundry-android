@@ -128,8 +128,8 @@
   {
     "name": "Washer 006",
     "type": "Washer",
-    "status": "Available",
-    "time": " "
+    "status": "In Use",
+    "time": "56 minutes left"
   },
   {
     "name": "Washer 007",

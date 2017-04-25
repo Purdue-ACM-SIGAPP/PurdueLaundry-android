@@ -5,12 +5,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewInteraction;
-import android.support.test.espresso.core.deps.guava.util.concurrent.ExecutionError;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
 import com.squareup.okhttp.mockwebserver.MockResponse;
@@ -28,7 +26,6 @@ import xyz.jhughes.laundry.JSONFileExtracter;
 import xyz.jhughes.laundry.LaundryParser.MachineStates;
 import xyz.jhughes.laundry.LaundryParser.Rooms;
 import xyz.jhughes.laundry.Matchers.RecyclerViewAdapterNotNullAssertion;
-import xyz.jhughes.laundry.Matchers.RecyclerViewAdapterNullAssertion;
 import xyz.jhughes.laundry.Matchers.RecyclerViewItemCountAssertion;
 import xyz.jhughes.laundry.Matchers.RecyclerViewMatcher;
 import xyz.jhughes.laundry.R;
@@ -40,8 +37,6 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.pressBack;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.intent.Intents.intended;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -51,7 +46,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.not;
-import static xyz.jhughes.laundry.Matchers.ViewChild.firstChildOf;
 import static xyz.jhughes.laundry.Matchers.ViewChild.nthChildOf;
 
 /**
@@ -376,6 +370,52 @@ public class MachineTests {
         onView(withText(R.string.available_timer_refresh)).perform(click());
         onView(withText(R.string.available_timer_cancel)).perform(click());
         onView(allOf(withText("Load Washer 12 to start a timer for when the machine is finished"), not(isDisplayed())));
+    }
+
+    /* Test that verifies if alarm tutorials appear */
+    @Test
+    public void testAlarmDialog() throws Exception {
+        String fileName = "earhart_machines.json";
+
+        mockWebServer.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .setBody(JSONFileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
+        Intent intent = new Intent();
+        intent.putExtra("locationName", location);
+        mMachineActivityRule.launchActivity(intent);
+
+        onView(withText(R.string.loading_machines)).perform(pressBack());
+
+        checkMachineActivity(location);
+
+
+        /*Check if dryer recycler view has 16 dryers */
+        onView(withText("Washers")).check(matches(isDisplayed()));
+
+        onView(allOf(withId(R.id.dryer_list_layout), isDescendantOfA(nthChildOf(withId(R.id.viewpager), 0))))
+                .check(matches(isDisplayed()));
+
+        ViewInteraction locationRecyclerView = onView(allOf(withId(R.id.dryer_machines_recycler_view), isDescendantOfA(nthChildOf(withId(R.id.viewpager), 0)), isDisplayed()));
+        locationRecyclerView.check(new RecyclerViewAdapterNotNullAssertion());
+        locationRecyclerView.check(new RecyclerViewItemCountAssertion(16));
+
+        ViewInteraction inProgressWasher = onView(allOf(withId(R.id.card_view), hasDescendant(withText("Washer 6"))));
+        inProgressWasher.check(matches(isDisplayed()));
+        inProgressWasher.perform(click());
+
+        onView(withText(R.string.alarm)).check(matches(isDisplayed()));
+        onView(withText(R.string.ask_set_alarm)).check(matches(isDisplayed()));
+        onView(withText(R.string.yes)).check(matches(isDisplayed()));
+        onView(withText(R.string.no)).perform(click());
+        onView(allOf(withText(R.string.ask_set_alarm), not(isDisplayed())));
+
+        inProgressWasher.perform(click());
+
+        onView(withText(R.string.alarm)).check(matches(isDisplayed()));
+        onView(withText(R.string.ask_set_alarm)).check(matches(isDisplayed()));
+        onView(withText(R.string.no)).check(matches(isDisplayed()));
+        onView(withText(R.string.yes)).perform(click());
+        onView(allOf(withText(R.string.ask_set_alarm), not(isDisplayed())));
     }
 
     /* Test to verify show available machines only works */
