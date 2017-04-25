@@ -377,4 +377,37 @@ public class MachineTests {
         onView(withText(R.string.available_timer_cancel)).perform(click());
         onView(allOf(withText("Load Washer 12 to start a timer for when the machine is finished"), not(isDisplayed())));
     }
+
+    /* Test to verify show available machines only works */
+    @Test
+    public void testFilters() throws Exception {
+        String fileName = "earhart_machines_timer_start.json";
+
+        mockWebServer.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .setBody(JSONFileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
+        Intent intent = new Intent();
+        intent.putExtra("locationName", location);
+        mMachineActivityRule.launchActivity(intent);
+
+        onView(withText(R.string.loading_machines)).perform(pressBack());
+
+        checkMachineActivity(location);
+
+
+        /*Check if dryer recycler view has 16 dryers */
+        onView(withText("Washers")).check(matches(isDisplayed()));
+
+        onView(allOf(withId(R.id.dryer_list_layout), isDescendantOfA(nthChildOf(withId(R.id.viewpager), 0))))
+                .check(matches(isDisplayed()));
+
+        ViewInteraction locationRecyclerView = onView(allOf(withId(R.id.dryer_machines_recycler_view), isDescendantOfA(nthChildOf(withId(R.id.viewpager), 0)), isDisplayed()));
+        locationRecyclerView.check(new RecyclerViewAdapterNotNullAssertion());
+        locationRecyclerView.check(new RecyclerViewItemCountAssertion(16));
+
+        onView(withId(R.id.display_parameters)).perform(click());
+        onView(withId(R.id.filter_dialog_switch)).perform(click());
+        onView(withText(R.string.ok)).perform(click());
+        locationRecyclerView.check(new RecyclerViewItemCountAssertion(15));
+    }
 }
