@@ -263,7 +263,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                     postSnackbar(getString(R.string.fragment_offline_location), Snackbar.LENGTH_LONG);
                     return;
                 }
-                currentAdapter.registerNotification(m);
+                currentAdapter.createNotification(m);
             }
         });
     }
