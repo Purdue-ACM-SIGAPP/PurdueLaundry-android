@@ -126,7 +126,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     }
 
     //Set and Fire Notification
-    private void notificationWithDialog(final int milliInFuture, final String notificationKey) {
+    private void notificationWithDialog(final Machine m) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext)
                 .setTitle(mContext.getString(R.string.alarm))
                 .setMessage(mContext.getString(R.string.ask_set_alarm))
@@ -134,9 +134,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                 .setPositiveButton(mContext.getString(R.string.yes), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         AnalyticsHelper.sendEventHit("Reminders", AnalyticsHelper.CLICK, "YES");
-                        mContext.startService(new Intent(mContext, NotificationCreator.class)
-                                .putExtra("machine", notificationKey)
-                                .putExtra("time", milliInFuture));
+                        createNotification(m);
                     }
                 })
                 .setNegativeButton(mContext.getString(R.string.no), new DialogInterface.OnClickListener() {
@@ -153,27 +151,15 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
 
     public void registerNotification(Machine m) {
         //For available (green) machines
-        if (m.getStatus().equals("Available")) {
+        if (m.getStatus().equals(MachineStates.AVAILABLE)) {
             waitForMachine(m);
+        } else if (m.getStatus().equals(MachineStates.IN_USE)){
+            notificationWithDialog(m);
         } else {
-            try {
-                //For machines that are already running
-                int minutesInFuture = Integer.parseInt(m.getTime().substring(0, m.getTime().indexOf(' ')));
-                int millisInFuture = minutesInFuture * 60000; //60 seconds * 1000 milliseconds
-
-                String notificationKey = roomName + " " + m.getName();
-
-                if (NotificationCreator.notificationExists(notificationKey)) {
-                    listener.postSnackbar(mContext.getString(R.string.reminder_already_set), Snackbar.LENGTH_LONG);
-                } else {
-                    notificationWithDialog(millisInFuture, notificationKey);
-                }
-            } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
-                if (m.getStatus().compareTo("Out of order") != 0) {
-                    listener.postSnackbar(mContext.getString(R.string.machine_not_running), Snackbar.LENGTH_SHORT);
-                } else {
-                    listener.postSnackbar("This machine is offline but may still be functioning. Visit " + m.getName() + " for details.", Snackbar.LENGTH_LONG);
-                }
+            if (m.getStatus().compareTo("Out of order") != 0) {
+                listener.postSnackbar(mContext.getString(R.string.machine_not_running), Snackbar.LENGTH_SHORT);
+            } else {
+                listener.postSnackbar("This machine is offline but may still be functioning. Visit " + m.getName() + " for details.", Snackbar.LENGTH_LONG);
             }
         }
     }
@@ -188,17 +174,33 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
             if (NotificationCreator.notificationExists(notificationKey)) {
                 listener.postSnackbar(mContext.getString(R.string.reminder_already_set), Snackbar.LENGTH_LONG);
             } else {
-                mContext.startService(new Intent(mContext, NotificationCreator.class)
-                        .putExtra("machine", notificationKey)
-                        .putExtra("time", milliInFuture));
-                Toast.makeText(mContext, mContext.getString(R.string.alarm_set), Toast.LENGTH_SHORT).show();
+                if (createNotification(notificationKey, notificationKey, milliInFuture, null, true))
+                    Toast.makeText(mContext, mContext.getString(R.string.alarm_set), Toast.LENGTH_SHORT).show();
             }
             return true;
-        } catch (NumberFormatException | StringIndexOutOfBoundsException e){
+        } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
+            if (m.getStatus().compareTo("Out of order") != 0) {
+                listener.postSnackbar(mContext.getString(R.string.machine_not_running), Snackbar.LENGTH_SHORT);
+            } else {
+                listener.postSnackbar("This machine is offline but may still be functioning. Visit " + m.getName() + " for details.", Snackbar.LENGTH_LONG);
+            }
             return false;
         }
-
     }
+
+    public boolean createNotification(String notificationKey, String title, int time, String message, boolean displayTimer){
+        if (NotificationCreator.notificationExists(notificationKey)){
+            return false;
+        }
+        mContext.startService(new Intent(mContext, NotificationCreator.class)
+                .putExtra("notificationKey", notificationKey)
+                .putExtra("title", title)
+                .putExtra("time", time)
+                .putExtra("displayTimer", displayTimer)
+                .putExtra("message", message));
+        return true;
+    }
+
 
     public void waitForMachine(final Machine m){
         //Constructs the dialog to wait for a machine
