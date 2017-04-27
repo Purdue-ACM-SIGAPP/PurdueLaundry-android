@@ -40,27 +40,32 @@ public class NotificationCreator extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         NotificationManagerCompat.from(this).cancelAll();
 
-        Object isMachine = intent.getExtras().get("machine");
-        String tempTitle;
-        if (isMachine != null){
-            tempTitle = (String) isMachine;
-        } else {
-            tempTitle = (String) intent.getExtras().get("title");
+        //checks if machine was used instead of title
+        String tempTitle = (String) intent.getExtras().get("title");
+        if (tempTitle == null){
+            tempTitle = (String) intent.getExtras().get("machine");
         }
         final String title = tempTitle;
+
         final String message = (String) intent.getExtras().get("message");
         final boolean displayTimer = intent.getExtras().getBoolean("displayTimer", true);
         int timeLeft = (int) intent.getExtras().get("time");
 
-        notificationIds.put(title, id);
+        //checks if key should default to title;
+        String tempNotificationKey = (String) intent.getExtras().get("notificationKey");
+        if (tempNotificationKey == null){
+            tempNotificationKey = title;
+        }
+        final String notificationKey = tempNotificationKey;
 
+        notificationIds.put(notificationKey, id);
         CountDownTimer timer = new CountDownTimer(timeLeft, 1000) {
             public void onTick(long millisUntilFinished) {
-                updateTimeNotification(title, message, displayTimer, NotificationCreator.this, millisUntilFinished);
+                updateTimeNotification(notificationKey, title, message, displayTimer, NotificationCreator.this, millisUntilFinished);
             }
 
             public void onFinish() {
-                updateTimeNotification(title, message, displayTimer, NotificationCreator.this, 0);
+                updateTimeNotification(notificationKey, title, message, displayTimer, NotificationCreator.this, 0);
             }
         }.start();
 
@@ -71,8 +76,8 @@ public class NotificationCreator extends Service {
         return START_REDELIVER_INTENT;
     }
 
-    private static void updateTimeNotification(String title, String message, boolean displayTimer, Context context, long timeLeft) {
-        int id = notificationIds.get(title);
+    private static void updateTimeNotification(String notificationKey, String title, String message, boolean displayTimer, Context context, long timeLeft) {
+        int id = notificationIds.get(notificationKey);
         System.out.println(timeLeft);
         String contentText;
         if (message != null){
@@ -122,15 +127,15 @@ public class NotificationCreator extends Service {
         notificationManager.notify(id, builder.build());
     }
 
-    static void stopTimer(int id, String title) {
-        notificationIds.remove(title);
+    static void stopTimer(int id, String key) {
+        notificationIds.remove(key);
         if (timers.get(id) != null) //This could be called when the app has been cleared.
             timers.get(id).cancel();
         timers.remove(id);
     }
 
-    public static boolean notificationExists(String title) {
-        return notificationIds.containsKey(title);
+    public static boolean notificationExists(String key) {
+        return notificationIds.containsKey(key);
     }
 
     @Nullable
