@@ -22,7 +22,7 @@ import org.junit.runner.RunWith;
 
 import java.net.HttpURLConnection;
 
-import xyz.jhughes.laundry.JSONFileExtracter;
+import xyz.jhughes.laundry.FileExtracter;
 import xyz.jhughes.laundry.LaundryParser.MachineStates;
 import xyz.jhughes.laundry.LaundryParser.Rooms;
 import xyz.jhughes.laundry.Matchers.RecyclerViewAdapterNotNullAssertion;
@@ -103,7 +103,7 @@ public class MachineTests {
 
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(200)
-                .setBody(JSONFileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
+                .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
         Intent intent = new Intent();
         intent.putExtra("locationName", location);
         mMachineActivityRule.launchActivity(intent);
@@ -162,7 +162,7 @@ public class MachineTests {
 
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(200)
-                .setBody(JSONFileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
+                .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
         Intent intent = new Intent();
         intent.putExtra("locationName", location);
         mMachineActivityRule.launchActivity(intent);
@@ -202,7 +202,7 @@ public class MachineTests {
 
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(404)
-                .setBody(JSONFileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
+                .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
 
         Intent intent = new Intent();
         intent.putExtra("locationName", location);
@@ -219,7 +219,7 @@ public class MachineTests {
 
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(HttpURLConnection.HTTP_INTERNAL_ERROR)
-                .setBody(JSONFileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
+                .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
 
         Intent intent = new Intent();
         intent.putExtra("locationName", location);
@@ -235,14 +235,14 @@ public class MachineTests {
 
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(HttpURLConnection.HTTP_UNAVAILABLE)
-                .setBody(JSONFileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
+                .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
 
         Intent intent = new Intent();
         intent.putExtra("locationName", location);
         mMachineActivityRule.launchActivity(intent);
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(200)
-                .setBody(JSONFileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
+                .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
         onView(allOf(withText(R.string.error_server_message), isDisplayed()));
         onView(allOf(withText("Okay"), isDisplayed())).perform(click());
 
@@ -253,7 +253,7 @@ public class MachineTests {
 
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(200)
-                .setBody(JSONFileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
+                .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
 
         onView(withId(R.id.location_error_button)).perform(click());
         checkLocationActivity();
@@ -261,7 +261,7 @@ public class MachineTests {
         fileName = "earhart_machines.json";
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(200)
-                .setBody(JSONFileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
+                .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
 
         ViewInteraction locationRecyclerView = onView(allOf(withId(R.id.recycler_view), isDisplayed()));
         locationRecyclerView.check(new RecyclerViewAdapterNotNullAssertion());
@@ -282,7 +282,7 @@ public class MachineTests {
 
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(200)
-                .setBody(JSONFileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
+                .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
         Intent intent = new Intent();
         intent.putExtra("locationName", location);
         mMachineActivityRule.launchActivity(intent);
@@ -339,7 +339,7 @@ public class MachineTests {
 
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(200)
-                .setBody(JSONFileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
+                .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
         Intent intent = new Intent();
         intent.putExtra("locationName", location);
         mMachineActivityRule.launchActivity(intent);
@@ -379,7 +379,7 @@ public class MachineTests {
 
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(200)
-                .setBody(JSONFileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
+                .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
         Intent intent = new Intent();
         intent.putExtra("locationName", location);
         mMachineActivityRule.launchActivity(intent);
@@ -425,7 +425,7 @@ public class MachineTests {
 
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(200)
-                .setBody(JSONFileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
+                .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
         Intent intent = new Intent();
         intent.putExtra("locationName", location);
         mMachineActivityRule.launchActivity(intent);

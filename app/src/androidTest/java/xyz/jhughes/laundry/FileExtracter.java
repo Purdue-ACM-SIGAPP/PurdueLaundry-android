@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
  * Created by mvieck on 4/21/17.
  */
 
-public class JSONFileExtracter {
+public class FileExtracter {
 
         public static String convertStreamToString(InputStream is) throws Exception {
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
