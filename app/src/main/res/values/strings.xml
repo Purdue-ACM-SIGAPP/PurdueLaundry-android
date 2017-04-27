@@ -40,11 +40,12 @@
     <string name="fragment_no_machine">No machines to set a timer for!</string>
     <string name="fragment_offline_location">It looks like this location is offline. Please go to the laundry room to check machines.</string>
     <string name="machine_activity_too_filtered">Please select some machine types to show.</string>
-
     <string name="available_timer_refresh">Refresh</string>
     <string name="available_timer_cancel">Dismiss</string>
     <string name="available_timer_message1">Load</string>
     <string name="available_timer_message2">to start a timer for when the machine is finished</string>
+    <string name="notify_any_machine_title">Waiting for an available machine</string>
+    <string name="notify_any_machine_message">We will notify you when a machine becomes available in</string>
 
     <array name="options">
         <item>Available</item>
