@@ -1,7 +1,10 @@
 package xyz.jhughes.laundry.apiclient;
 
 /**
- * Created by mvieck on 4/22/17.
+ * API_ROOT holder for the tests under the AndroidTest folder
+ *
+ * This variable is not final since we must set the url to the testing lib
+ * when we test server calls
  */
 
 public class MachineConstants {
