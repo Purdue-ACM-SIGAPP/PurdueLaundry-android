@@ -159,7 +159,12 @@ public class MachineActivity extends ScreenTrackedActivity {
 
     private void updateFilteringWarning() {
         final SharedPreferences p = SharedPrefsHelper.getSharedPrefs(MachineActivity.this);
-        boolean filtering = p.getBoolean("filter", false);
+        boolean filtering = false;
+        try {
+            filtering = p.getBoolean("filter", false);
+        } catch (ClassCastException e) {
+            filtering = false;
+        }
 
         if(filterWarningBar == null) {
             filterWarningBar = Snackbar.make(mMainContent, "Only showing available machines.", Snackbar.LENGTH_INDEFINITE)
@@ -184,8 +189,6 @@ public class MachineActivity extends ScreenTrackedActivity {
         else {
             filterWarningBar.dismiss();
         }
-//        findViewById(R.id.machine_activity_filtering_textview).setVisibility(
-//                filtering ? View.VISIBLE : View.GONE);
     }
 
     private void setUpViewPager() {
@@ -216,7 +219,12 @@ public class MachineActivity extends ScreenTrackedActivity {
 
     public void createDialog() {
         final SharedPreferences p = SharedPrefsHelper.getSharedPrefs(MachineActivity.this);
-        boolean filtering = p.getBoolean("filter", false);
+        boolean filtering = false;
+        try {
+            filtering = p.getBoolean("filter", false);
+        } catch (ClassCastException e) {
+            filtering = false;
+        }
         View layout = LayoutInflater.from(this).inflate(R.layout.dialog_filter, null);
         final Switch sw = ((Switch) layout.findViewById(R.id.filter_dialog_switch));
         sw.setChecked(filtering);
