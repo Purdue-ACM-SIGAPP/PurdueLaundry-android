@@ -31,4 +31,4 @@ Dryer icon used is Dryer by Nicholas Navarro from the Noun Project. Modified for
 
 ## License
 
-This code is licensed under the GPLv2 open source license. Full text is available [here](https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt).
+This code is licensed under the GPLv3 open source license. Full text is available [here](https://www.gnu.org/licenses/gpl.txt).
