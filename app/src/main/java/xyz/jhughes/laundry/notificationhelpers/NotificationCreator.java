@@ -12,6 +12,7 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.NotificationCompat;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -25,9 +26,12 @@ public class NotificationCreator extends Service {
     private static HashMap<String, Integer> notifcationIds = new HashMap<>();
     private static HashMap<Integer, CountDownTimer> timers = new HashMap<>();
     private static int id = 0;
+    private static WeakReference<NotificationCreator> self;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        self = new WeakReference<>(this);
+
         NotificationManagerCompat.from(this).cancelAll();
 
         final String machine = (String) intent.getExtras().get("machine");
@@ -42,6 +46,7 @@ public class NotificationCreator extends Service {
 
             public void onFinish() {
                 updateTimeNotification(machine, NotificationCreator.this, 0);
+                stopTimer(id, machine);
             }
         }.start();
 
@@ -55,7 +60,6 @@ public class NotificationCreator extends Service {
     private static void updateTimeNotification(String machine, Context context, long timeLeft) {
         int id = notifcationIds.get(machine);
         String countDown;
-        System.out.println(timeLeft);
         if (timeLeft > 0) {
             countDown = String.format("%01d minutes left", TimeUnit.MILLISECONDS.toMinutes(timeLeft));
         } else {
@@ -65,6 +69,7 @@ public class NotificationCreator extends Service {
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         Intent cancelIntent = new Intent(context, NotificationCancelReceiver.class);
+        cancelIntent.putExtra("timeLeft", timeLeft);
         cancelIntent.putExtra("notificationId", id);
         cancelIntent.putExtra("machine", machine);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, cancelIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -97,6 +102,10 @@ public class NotificationCreator extends Service {
         if (timers.get(id) != null) //This could be called when the app has been cleared.
             timers.get(id).cancel();
         timers.remove(id);
+
+        if (timers.isEmpty() && self.get() != null) {
+            self.get().stopSelf();
+        }
     }
 
     public static boolean notificationExists(String machine) {

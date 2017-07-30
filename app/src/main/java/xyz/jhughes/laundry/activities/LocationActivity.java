@@ -26,10 +26,9 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import xyz.jhughes.laundry.LaundryParser.Location;
 import xyz.jhughes.laundry.LaundryParser.MachineList;
 import xyz.jhughes.laundry.ModelOperations;
@@ -134,8 +133,8 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
         Call<Map<String,MachineList>> allMachineCall = MachineService.getService().getAllMachines();
         allMachineCall.enqueue(new Callback<Map<String, MachineList>>() {
             @Override
-            public void onResponse(Response<Map<String, MachineList>> response, Retrofit retrofit) {
-                if(response.isSuccess()) {
+            public void onResponse(Call<Map<String, MachineList>> call, Response<Map<String, MachineList>> response) {
+                if(response.isSuccessful()) {
                     Map<String,MachineList> machineMap = response.body();
                     List<Location> locations = ModelOperations.machineMapToLocationList(machineMap);
                     adapter = new LocationAdapter(locations, LocationActivity.this.getApplicationContext());
@@ -152,33 +151,23 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
                     if(httpCode < 500) {
                         //client error
                         showErrorMessage(getString(R.string.error_client_message));
+                        AnalyticsHelper.sendEventHit("api", "apiCodes", "/location/all", httpCode);
                     } else {
                         //server error
                         showErrorMessage(getString(R.string.error_server_message));
-                        AnalyticsHelper.getDefaultTracker().send(
-                                new HitBuilders.ExceptionBuilder()
-                                    .setDescription("Error")
-                                    .set("HTTP Code", String.valueOf(httpCode))
-                                    .set("Message", response.message())
-                                    .setFatal(false)
-                                    .build());
+                        AnalyticsHelper.sendEventHit("api", "apiCodes", "/location/all", httpCode);
                     }
 
                 }
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<Map<String, MachineList>> call, Throwable t) {
                 Log.e("LocationActivity", "API ERROR - " + t.getMessage());
                 //likely a timeout -- network is available due to prev. check
                 showErrorMessage(getString(R.string.error_server_message));
-                AnalyticsHelper.getDefaultTracker().send(
-                        new HitBuilders.ExceptionBuilder()
-                                .setDescription("Error")
-                                .set("HTTP Code", "-1")
-                                .set("Message", t.getMessage())
-                                .setFatal(false)
-                                .build());
+
+                AnalyticsHelper.sendErrorHit(t, false);
 
                 mSwipeRefreshLayout.setRefreshing(false);
             }
