@@ -2,32 +2,44 @@ package xyz.jhughes.laundry.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.BaseTransientBottomBar;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Switch;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xyz.jhughes.laundry.LaundryParser.Constants;
-import xyz.jhughes.laundry.LaundryParser.MachineStates;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.AppSectionsPagerAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.analytics.ScreenTrackedActivity;
-import xyz.jhughes.laundry.fragments.MachineFragment;
 import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
 /**
  * This activity tracks screen views. The fragments ALSO track screen views.
  */
 public class MachineActivity extends ScreenTrackedActivity {
+    private static final String SHOW_ONBOARDING_COUNTDOWN = "show_onboarding_countdown";
+
+    /**
+     * The number of times to show the snackbar explaining how to start a timer
+     * unless the user manually dismisses it.
+     */
+    private static final int ONBOARDING_COUNTDOWN = 5;
 
     private String currentRoom;
     private AppSectionsPagerAdapter appSectionsPagerAdapter;
@@ -38,6 +50,13 @@ public class MachineActivity extends ScreenTrackedActivity {
     TabLayout tabLayout;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+
+    @Bind(R.id.main_content)
+    CoordinatorLayout mMainContent;
+
+    Snackbar filterWarningBar;
+
+    Snackbar mOnboardingSnackbar;
 
     @Override
     protected void onPause() {
@@ -65,6 +84,111 @@ public class MachineActivity extends ScreenTrackedActivity {
 
         setUpViewPager();
         setScreenName(Constants.getApiLocation(currentRoom));
+        updateFilteringWarning();
+
+        showOnboardingIfNecessary();
+    }
+
+
+    /**
+     * When the user first accesses the Machines Activity, we should show
+     * a snackbar telling them how to create a timer. We hope this will increase
+     * the use of timers.
+     */
+    private void showOnboardingIfNecessary() {
+        int numberOfTimesToShowOnboarding =
+                SharedPrefsHelper.getSharedPrefs(this).getInt(SHOW_ONBOARDING_COUNTDOWN, ONBOARDING_COUNTDOWN);
+
+        if((mOnboardingSnackbar != null && !mOnboardingSnackbar.isShown()))
+            return;
+
+        //add BuildConfig.DEBUG to this statement to make it display always for testing.
+        if(numberOfTimesToShowOnboarding > 0) {
+            //show onboarding snackbar.
+            mOnboardingSnackbar = Snackbar
+                    .make(mMainContent,
+                            "Tap a running machine to be notified when it finishes.",
+                            Snackbar.LENGTH_INDEFINITE)
+                    .addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                        /**
+                         * If the user dismisses the snackbar, we should respect their
+                         * desire to not show the tutorial again.
+                         * We do this by setting the countdown to zero.
+                         */
+                        @Override
+                        public void onDismissed(Snackbar transientBottomBar, int event) {
+                            super.onDismissed(transientBottomBar, event);
+                            if(event == DISMISS_EVENT_SWIPE) {
+                                SharedPrefsHelper
+                                        .getSharedPrefs(MachineActivity.this)
+                                        .edit()
+                                        .putInt(SHOW_ONBOARDING_COUNTDOWN,
+                                                0)
+                                        .apply();
+                            }
+                        }
+                    })
+                    .setAction("Don't show again", new View.OnClickListener() {
+
+                        /**
+                         * If the user dismisses the snackbar, we should respect their
+                         * desire to not show the tutorial again.
+                         * We do this by setting the countdown to zero.
+                         */
+                        @Override
+                        public void onClick(View v) {
+                            SharedPrefsHelper
+                                    .getSharedPrefs(MachineActivity.this)
+                                    .edit()
+                                    .putInt(SHOW_ONBOARDING_COUNTDOWN,
+                                            0)
+                                    .apply();
+                        }
+                    });
+
+            mOnboardingSnackbar.show();
+
+            SharedPrefsHelper
+                    .getSharedPrefs(this)
+                    .edit()
+                    .putInt(SHOW_ONBOARDING_COUNTDOWN,
+                            --numberOfTimesToShowOnboarding)
+                    .apply();
+        }
+    }
+
+    private void updateFilteringWarning() {
+        final SharedPreferences p = SharedPrefsHelper.getSharedPrefs(MachineActivity.this);
+        boolean filtering = false;
+        try {
+            filtering = p.getBoolean("filter", false);
+        } catch (ClassCastException e) {
+            filtering = false;
+        }
+
+        if(filterWarningBar == null) {
+            filterWarningBar = Snackbar.make(mMainContent, "Only showing available machines.", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("Show all", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            setFilter(false);
+                        }
+                    })
+                    .addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                        @Override
+                        public void onDismissed(Snackbar transientBottomBar, int event) {
+                            super.onDismissed(transientBottomBar, event);
+                            filterWarningBar = null;
+                        }
+                    });
+        }
+
+        if(filtering) {
+            filterWarningBar.show();
+        }
+        else {
+            filterWarningBar.dismiss();
+        }
     }
 
     private void setUpViewPager() {
@@ -83,32 +207,36 @@ public class MachineActivity extends ScreenTrackedActivity {
         }
     }
 
+    private void setFilter(boolean filterState) {
+        final SharedPreferences p = SharedPrefsHelper.getSharedPrefs(MachineActivity.this);
+        SharedPreferences.Editor e = p.edit();
+        e.putBoolean("filter", filterState);
+        e.apply();
+        appSectionsPagerAdapter.notifyFilterChanged();
+        updateFilteringWarning();
+        AnalyticsHelper.sendEventHit("Filters", AnalyticsHelper.CLICK, filterState ? "Available only" : "All machines");
+    }
+
     public void createDialog() {
-        final boolean[] tempOptions = transformOptions(MachineFragment.options);
+        final SharedPreferences p = SharedPrefsHelper.getSharedPrefs(MachineActivity.this);
+        boolean filtering = false;
+        try {
+            filtering = p.getBoolean("filter", false);
+        } catch (ClassCastException e) {
+            filtering = false;
+        }
+        View layout = LayoutInflater.from(this).inflate(R.layout.dialog_filter, null);
+        final Switch sw = ((Switch) layout.findViewById(R.id.filter_dialog_switch));
+        sw.setChecked(filtering);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // Set the dialog title
         builder.setTitle(R.string.select_options)
-                // Specify the list array, the items to be selected by default (null for none),
-                // and the listener through which to receive callbacks when items are selected
-                .setMultiChoiceItems(R.array.options, tempOptions,
-                        new DialogInterface.OnMultiChoiceClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which,
-                                                boolean isChecked) {
-                                tempOptions[which] = isChecked;
-                            }
-                        })
+                .setView(layout)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        String options = transformOptions(tempOptions);
-                        MachineFragment.options = options;
-                        appSectionsPagerAdapter.notifyDataSetChanged();
-
-                        SharedPreferences.Editor e = SharedPrefsHelper.getSharedPrefs(MachineActivity.this).edit();
-                        e.putString("options", options);
-                        e.apply();
-                        AnalyticsHelper.sendEventHit("Filters", AnalyticsHelper.CLICK, options);
+                        setFilter(sw.isChecked());
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -118,41 +246,6 @@ public class MachineActivity extends ScreenTrackedActivity {
                     }
                 });
         builder.create().show();
-    }
-
-    private String transformOptions(boolean[] options) {
-        String result = "";
-        boolean hasFirst = false;
-
-        if (options[0]) {
-            result += MachineStates.AVAILABLE;
-            hasFirst = true;
-        }
-
-        if (options[1]) {
-            result += hasFirst ? MachineStates.SEPARATOR + MachineStates.IN_USE : MachineStates.IN_USE;
-            hasFirst = true;
-        }
-
-        if (options[2]) {
-            result += hasFirst ? MachineStates.SEPARATOR + MachineStates.ALMOST_DONE : MachineStates.ALMOST_DONE;
-            hasFirst = true;
-        }
-
-        if (options[3]) {
-            result += hasFirst ? MachineStates.SEPARATOR + MachineStates.END_CYCLE : MachineStates.END_CYCLE;
-        }
-
-        return result;
-    }
-
-    private boolean[] transformOptions(String options) {
-        return new boolean[]{
-                options.contains(MachineStates.AVAILABLE),
-                options.contains(MachineStates.IN_USE),
-                options.contains(MachineStates.ALMOST_DONE),
-                options.contains(MachineStates.END_CYCLE)
-        };
     }
 
     @Override
