@@ -23,6 +23,7 @@ import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 public class NotificationCreator extends Service {
 
     private final static String GROUP_KEY_EMAILS = "laundry_notif_group_key";
+    private final static String CHANNEL_ID = "Laundry Timer Alert";
     private static HashMap<String, Integer> notifcationIds = new HashMap<>();
     private static HashMap<Integer, CountDownTimer> timers = new HashMap<>();
     private static int id = 0;
@@ -82,7 +83,8 @@ public class NotificationCreator extends Service {
                 .setGroup(GROUP_KEY_EMAILS)
                 .addAction(R.drawable.ic_action_content_clear, "Cancel", pendingIntent)
                 .setOngoing(true)
-                .setPriority(id);
+                .setPriority(id)
+                .setChannelId(CHANNEL_ID);
 
         if (timeLeft == 0) {
             builder.setOngoing(false);
@@ -91,7 +93,7 @@ public class NotificationCreator extends Service {
         // if time up or at 5 minutes
         if (timeLeft == 0 || (countDown.equals("5:00"))) {
             AnalyticsHelper.sendEventHit("Reminders", "Passive", "Timer Finished");
-            builder.setVibrate(new long[]{1000, 1000, 1000});
+            builder.setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
         }
 
         notificationManager.notify(id, builder.build());
