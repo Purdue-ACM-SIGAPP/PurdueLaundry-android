@@ -30,7 +30,7 @@ import com.google.android.gms.analytics.HitBuilders;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -51,12 +51,18 @@ import xyz.jhughes.laundry.storage.SharedPrefsHelper;
  */
 public class LocationActivity extends ScreenTrackedActivity implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
-    @Bind(R.id.recycler_view) RecyclerView recyclerView;
-    @Bind(R.id.location_activity_toolbar) Toolbar toolbar;
-    @Bind(R.id.progressBar) ProgressBar mLoadingProgressBar;
-    @Bind(R.id.location_list_puller) SwipeRefreshLayout mSwipeRefreshLayout;
-    @Bind((R.id.location_error_text)) TextView errorTextView;
-    @Bind(R.id.location_error_button) Button errorButton;
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
+    @BindView(R.id.location_activity_toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.progressBar)
+    ProgressBar mLoadingProgressBar;
+    @BindView(R.id.location_list_puller)
+    SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView((R.id.location_error_text))
+    TextView errorTextView;
+    @BindView(R.id.location_error_button)
+    Button errorButton;
 
     private LocationAdapter adapter;
 
@@ -77,7 +83,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
         ButterKnife.bind(this);
 
         String msg;
-        if((msg = getIntent().getStringExtra("error")) != null) {
+        if ((msg = getIntent().getStringExtra("error")) != null) {
             showErrorMessage(msg);
         } else if (!isNetworkAvailable()) {
             showNoInternetDialog();
@@ -117,10 +123,10 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
         recyclerView.setAdapter(null);
         //We only want to clear the adapter/show the loading
         // if there are no items in the list already.
-        if(recyclerView.getAdapter() == null || recyclerView.getAdapter().getItemCount() <= 0) {
+        if (recyclerView.getAdapter() == null || recyclerView.getAdapter().getItemCount() <= 0) {
             recyclerView.setAdapter(null);
         }
-        if(!error) {
+        if (!error) {
             getLaundryCall();
             mLoadingProgressBar.setVisibility(View.VISIBLE);
         }
@@ -147,20 +153,20 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
 
     protected void getLaundryCall() {
 
-        if(!isNetworkAvailable()) {
+        if (!isNetworkAvailable()) {
             mSwipeRefreshLayout.setRefreshing(false);
-            if(error) showErrorMessage("You have no internet connection.");
+            if (error) showErrorMessage("You have no internet connection.");
             else showNoInternetDialog();
             return;
         }
         hideErrorMessage();
 
-        Call<Map<String,MachineList>> allMachineCall = MachineService.getService().getAllMachines();
+        Call<Map<String, MachineList>> allMachineCall = MachineService.getService().getAllMachines();
         allMachineCall.enqueue(new Callback<Map<String, MachineList>>() {
             @Override
             public void onResponse(Call<Map<String, MachineList>> call, Response<Map<String, MachineList>> response) {
-                if(response.isSuccessful()) {
-                    Map<String,MachineList> machineMap = response.body();
+                if (response.isSuccessful()) {
+                    Map<String, MachineList> machineMap = response.body();
                     List<Location> locations = ModelOperations.machineMapToLocationList(machineMap);
                     adapter = new LocationAdapter(locations, LocationActivity.this.getApplicationContext());
 
@@ -173,7 +179,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
                     mSwipeRefreshLayout.setRefreshing(false);
                 } else {
                     int httpCode = response.code();
-                    if(httpCode < 500) {
+                    if (httpCode < 500) {
                         //client error
                         showErrorMessage(getString(R.string.error_client_message));
                         AnalyticsHelper.sendEventHit("api", "apiCodes", "/location/all", httpCode);
@@ -251,7 +257,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
 
     @Override
     public void onClick(View v) {
-        if(v.equals(errorButton)) {
+        if (v.equals(errorButton)) {
             mLoadingProgressBar.setVisibility(View.VISIBLE);
             getLaundryCall();
         }

@@ -15,7 +15,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Location;
@@ -51,8 +51,8 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         final String locationName = Constants.getLocationName(location.getLocationName());
         boolean isOffline = location.getMachineList().isOffline();
         holder.textViewOffline.setVisibility(View.GONE);
-        if(isOffline){
-            holder.cardView.setAlpha((float)0.6);
+        if (isOffline) {
+            holder.cardView.setAlpha((float) 0.6);
             holder.washerAvailableCount.setVisibility(View.GONE);
             holder.washerTotalCount.setVisibility(View.GONE);
             holder.dryerAvailableCount.setVisibility(View.GONE);
@@ -67,7 +67,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         holder.washerTotalCount.setText("/" + count[2].toString());
         holder.dryerAvailableCount.setText(count[1].toString());
         holder.dryerTotalCount.setText("/" + count[0].toString());
-        setImage(holder.imageView, position,Constants.getLocationName(location.getLocationName()));
+        setImage(holder.imageView, position, Constants.getLocationName(location.getLocationName()));
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,16 +88,26 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        @Bind(R.id.card_view)  CardView cardView;
-        @Bind(R.id.image_view_location) ImageView imageView;
-        @Bind(R.id.text_view_location_name) TextView location;
-        @Bind(R.id.text_view_washer_count)  TextView washerAvailableCount;
-        @Bind(R.id.text_view_washer_total)  TextView washerTotalCount;
-        @Bind(R.id.text_view_dryer_count)   TextView dryerAvailableCount;
-        @Bind(R.id.text_view_dryer_total)   TextView dryerTotalCount;
-        @Bind(R.id.text_view_washer)        TextView textViewWasher;
-        @Bind(R.id.text_view_dryer)         TextView textViewDryer;
-        @Bind(R.id.text_view_offline)       TextView textViewOffline;
+        @BindView(R.id.card_view)
+        CardView cardView;
+        @BindView(R.id.image_view_location)
+        ImageView imageView;
+        @BindView(R.id.text_view_location_name)
+        TextView location;
+        @BindView(R.id.text_view_washer_count)
+        TextView washerAvailableCount;
+        @BindView(R.id.text_view_washer_total)
+        TextView washerTotalCount;
+        @BindView(R.id.text_view_dryer_count)
+        TextView dryerAvailableCount;
+        @BindView(R.id.text_view_dryer_total)
+        TextView dryerTotalCount;
+        @BindView(R.id.text_view_washer)
+        TextView textViewWasher;
+        @BindView(R.id.text_view_dryer)
+        TextView textViewDryer;
+        @BindView(R.id.text_view_offline)
+        TextView textViewOffline;
 
         private ViewHolder(View v) {
             super(v);

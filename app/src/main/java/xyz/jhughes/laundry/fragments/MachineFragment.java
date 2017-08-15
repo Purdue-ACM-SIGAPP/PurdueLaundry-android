@@ -26,8 +26,9 @@ import com.google.android.gms.analytics.HitBuilders;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -53,14 +54,16 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
 
     private MachineAdapter currentAdapter;
 
-    @Bind(R.id.dryer_machines_recycler_view)
+    @BindView(R.id.dryer_machines_recycler_view)
     RecyclerView recyclerView;
-    @Bind(R.id.dryer_list_layout)
+    @BindView(R.id.dryer_list_layout)
     SwipeRefreshLayout mSwipeRefreshLayout;
-    @Bind(R.id.machine_fragment_too_filtered)
+    @BindView(R.id.machine_fragment_too_filtered)
     TextView mTooFilteredTextView;
-    @Bind(R.id.machine_fragment_notify_button)
+    @BindView(R.id.machine_fragment_notify_button)
     Button notifyButton;
+
+    private Unbinder unbinder;
 
     private boolean isRefreshing;
     private boolean isDryers;
@@ -98,7 +101,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
         isDryers = getArguments().getBoolean("isDryers");
 
         rootView = inflater.inflate(R.layout.fragment_machine, container, false);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
 
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this.getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
@@ -309,7 +312,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     @Override
@@ -320,7 +323,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
 
     //http://stackoverflow.com/a/14150037
     //locks the screen to the current rotation
-    public void onLock(){
+    public void onLock() {
         int orientation = getActivity().getRequestedOrientation();
         int rotation = ((WindowManager) getActivity().getSystemService(
                 Context.WINDOW_SERVICE)).getDefaultDisplay().getRotation();
@@ -341,7 +344,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
         getActivity().setRequestedOrientation(orientation);
     }
 
-    public void onUnlock(){
+    public void onUnlock() {
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
     }
 }

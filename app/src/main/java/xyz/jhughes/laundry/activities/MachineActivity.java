@@ -2,7 +2,6 @@ package xyz.jhughes.laundry.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.BaseTransientBottomBar;
@@ -20,7 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Switch;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.R;
@@ -44,14 +43,14 @@ public class MachineActivity extends ScreenTrackedActivity {
     private String currentRoom;
     private AppSectionsPagerAdapter appSectionsPagerAdapter;
 
-    @Bind(R.id.viewpager)
+    @BindView(R.id.viewpager)
     ViewPager viewPager;
-    @Bind(R.id.sliding_tabs)
+    @BindView(R.id.sliding_tabs)
     TabLayout tabLayout;
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    @Bind(R.id.main_content)
+    @BindView(R.id.main_content)
     CoordinatorLayout mMainContent;
 
     Snackbar filterWarningBar;
@@ -89,7 +88,6 @@ public class MachineActivity extends ScreenTrackedActivity {
         showOnboardingIfNecessary();
     }
 
-
     /**
      * When the user first accesses the Machines Activity, we should show
      * a snackbar telling them how to create a timer. We hope this will increase
@@ -99,11 +97,11 @@ public class MachineActivity extends ScreenTrackedActivity {
         int numberOfTimesToShowOnboarding =
                 SharedPrefsHelper.getSharedPrefs(this).getInt(SHOW_ONBOARDING_COUNTDOWN, ONBOARDING_COUNTDOWN);
 
-        if((mOnboardingSnackbar != null && !mOnboardingSnackbar.isShown()))
+        if ((mOnboardingSnackbar != null && !mOnboardingSnackbar.isShown()))
             return;
 
         //add BuildConfig.DEBUG to this statement to make it display always for testing.
-        if(numberOfTimesToShowOnboarding > 0) {
+        if (numberOfTimesToShowOnboarding > 0) {
             //show onboarding snackbar.
             mOnboardingSnackbar = Snackbar
                     .make(mMainContent,
@@ -118,7 +116,7 @@ public class MachineActivity extends ScreenTrackedActivity {
                         @Override
                         public void onDismissed(Snackbar transientBottomBar, int event) {
                             super.onDismissed(transientBottomBar, event);
-                            if(event == DISMISS_EVENT_SWIPE) {
+                            if (event == DISMISS_EVENT_SWIPE) {
                                 SharedPrefsHelper
                                         .getSharedPrefs(MachineActivity.this)
                                         .edit()
@@ -166,7 +164,7 @@ public class MachineActivity extends ScreenTrackedActivity {
             filtering = false;
         }
 
-        if(filterWarningBar == null) {
+        if (filterWarningBar == null) {
             filterWarningBar = Snackbar.make(mMainContent, "Only showing available machines.", Snackbar.LENGTH_INDEFINITE)
                     .setAction("Show all", new View.OnClickListener() {
                         @Override
@@ -183,10 +181,9 @@ public class MachineActivity extends ScreenTrackedActivity {
                     });
         }
 
-        if(filtering) {
+        if (filtering) {
             filterWarningBar.show();
-        }
-        else {
+        } else {
             filterWarningBar.dismiss();
         }
     }

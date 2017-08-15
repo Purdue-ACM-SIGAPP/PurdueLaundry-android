@@ -21,7 +21,7 @@ import xyz.jhughes.laundry.analytics.AnalyticsHelper;
  * Singleton impl for the Machine API.
  */
 public class MachineService {
-    private static String API_ROOT = "http://laundry-api.sigapp.club";
+    private static String API_ROOT = "http://10.32.30.207";
     private static MachineAPI REST_CLIENT;
     private static MockLaundryApiService MOCK_CLIENT;
 
