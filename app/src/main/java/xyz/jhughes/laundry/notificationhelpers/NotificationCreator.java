@@ -59,6 +59,7 @@ public class NotificationCreator extends Service {
 
     private static void updateTimeNotification(String machine, Context context, long timeLeft) {
         if (notifcationIds == null || self == null) {
+            AnalyticsHelper.sendErrorHit(new NullPointerException("notificationIds or service null"), false);
             return;
         }
 
