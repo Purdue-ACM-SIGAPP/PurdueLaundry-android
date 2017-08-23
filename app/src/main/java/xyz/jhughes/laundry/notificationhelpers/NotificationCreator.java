@@ -58,6 +58,11 @@ public class NotificationCreator extends Service {
     }
 
     private static void updateTimeNotification(String machine, Context context, long timeLeft) {
+        if (notifcationIds == null || self == null) {
+            AnalyticsHelper.sendErrorHit(new NullPointerException("notificationIds or service null"), false);
+            return;
+        }
+
         int id = notifcationIds.get(machine);
         String countDown;
         if (timeLeft > 0) {
@@ -99,11 +104,12 @@ public class NotificationCreator extends Service {
 
     static void stopTimer(int id, String machine) {
         notifcationIds.remove(machine);
-        if (timers.get(id) != null) //This could be called when the app has been cleared.
+        if (timers.get(id) != null) { //This could be called when the app has been cleared.
             timers.get(id).cancel();
-        timers.remove(id);
+            timers.remove(id);
+        }
 
-        if (timers.isEmpty() && self.get() != null) {
+        if (timers.isEmpty() && self != null && self.get() != null) {
             self.get().stopSelf();
         }
     }
