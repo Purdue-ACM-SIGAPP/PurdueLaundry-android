@@ -12,7 +12,7 @@ We would love contributions to this app! We are always looking for improvements.
 
 If you are interested in being involved in discussion about this app please submit an issue requesting access to our Slack account.
 
-Development on this app is managed through Github issues and milestones. If you are looking for something to do with Laundry, check the milestones for the next release and pick an issue from that list. 
+Development on this app is managed through Github issues and milestones. If you are looking for something to do with Laundry, check the milestones for the next release and pick an issue from that list. Anything and everything you do, please create an issue and tracker it in the Kanban Board [here](https://github.com/Purdue-ACM-SIGAPP/PurdueLaundry-android/projects/2).
 
 ## Server contributions
 
