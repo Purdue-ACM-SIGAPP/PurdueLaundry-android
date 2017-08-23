@@ -57,7 +57,12 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         allMachines = new ArrayList<>();
 
         final SharedPreferences p = SharedPrefsHelper.getSharedPrefs(mContext);
-        boolean filterByAvailable = p.getBoolean("filter", false);
+        boolean filterByAvailable = false;
+        try {
+            filterByAvailable = p.getBoolean("filter", false);
+        } catch (ClassCastException e) {
+            filterByAvailable = false;
+        }
 
         filter(dryers, filterByAvailable, machines);
     }
