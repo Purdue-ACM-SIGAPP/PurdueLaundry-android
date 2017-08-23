@@ -164,7 +164,10 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                 @Override
                 public void onFailure(Call<ArrayList<Machine>> call, Throwable t) {
                     //likely a timeout -- network is available due to prev. check
-                    showErrorDialog(getString(R.string.error_server_message));
+                    if (isAdded() && getActivity() != null) {
+                        showErrorDialog(getString(R.string.error_server_message));
+                    }
+
                     mSwipeRefreshLayout.setRefreshing(false);
                     isRefreshing = false;
                     alertNetworkError();
