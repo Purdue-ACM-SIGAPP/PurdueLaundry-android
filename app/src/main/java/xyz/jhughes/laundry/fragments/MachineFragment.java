@@ -162,6 +162,11 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
 
                 @Override
                 public void onFailure(Call<ArrayList<Machine>> call, Throwable t) {
+
+                    if (call.isCanceled()) {
+                        return;
+                    }
+
                     //likely a timeout -- network is available due to prev. check
                     if (isAdded() && getActivity() != null) {
                         showErrorDialog(getString(R.string.error_server_message));
@@ -170,7 +175,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                         isRefreshing = false;
                         alertNetworkError();
                     } else {
-                        AnalyticsHelper.sendEventHit(AnalyticsHelper.ERROR, "onFailure", "MachineFragment's Activity Null");
+                        AnalyticsHelper.sendErrorHit(new RuntimeException("Activity null"), false);
                     }
 
                     AnalyticsHelper.sendErrorHit(t, false);
@@ -318,11 +323,9 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
 
     @Override
     public void onDetach() {
-        if (call == null) {
-            return;
+        if (call != null) {
+            call.cancel();
         }
-
-        call.cancel();
 
         super.onDetach();
     }
