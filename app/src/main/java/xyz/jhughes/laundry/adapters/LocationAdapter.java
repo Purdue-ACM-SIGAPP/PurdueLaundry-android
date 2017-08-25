@@ -62,7 +62,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
             holder.textViewOffline.setVisibility(View.VISIBLE);
         }
         Integer[] count = ModelOperations.getAvailableCounts(location.getMachineList().getMachines());
-        holder.location.setText(locationName);
+        holder.location.setText(locationName.split("Laundry")[0]);
         holder.washerAvailableCount.setText(count[3].toString());
         holder.washerTotalCount.setText("/" + count[2].toString());
         holder.dryerAvailableCount.setText(count[1].toString());

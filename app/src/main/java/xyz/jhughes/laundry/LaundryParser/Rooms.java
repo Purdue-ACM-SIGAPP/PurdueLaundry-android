@@ -8,9 +8,12 @@ public class Rooms {
 
     private static Rooms rm = new Rooms();
 
-    private String[] LIST_OF_ROOMS = {"Cary Hall West", "Cary Hall East", "Earhart Hall", "Harrison Hall", "Hawkins Hall", "Hillenbrand Hall", "McCutcheon Hall",
-            "Meredith Northwest", "Meredith Southeast", "Owen Hall", "Shreve Hall", "Tarkington Hall", "Third Street Suites", "Wiley Hall",
-            "Windsor - Duhme", "Windsor - Warren"};
+    private String[] LIST_OF_ROOMS = {
+            "Cary Quad West Laundry", "Cary Quad East Laundry", "Earhart Laundry Room", "Harrison Laundry Room", "Hawkins Laundry Room",
+            "Hillenbrand Laundry Room", "McCutcheon Laundry Room", "Meredith NW Laundry Room", "Meredith SE Laundry Room", "Owen Laundry Room",
+            "Shreve Laundry Room", "Tarkington Laundry Room", "Third St. Suites Laundry Room", "Wiley Laundry Room", "Windsor - Duhme Laundry Room",
+            "Windsor - Warren Laundry Room"
+    };
     private HashMap<String, String> roomsToAPILocations;
     private HashMap<String, String> APILocationToRooms;
     private HashMap<String, Integer> roomsToImage;
@@ -32,7 +35,6 @@ public class Rooms {
         machineAvailabilityColors.put(MachineStates.IN_USE, R.color.InUse);
         machineAvailabilityColors.put(MachineStates.ALMOST_DONE, R.color.AlmostDone);
         machineAvailabilityColors.put(MachineStates.END_CYCLE, R.color.Finished);
-
     }
 
     public static Rooms getRoomsConstantsInstance() {
@@ -64,78 +66,40 @@ public class Rooms {
     }
 
     private String toAPILocation(String room) {
-        switch (room) {
-            case "Cary Hall West":
-                return "Cary Quad West Laundry";
-            case "Cary Hall East":
-                return "Cary Quad East Laundry";
-            case "Earhart Hall":
-                return "Earhart Laundry Room";
-            case "Harrison Hall":
-                return "Harrison Laundry Room";
-            case "Hawkins Hall":
-                return "Hawkins Laundry Room";
-            case "Hillenbrand Hall":
-                return "Hillenbrand Laundry Room";
-            case "McCutcheon Hall":
-                return "McCutcheon Laundry Room";
-            case "Meredith Northwest":
-                return "Meredith NW Laundry Room";
-            case "Meredith Southeast":
-                return "Meredith SE Laundry Room";
-            case "Owen Hall":
-                return "Owen Laundry Room";
-            case "Shreve Hall":
-                return "Shreve Laundry Room";
-            case "Tarkington Hall":
-                return "Tarkington Laundry Room";
-            case "Third Street Suites":
-                return "Third St. Suites Laundry Room";
-            case "Wiley Hall":
-                return "Wiley Laundry Room";
-            case "Windsor - Duhme":
-                return "Windsor - Duhme Laundry Room";
-            case "Windsor - Warren":
-                return "Windsor - Warren Laundry Room";
-            default:
-                break;
-        }
-        return null;
+        return room;
     }
 
     private int toImageResourceId(String room) {
-        switch (room) {
-            case "Cary Hall East":
-            case "Cary Hall West":
+        switch (room.split(" ")[0].toLowerCase()) {
+            case "cary":
                 return R.drawable.image_cary;
-            case "Earhart Hall":
+            case "earhart":
                 return R.drawable.image_earhart;
-            case "Harrison Hall":
+            case "harrison":
                 return R.drawable.image_harrison;
-            case "Hawkins Hall":
+            case "hawkins":
                 return R.drawable.image_hawkins;
-            case "Hillenbrand Hall":
+            case "hillenbrand":
                 return R.drawable.image_hillenbrand;
-            case "McCutcheon Hall":
+            case "mccutcheon":
                 return R.drawable.image_mccutcheon;
-            case "Meredith Northwest":
-            case "Meredith Southeast":
+            case "meredith":
                 return R.drawable.image_meredith;
-            case "Owen Hall":
+            case "owen":
                 return R.drawable.image_owen;
-            case "Shreve Hall":
+            case "shreve":
                 return R.drawable.image_shreve;
-            case "Tarkington Hall":
+            case "tarkington":
                 return R.drawable.image_tarkington;
-            case "Third Street Suites":
+            case "third":
                 return R.drawable.image_tss;
-            case "Wiley Hall":
+            case "wiley":
                 return R.drawable.image_wiley;
-            case "Windsor - Duhme":
-            case "Windsor - Warren":
+            case "windsor":
                 return R.drawable.image_windsor;
+            default:
+                return R.drawable.image_earhart; // Because it's nice
         }
-        return -1;
     }
 
     private String getRoom(String apiLocation) {
