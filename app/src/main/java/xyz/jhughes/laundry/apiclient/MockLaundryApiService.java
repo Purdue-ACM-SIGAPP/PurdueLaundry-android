@@ -28,7 +28,7 @@ public class MockLaundryApiService implements MachineAPI {
         offMachine.addAll(Arrays.asList(new Machine("Washer1", MachineTypes.WASHER, MachineStates.IN_USE, "2 minutes left")));
         firstTime++;
         Log.d("MockLaundryAPI", "Times called: " + firstTime);
-        if (firstTime < 200){
+        if ((firstTime % 3) == 0){
             return new MockRetrofitCall<>(onMachine);
         }
 
