@@ -78,7 +78,7 @@ public class NotificationCreator extends Service {
 
     private static void updateTimeNotification(String notificationKey, String title, String message, boolean displayTimer, Context context, long timeLeft) {
         int id = notificationIds.get(notificationKey);
-        System.out.println(timeLeft);
+        //System.out.println(timeLeft);
         String contentText;
         if (message != null){
             contentText = message;
