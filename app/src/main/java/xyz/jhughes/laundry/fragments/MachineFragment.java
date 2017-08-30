@@ -22,8 +22,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.android.gms.analytics.HitBuilders;
-
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -32,7 +30,6 @@ import butterknife.Unbinder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.ModelOperations;
@@ -72,6 +69,8 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     private View rootView;
 
     private String mRoomName;
+
+    private Call<ArrayList<Machine>> call = null;
 
     public MachineFragment() {
         // Required empty public constructor
@@ -131,7 +130,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     public void refreshList() {
         if (isNetworkAvailable()) {
             String apiLocationFormat = Constants.getApiLocation(mRoomName);
-            Call<ArrayList<Machine>> call = MachineService.getService().getMachineStatus(apiLocationFormat);
+            call = MachineService.getService().getMachineStatus(apiLocationFormat);
 
             call.enqueue(new Callback<ArrayList<Machine>>() {
                 @Override
@@ -166,11 +165,21 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
 
                 @Override
                 public void onFailure(Call<ArrayList<Machine>> call, Throwable t) {
+
+                    if (call.isCanceled()) {
+                        return;
+                    }
+
                     //likely a timeout -- network is available due to prev. check
-                    showErrorDialog(getString(R.string.error_server_message));
-                    mSwipeRefreshLayout.setRefreshing(false);
-                    isRefreshing = false;
-                    alertNetworkError();
+                    if (isAdded() && getActivity() != null) {
+                        showErrorDialog(getString(R.string.error_server_message));
+
+                        mSwipeRefreshLayout.setRefreshing(false);
+                        isRefreshing = false;
+                        alertNetworkError();
+                    } else {
+                        AnalyticsHelper.sendErrorHit(new RuntimeException("Activity null"), false);
+                    }
 
                     AnalyticsHelper.sendErrorHit(t, false);
                 }
@@ -313,6 +322,15 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @Override
+    public void onDetach() {
+        if (call != null) {
+            call.cancel();
+        }
+
+        super.onDetach();
     }
 
     @Override
