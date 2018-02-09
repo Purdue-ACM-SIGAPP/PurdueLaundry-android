@@ -5,10 +5,12 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.Path;
+import xyz.jhughes.laundry.LaundryParser.Locations;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.LaundryParser.MachineList;
 import xyz.jhughes.laundry.LaundryParser.MachineStates;
@@ -53,4 +55,13 @@ public class MockLaundryApiService implements MachineAPI {
         return new MockRetrofitCall<>(offMachine);
     }
 
+
+    @Override
+    public Call<List<Locations>> getLocations() {
+        List<Locations> mockList = new ArrayList<Locations>();
+        Locations fakeRoom = new Locations();
+        fakeRoom.name = "Test Building";
+        mockList.add(fakeRoom);
+        return new MockRetrofitCall<>(mockList);
+    }
 }
