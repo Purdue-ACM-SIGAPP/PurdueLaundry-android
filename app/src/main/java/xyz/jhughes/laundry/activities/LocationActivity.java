@@ -279,7 +279,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
 
     @Override
     public void onRefresh() {
-        getLaundryCall();
+        getRoomsCall();
         mSwipeRefreshLayout.setRefreshing(true);
     }
 
@@ -309,7 +309,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     public void onClick(View v) {
         if (v.equals(errorButton)) {
             mLoadingProgressBar.setVisibility(View.VISIBLE);
-            getLaundryCall();
+            getRoomsCall();
         }
     }
 }
