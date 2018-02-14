@@ -36,7 +36,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import xyz.jhughes.laundry.LaundryParser.Location;
+import xyz.jhughes.laundry.LaundryParser.Locations;
 import xyz.jhughes.laundry.LaundryParser.MachineList;
+import xyz.jhughes.laundry.LaundryParser.Rooms;
 import xyz.jhughes.laundry.ModelOperations;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.LocationAdapter;
@@ -127,7 +129,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
             recyclerView.setAdapter(null);
         }
         if (!error) {
-            getLaundryCall();
+            getRoomsCall();
             mLoadingProgressBar.setVisibility(View.VISIBLE);
         }
 
@@ -152,14 +154,6 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     }
 
     protected void getLaundryCall() {
-
-        if (!isNetworkAvailable()) {
-            mSwipeRefreshLayout.setRefreshing(false);
-            if (error) showErrorMessage("You have no internet connection.");
-            else showNoInternetDialog();
-            return;
-        }
-        hideErrorMessage();
 
         Call<Map<String, MachineList>> allMachineCall = MachineService.getService().getAllMachines();
         allMachineCall.enqueue(new Callback<Map<String, MachineList>>() {
@@ -205,6 +199,62 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
         });
     }
 
+
+    protected void getRoomsCall(){
+
+        if (!isNetworkAvailable()) {
+            mSwipeRefreshLayout.setRefreshing(false);
+            if (error) showErrorMessage("You have no internet connection.");
+            else showNoInternetDialog();
+            return;
+        }
+        hideErrorMessage();
+        if (Rooms.getRoomsConstantsInstance().getListOfRooms() == null) {
+            Call<List<Locations>> roomCall = MachineService.getService().getLocations();
+            roomCall.enqueue(new Callback<List<Locations>>() {
+                @Override
+                public void onResponse(Call<List<Locations>> call, Response<List<Locations>> response) {
+                    if (response.isSuccessful()) {
+                        //set rooms
+                        List<Locations> roomList = response.body();
+                        String[] rooms = new String[roomList.size()];
+                        for (int i = 0; i < roomList.size(); i++){
+                            rooms[i] = roomList.get(i).name;
+                        }
+                        Rooms.getRoomsConstantsInstance().setListOfRooms(rooms);
+                        //call laundry
+                        getLaundryCall();
+                    } else {
+                        int httpCode = response.code();
+                        if (httpCode < 500) {
+                            //client error
+                            showErrorMessage(getString(R.string.error_client_message));
+                            AnalyticsHelper.sendEventHit("api", "apiCodes", "/location/all", httpCode);
+                        } else {
+                            //server error
+                            showErrorMessage(getString(R.string.error_server_message));
+                            AnalyticsHelper.sendEventHit("api", "apiCodes", "/location/all", httpCode);
+                        }
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<Locations>> call, Throwable t) {
+                    Log.e("LocationActivity", "API ERROR - " + t.getMessage());
+                    //likely a timeout -- network is available due to prev. check
+                    showErrorMessage(getString(R.string.error_server_message));
+
+                    AnalyticsHelper.sendErrorHit(t, false);
+
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }
+            });
+        } else {
+            getLaundryCall();
+        }
+    }
+
     public void showErrorMessage(String message) {
         error = true;
         errorTextView.setText(message);
@@ -229,7 +279,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
 
     @Override
     public void onRefresh() {
-        getLaundryCall();
+        getRoomsCall();
         mSwipeRefreshLayout.setRefreshing(true);
     }
 
@@ -259,7 +309,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     public void onClick(View v) {
         if (v.equals(errorButton)) {
             mLoadingProgressBar.setVisibility(View.VISIBLE);
-            getLaundryCall();
+            getRoomsCall();
         }
     }
 }

@@ -8,12 +8,12 @@ public class Rooms {
 
     private static Rooms rm = new Rooms();
 
-    private String[] LIST_OF_ROOMS = {
+    private String[] LIST_OF_ROOMS = null;/*{
             "Cary Quad West Laundry", "Cary Quad East Laundry", "Earhart Laundry Room", "Harrison Laundry Room", "Hawkins Laundry Room",
             "Hillenbrand Laundry Room", "McCutcheon Laundry Room", "Meredith NW Laundry Room", "Meredith SE Laundry Room", "Owen Laundry Room",
             "Shreve Laundry Room", "Tarkington Laundry Room", "Third St. Suites Laundry Room", "Wiley Laundry Room", "Windsor - Duhme Laundry Room",
             "Windsor - Warren Laundry Room"
-    };
+    };*/
     private HashMap<String, String> roomsToAPILocations;
     private HashMap<String, String> APILocationToRooms;
     private HashMap<String, Integer> roomsToImage;
@@ -25,12 +25,6 @@ public class Rooms {
         machineAvailabilityColors = new HashMap<>();
         APILocationToRooms = new HashMap<>();
 
-        for (String room : LIST_OF_ROOMS) {
-            roomsToAPILocations.put(room, toAPILocation(room));
-            APILocationToRooms.put(toAPILocation(room), room);
-            roomsToImage.put(room, toImageResourceId(room));
-        }
-
         machineAvailabilityColors.put(MachineStates.AVAILABLE, R.color.Available);
         machineAvailabilityColors.put(MachineStates.IN_USE, R.color.InUse);
         machineAvailabilityColors.put(MachineStates.ALMOST_DONE, R.color.AlmostDone);
@@ -39,6 +33,15 @@ public class Rooms {
 
     public static Rooms getRoomsConstantsInstance() {
         return rm;
+    }
+
+    public void setListOfRooms(String[] roomList){
+        LIST_OF_ROOMS = roomList;
+        for (String room : LIST_OF_ROOMS) {
+            roomsToAPILocations.put(room, toAPILocation(room));
+            APILocationToRooms.put(toAPILocation(room), room);
+            roomsToImage.put(room, toImageResourceId(room));
+        }
     }
 
     public String[] getListOfRooms() {

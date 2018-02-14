@@ -16,8 +16,8 @@ android {
         applicationId "xyz.jhughes.laundry"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 15
-        versionName "2.5"
+        versionCode 16
+        versionName "2.5.1"
     }
     buildTypes {
         release {
