@@ -35,6 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="4dp"
+                android:singleLine="true"
                 android:textSize="28sp"
                 android:typeface="normal" />
 

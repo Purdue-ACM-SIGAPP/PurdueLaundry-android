@@ -46,6 +46,9 @@
     <string name="available_timer_message1">Load</string>
     <string name="available_timer_message2">to start a timer for when the machine is finished</string>
 
+    <string name="notification_channel_name">Laundry Timer Alert</string>
+    <string name="notification_channel_desc">The timer used to alert you when your laundry is finished.</string>
+
     <array name="options">
         <item>Available</item>
         <item>In Use</item>

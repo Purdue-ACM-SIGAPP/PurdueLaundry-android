@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -68,11 +68,11 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     }
 
     private void filter(boolean dryers, boolean available, ArrayList<Machine> machines) {
-        for(Machine m : machines) {
-            if(dryers != m.getType().equals(MachineTypes.DRYER)) continue;
+        for (Machine m : machines) {
+            if (dryers != m.getType().equals(MachineTypes.DRYER)) continue;
             allMachines.add(m);
-            if(!available) currentMachines.add(m);
-            else if(m.getStatus().equals(MachineStates.AVAILABLE)) currentMachines.add(m);
+            if (!available) currentMachines.add(m);
+            else if (m.getStatus().equals(MachineStates.AVAILABLE)) currentMachines.add(m);
 
         }
     }
@@ -101,7 +101,6 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
             case MachineStates.IN_USE:
                 // Instead of showing "In Use", show how many minutes are left!
                 holder.statusTextView.setText(m.getTime()); // this will need to be updated once people start using the machines again...It should be "xx min. left"
-
                 break;
             case MachineStates.READY:
                 holder.statusTextView.setText(mContext.getResources().getStringArray(R.array.options)[1]); // this should be replaced too
@@ -183,7 +182,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         }
     }
 
-    public boolean createNotification(Machine m){
+    public boolean createNotification(Machine m) {
         try {
             int minutesInFuture = Integer.parseInt(m.getTime().substring(0, m.getTime().indexOf(' ')));
             int milliInFuture = minutesInFuture * 60000; //60 seconds * 1000 milliseconds
@@ -199,13 +198,13 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                 Toast.makeText(mContext, mContext.getString(R.string.alarm_set), Toast.LENGTH_SHORT).show();
             }
             return true;
-        } catch (NumberFormatException | StringIndexOutOfBoundsException e){
+        } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
             return false;
         }
 
     }
 
-    public void waitForMachine(final Machine m){
+    public void waitForMachine(final Machine m) {
         //Constructs the dialog to wait for a machine
         //checks the server while the dialog is open and the app is running in the background
         final Handler handler = new Handler();
@@ -252,9 +251,9 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                     @Override
                     public void onResponse(Call<ArrayList<Machine>> call, Response<ArrayList<Machine>> response) {
                         ArrayList<Machine> body = response.body();
-                        if (body.contains(m)){
+                        if (body.contains(m)) {
                             Machine m3 = body.get(body.indexOf(m));
-                            if (m3.getStatus().equals(MachineStates.IN_USE)){ //
+                            if (m3.getStatus().equals(MachineStates.IN_USE)) { //
                                 createNotification(m3);
                                 machineWaitingDialog.cancel();
                             }
@@ -278,14 +277,12 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                 machineWaitingDialog.cancel();
             }
 
-            public void onTimeout(){
+            public void onTimeout() {
                 AnalyticsHelper.sendEventHit("Automatic Timer", "Timer state", "Timed out");
                 machineWaitingDialog.cancel();
             }
         }), MachineCheckerRunnable.TIME);
     }
-
-
 
     public ArrayList<Machine> getCurrentMachines() {
         return currentMachines;
@@ -300,11 +297,11 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     // you provide access to all the views for a data item in a view holder
     static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        @Bind(R.id.machine_name_text_view)
+        @BindView(R.id.machine_name_text_view)
         TextView nameTextView;
-        @Bind(R.id.machine_status_text_view)
+        @BindView(R.id.machine_status_text_view)
         TextView statusTextView;
-        @Bind(R.id.card_view)
+        @BindView(R.id.card_view)
         CardView cardView;
 
         private ViewHolder(View v) {

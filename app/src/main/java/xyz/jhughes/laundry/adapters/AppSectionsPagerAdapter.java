@@ -8,9 +8,6 @@ import android.view.ViewGroup;
 
 import xyz.jhughes.laundry.fragments.MachineFragment;
 
-/**
- * Created by jeff on 10/4/15.
- */
 public class AppSectionsPagerAdapter extends FragmentPagerAdapter {
     private String mRoomName;
     private MachineFragment mFragments[];
@@ -38,7 +35,7 @@ public class AppSectionsPagerAdapter extends FragmentPagerAdapter {
         Fragment fragment;
         fragment = new MachineFragment();
         b.putString("roomName", mRoomName);
-        if(i == WASHERTABPOSITION) {
+        if (i == WASHERTABPOSITION) {
             //The washers fragment
             b.putBoolean("isDryers", false);
         } else if (i == DRYERTABPOSITION) {
@@ -57,7 +54,7 @@ public class AppSectionsPagerAdapter extends FragmentPagerAdapter {
     }
 
     public void notifyFilterChanged() {
-        for(MachineFragment m : mFragments) {
+        for (MachineFragment m : mFragments) {
             m.updateRecyclerView();
         }
     }
