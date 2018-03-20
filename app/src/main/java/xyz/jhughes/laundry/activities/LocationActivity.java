@@ -93,11 +93,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
             String lastRoom = SharedPrefsHelper.getSharedPrefs(this)
                     .getString("lastScreenViewed", null);
             if (lastRoom != null && !lastRoom.equals("LocationList")) {
-                Intent intent = new Intent(this, MachineActivity.class);
-                Bundle b = new Bundle();
-                b.putString("locationName", lastRoom);
-                intent.putExtras(b);
-                startActivity(intent);
+                getRoomsCall(true, lastRoom);
             }
         }
 
@@ -129,7 +125,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
             recyclerView.setAdapter(null);
         }
         if (!error) {
-            getRoomsCall();
+            getRoomsCall(false, null);
             mLoadingProgressBar.setVisibility(View.VISIBLE);
         }
 
@@ -200,7 +196,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     }
 
 
-    protected void getRoomsCall(){
+    protected void getRoomsCall(final boolean goingToMachineActivity, final String lastRoom) {
 
         if (!isNetworkAvailable()) {
             mSwipeRefreshLayout.setRefreshing(false);
@@ -218,12 +214,20 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
                         //set rooms
                         List<Locations> roomList = response.body();
                         String[] rooms = new String[roomList.size()];
-                        for (int i = 0; i < roomList.size(); i++){
+                        for (int i = 0; i < roomList.size(); i++) {
                             rooms[i] = roomList.get(i).name;
                         }
                         Rooms.getRoomsConstantsInstance().setListOfRooms(rooms);
-                        //call laundry
-                        getLaundryCall();
+                        if (!goingToMachineActivity) {
+                            //call laundry
+                            getLaundryCall();
+                        } else {
+                            Intent intent = new Intent(LocationActivity.this, MachineActivity.class);
+                            Bundle b = new Bundle();
+                            b.putString("locationName", lastRoom);
+                            intent.putExtras(b);
+                            startActivity(intent);
+                        }
                     } else {
                         int httpCode = response.code();
                         if (httpCode < 500) {
@@ -251,7 +255,15 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
                 }
             });
         } else {
-            getLaundryCall();
+            if (!goingToMachineActivity) {
+                getLaundryCall();
+            } else {
+                Intent intent = new Intent(LocationActivity.this, MachineActivity.class);
+                Bundle b = new Bundle();
+                b.putString("locationName", lastRoom);
+                intent.putExtras(b);
+                startActivity(intent);
+            }
         }
     }
 
@@ -279,7 +291,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
 
     @Override
     public void onRefresh() {
-        getRoomsCall();
+        getRoomsCall(false, null);
         mSwipeRefreshLayout.setRefreshing(true);
     }
 
@@ -309,7 +321,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     public void onClick(View v) {
         if (v.equals(errorButton)) {
             mLoadingProgressBar.setVisibility(View.VISIBLE);
-            getRoomsCall();
+            getRoomsCall(false, null);
         }
     }
 }
