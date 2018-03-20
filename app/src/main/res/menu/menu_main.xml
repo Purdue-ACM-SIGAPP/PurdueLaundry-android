@@ -5,6 +5,6 @@
     <item
             android:title="@string/display_parameters"
             app:showAsAction="always"
-            android:icon="@drawable/filter_icon"
+            android:icon="@drawable/ic_filter"
             android:id="@+id/display_parameters"/>
 </menu>
