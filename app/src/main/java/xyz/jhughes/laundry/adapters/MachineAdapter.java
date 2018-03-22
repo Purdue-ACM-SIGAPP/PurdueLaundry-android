@@ -23,6 +23,7 @@ import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import xyz.jhughes.laundry.BuildConfig;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.LaundryParser.MachineStates;
@@ -246,7 +247,9 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
             public void onClick(View v) {
                 AnalyticsHelper.sendEventHit("Automatic Timer", "Click", "Refresh");
                 String apiLocationFormat = Constants.getApiLocation(MachineAdapter.this.roomName);
-                Call<ArrayList<Machine>> call = MachineService.getService().getMachineStatus(apiLocationFormat);
+                Call<ArrayList<Machine>> call = BuildConfig.DEBUG ?
+                        MachineService.getService().getMachineStatus_DEBUG(apiLocationFormat) :
+                        MachineService.getService().getMachineStatus(apiLocationFormat);
                 call.enqueue(new Callback<ArrayList<Machine>>() {
                     @Override
                     public void onResponse(Call<ArrayList<Machine>> call, Response<ArrayList<Machine>> response) {

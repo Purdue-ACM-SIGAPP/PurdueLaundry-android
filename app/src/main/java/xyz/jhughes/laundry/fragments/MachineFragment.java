@@ -30,6 +30,7 @@ import butterknife.Unbinder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import xyz.jhughes.laundry.BuildConfig;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.ModelOperations;
@@ -130,7 +131,9 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     public void refreshList() {
         if (isNetworkAvailable()) {
             String apiLocationFormat = Constants.getApiLocation(mRoomName);
-            call = MachineService.getService().getMachineStatus(apiLocationFormat);
+            call = BuildConfig.DEBUG ?
+                    MachineService.getService().getMachineStatus_DEBUG(apiLocationFormat) :
+                    MachineService.getService().getMachineStatus(apiLocationFormat);
 
             call.enqueue(new Callback<ArrayList<Machine>>() {
                 @Override

@@ -25,4 +25,15 @@ public interface MachineAPI {
 
     @GET("/v2/locations")
     Call<List<Locations>> getLocations();
+
+    @GET("/v2-debug/location/{location}")
+    Call<ArrayList<Machine>> getMachineStatus_DEBUG(
+            @Path("location") String location
+    );
+
+    @GET("/v2-debug/location/all")
+    Call<Map<String,MachineList>> getAllMachines_DEBUG();
+
+    @GET("/v2-debug/locations")
+    Call<List<Locations>> getLocations_DEBUG();
 }
