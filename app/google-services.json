@@ -1,45 +1,42 @@
 {
   "project_info": {
-    "project_id": "purdue-laundry",
-    "project_number": "319853752038",
-    "name": "Purdue Laundry"
+    "project_number": "460656078713",
+    "firebase_url": "https://purdue-laundry-v2plus.firebaseio.com",
+    "project_id": "purdue-laundry-v2plus",
+    "storage_bucket": "purdue-laundry-v2plus.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:319853752038:android:8f701eb2e448deb2",
-        "client_id": "android:xyz.jhughes.laundry",
-        "client_type": 1,
+        "mobilesdk_app_id": "1:460656078713:android:8f701eb2e448deb2",
         "android_client_info": {
           "package_name": "xyz.jhughes.laundry"
         }
       },
-      "oauth_client": [],
-      "api_key": [],
+      "oauth_client": [
+        {
+          "client_id": "460656078713-svnp22f109n538hnu2h0b9km20hdeh2t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFUIU8eXzOD11oXsK1I26I99g-mZV1xpY"
+        }
+      ],
       "services": {
         "analytics_service": {
-          "status": 2,
-          "analytics_property": {
-            "tracking_id": "UA-71723014-1"
-          }
-        },
-        "cloud_messaging_service": {
-          "status": 1,
-          "apns_config": []
+          "status": 1
         },
         "appinvite_service": {
           "status": 1,
           "other_platform_oauth_client": []
         },
-        "google_signin_service": {
-          "status": 1
-        },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }
   ],
-  "client_info": [],
-  "ARTIFACT_VERSION": "1"
+  "configuration_version": "1"
 }
