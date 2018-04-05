@@ -15,13 +15,16 @@ android {
         applicationId "xyz.jhughes.laundry"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 19
-        versionName "2.6"
+        versionCode 20
+        versionName "2.7"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            debuggable false
         }
     }
     lintOptions {
