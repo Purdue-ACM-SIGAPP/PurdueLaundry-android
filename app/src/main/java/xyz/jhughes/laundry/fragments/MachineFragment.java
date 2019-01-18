@@ -24,12 +24,15 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import xyz.jhughes.laundry.AnalyticsApplication;
 import xyz.jhughes.laundry.BuildConfig;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
@@ -40,7 +43,8 @@ import xyz.jhughes.laundry.activities.LocationActivity;
 import xyz.jhughes.laundry.adapters.MachineAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.analytics.ScreenTrackedFragment;
-import xyz.jhughes.laundry.apiclient.MachineRepository;
+import xyz.jhughes.laundry.apiclient.MachineAPI;
+import xyz.jhughes.laundry.apiclient.MachineService;
 import xyz.jhughes.laundry.notificationhelpers.ScreenOrientationLockToggleListener;
 
 /**
@@ -61,6 +65,9 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     @BindView(R.id.machine_fragment_notify_button)
     Button notifyButton;
 
+    @Inject
+    MachineService machineService;
+
     private Unbinder unbinder;
 
     private boolean isRefreshing;
@@ -80,6 +87,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((AnalyticsApplication)getContext().getApplicationContext()).getAppComponent().inject(MachineFragment.this);
         progressDialog = new ProgressDialog(this.getContext());
         {
             if (!isRefreshing) {
@@ -132,8 +140,8 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
         if (isNetworkAvailable()) {
             String apiLocationFormat = Constants.getApiLocation(mRoomName);
             call = BuildConfig.DEBUG ?
-                    MachineRepository.getService().getMachineStatus_DEBUG(apiLocationFormat) :
-                    MachineRepository.getService().getMachineStatus(apiLocationFormat);
+                    machineService.getMachineStatus_DEBUG(apiLocationFormat) :
+                    machineService.getMachineStatus(apiLocationFormat);
 
             call.enqueue(new Callback<ArrayList<Machine>>() {
                 @Override

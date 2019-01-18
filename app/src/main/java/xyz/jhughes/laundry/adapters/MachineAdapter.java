@@ -18,6 +18,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
@@ -29,7 +31,8 @@ import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.LaundryParser.MachineStates;
 import xyz.jhughes.laundry.LaundryParser.MachineTypes;
 
-import xyz.jhughes.laundry.apiclient.MachineRepository;
+import xyz.jhughes.laundry.apiclient.MachineAPI;
+import xyz.jhughes.laundry.apiclient.MachineService;
 import xyz.jhughes.laundry.notificationhelpers.ScreenOrientationLockToggleListener;
 import xyz.jhughes.laundry.notificationhelpers.OnMachineChangedToInUse;
 import xyz.jhughes.laundry.R;
@@ -46,6 +49,9 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     private final ScreenOrientationLockToggleListener mOnOrientationlockListener;
     private ArrayList<Machine> currentMachines, allMachines;
     private Context mContext;
+
+    @Inject
+    MachineService machineService;
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public MachineAdapter(ArrayList<Machine> machines, Context context, Boolean dryers, String roomName, SnackbarPostListener listener, ScreenOrientationLockToggleListener mOnOrientationlockListener) {
@@ -248,8 +254,8 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                 AnalyticsHelper.sendEventHit("Automatic Timer", "Click", "Refresh");
                 String apiLocationFormat = Constants.getApiLocation(MachineAdapter.this.roomName);
                 Call<ArrayList<Machine>> call = BuildConfig.DEBUG ?
-                        MachineRepository.getService().getMachineStatus_DEBUG(apiLocationFormat) :
-                        MachineRepository.getService().getMachineStatus(apiLocationFormat);
+                        machineService.getMachineStatus_DEBUG(apiLocationFormat) :
+                        machineService.getMachineStatus(apiLocationFormat);
                 call.enqueue(new Callback<ArrayList<Machine>>() {
                     @Override
                     public void onResponse(Call<ArrayList<Machine>> call, Response<ArrayList<Machine>> response) {

@@ -28,11 +28,14 @@ import android.widget.TextView;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import xyz.jhughes.laundry.AnalyticsApplication;
 import xyz.jhughes.laundry.BuildConfig;
 import xyz.jhughes.laundry.LaundryParser.Location;
 import xyz.jhughes.laundry.LaundryParser.Locations;
@@ -43,7 +46,8 @@ import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.LocationAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.analytics.ScreenTrackedActivity;
-import xyz.jhughes.laundry.apiclient.MachineRepository;
+import xyz.jhughes.laundry.apiclient.MachineAPI;
+import xyz.jhughes.laundry.apiclient.MachineService;
 import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
 /**
@@ -65,6 +69,9 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     @BindView(R.id.location_error_button)
     Button errorButton;
 
+    @Inject
+    MachineService machineService;
+
     private LocationAdapter adapter;
 
     private boolean error = false;
@@ -80,6 +87,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((AnalyticsApplication)getApplication()).getAppComponent().inject(LocationActivity.this);
         setContentView(R.layout.activity_location);
         ButterKnife.bind(this);
 
@@ -151,8 +159,8 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     protected void getLaundryCall() {
 
         Call<Map<String, MachineList>> allMachineCall = BuildConfig.DEBUG ?
-                MachineRepository.getService().getAllMachines_DEBUG() :
-                MachineRepository.getService().getAllMachines();
+                machineService.getAllMachines_DEBUG() :
+                machineService.getAllMachines();
         allMachineCall.enqueue(new Callback<Map<String, MachineList>>() {
             @Override
             public void onResponse(Call<Map<String, MachineList>> call, Response<Map<String, MachineList>> response) {
@@ -208,8 +216,8 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
         hideErrorMessage();
         if (Rooms.getRoomsConstantsInstance().getListOfRooms() == null) {
             Call<List<Locations>> roomCall = BuildConfig.DEBUG ?
-                    MachineRepository.getService().getLocations_DEBUG() :
-                    MachineRepository.getService().getLocations();
+                    machineService.getLocations_DEBUG() :
+                    machineService.getLocations();
             roomCall.enqueue(new Callback<List<Locations>>() {
                 @Override
                 public void onResponse(Call<List<Locations>> call, Response<List<Locations>> response) {

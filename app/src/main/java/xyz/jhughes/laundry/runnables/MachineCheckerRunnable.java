@@ -4,6 +4,8 @@ import android.os.Handler;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -12,8 +14,9 @@ import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.LaundryParser.MachineStates;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
+import xyz.jhughes.laundry.apiclient.MachineAPI;
+import xyz.jhughes.laundry.apiclient.MachineService;
 import xyz.jhughes.laundry.notificationhelpers.OnMachineChangedToInUse;
-import xyz.jhughes.laundry.apiclient.MachineRepository;
 
 /**
  * Created by Slang on 3/2/2017.
@@ -28,6 +31,8 @@ public class MachineCheckerRunnable implements Runnable {
     private int timeout = 5;
     public static final int TIME = 60000; //How long between server pings
                                     //note that the first post delayed time is pulled from here
+    @Inject
+    MachineService machineService;
 
     public MachineCheckerRunnable(Machine m, String roomName, Handler handler, OnMachineChangedToInUse listener){
         this.listener = listener;
@@ -40,8 +45,8 @@ public class MachineCheckerRunnable implements Runnable {
     public void run() {
         String apiLocationFormat = Constants.getApiLocation(this.roomName);
         Call<ArrayList<Machine>> call = BuildConfig.DEBUG ?
-                MachineRepository.getService().getMachineStatus_DEBUG(apiLocationFormat) :
-                MachineRepository.getService().getMachineStatus(apiLocationFormat);
+                machineService.getMachineStatus_DEBUG(apiLocationFormat) :
+                machineService.getMachineStatus(apiLocationFormat);
         call.enqueue(new Callback<ArrayList<Machine>>() {
             @Override
             public void onResponse(Call<ArrayList<Machine>> call, Response<ArrayList<Machine>> response) {
