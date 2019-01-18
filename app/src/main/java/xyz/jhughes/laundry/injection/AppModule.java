@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import javax.inject.Singleton;
 
+import dagger.Module;
 import dagger.Provides;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -20,6 +21,7 @@ import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.apiclient.MachineService;
 import xyz.jhughes.laundry.apiclient.MachineRepository;
 
+@Module
 public class AppModule {
 
     @Provides

@@ -3,10 +3,10 @@ package xyz.jhughes.laundry.injection;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import xyz.jhughes.laundry.AnalyticsApplication;
+import xyz.jhughes.laundry.activities.LocationActivity;
 
 @Singleton
 @Component(modules = AppModule.class)
 public interface AppComponent {
-    void inject(AnalyticsApplication analyticsApplication);
+    void inject(LocationActivity locationActivity);
 }
