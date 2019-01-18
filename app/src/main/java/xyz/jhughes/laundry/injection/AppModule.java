@@ -1,11 +1,13 @@
-package xyz.jhughes.laundry.apiclient;
+package xyz.jhughes.laundry.injection;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-
 import java.io.IOException;
 
+import javax.inject.Singleton;
+
+import dagger.Provides;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -15,22 +17,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import xyz.jhughes.laundry.LaundryParser.MachineList;
 import xyz.jhughes.laundry.LaundryParser.MachineListDeserializer;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
+import xyz.jhughes.laundry.apiclient.MachineAPI;
+import xyz.jhughes.laundry.apiclient.MachineService;
 
+public class AppModule {
 
-/**
- * Singleton impl for the Machine API.
- */
-public class MachineService {
-    public static final String API_ROOT = "http://laundry-api.sigapp.club";
-    private static MachineAPI REST_CLIENT;
-
-    static {
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(MachineList.class, new MachineListDeserializer())
-                .create();
-
-        OkHttpClient okClient =
-                new OkHttpClient
+    @Provides
+    @Singleton
+    OkHttpClient providesOkHttpClient() {
+        return new OkHttpClient
                         .Builder()
                         .addInterceptor(new Interceptor() {
                             @Override
@@ -51,17 +46,19 @@ public class MachineService {
                             }
                         })
                         .build();
+    }
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .client(okClient)
-                .baseUrl(API_ROOT)
+    @Provides
+    @Singleton
+    MachineAPI providesMachineService(OkHttpClient okHttpClient) {
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(MachineList.class, new MachineListDeserializer())
+                .create();
+        return new Retrofit.Builder()
+                .client(okHttpClient)
+                .baseUrl(MachineService.API_ROOT)
                 .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-        REST_CLIENT = retrofit.create(MachineAPI.class);
+                .build()
+                .create(MachineAPI.class);
     }
-
-    public static MachineAPI getService() {
-        return REST_CLIENT;
-    }
-
 }

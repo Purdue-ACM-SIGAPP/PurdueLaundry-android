@@ -54,6 +54,7 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     // Additional dependencies
     implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.google.dagger:dagger:2.20'
 }
 
 apply plugin: 'com.google.gms.google-services'
