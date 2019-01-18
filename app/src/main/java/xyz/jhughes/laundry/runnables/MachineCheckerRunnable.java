@@ -13,7 +13,7 @@ import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.LaundryParser.MachineStates;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.notificationhelpers.OnMachineChangedToInUse;
-import xyz.jhughes.laundry.apiclient.MachineService;
+import xyz.jhughes.laundry.apiclient.MachineRepository;
 
 /**
  * Created by Slang on 3/2/2017.
@@ -40,8 +40,8 @@ public class MachineCheckerRunnable implements Runnable {
     public void run() {
         String apiLocationFormat = Constants.getApiLocation(this.roomName);
         Call<ArrayList<Machine>> call = BuildConfig.DEBUG ?
-                MachineService.getService().getMachineStatus_DEBUG(apiLocationFormat) :
-                MachineService.getService().getMachineStatus(apiLocationFormat);
+                MachineRepository.getService().getMachineStatus_DEBUG(apiLocationFormat) :
+                MachineRepository.getService().getMachineStatus(apiLocationFormat);
         call.enqueue(new Callback<ArrayList<Machine>>() {
             @Override
             public void onResponse(Call<ArrayList<Machine>> call, Response<ArrayList<Machine>> response) {

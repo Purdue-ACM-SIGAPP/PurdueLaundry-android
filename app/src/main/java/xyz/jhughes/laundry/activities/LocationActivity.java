@@ -25,8 +25,6 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.android.gms.analytics.HitBuilders;
-
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +36,6 @@ import retrofit2.Response;
 import xyz.jhughes.laundry.BuildConfig;
 import xyz.jhughes.laundry.LaundryParser.Location;
 import xyz.jhughes.laundry.LaundryParser.Locations;
-import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.LaundryParser.MachineList;
 import xyz.jhughes.laundry.LaundryParser.Rooms;
 import xyz.jhughes.laundry.ModelOperations;
@@ -46,7 +43,7 @@ import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.LocationAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.analytics.ScreenTrackedActivity;
-import xyz.jhughes.laundry.apiclient.MachineService;
+import xyz.jhughes.laundry.apiclient.MachineRepository;
 import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
 /**
@@ -154,8 +151,8 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     protected void getLaundryCall() {
 
         Call<Map<String, MachineList>> allMachineCall = BuildConfig.DEBUG ?
-                MachineService.getService().getAllMachines_DEBUG() :
-                MachineService.getService().getAllMachines();
+                MachineRepository.getService().getAllMachines_DEBUG() :
+                MachineRepository.getService().getAllMachines();
         allMachineCall.enqueue(new Callback<Map<String, MachineList>>() {
             @Override
             public void onResponse(Call<Map<String, MachineList>> call, Response<Map<String, MachineList>> response) {
@@ -211,8 +208,8 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
         hideErrorMessage();
         if (Rooms.getRoomsConstantsInstance().getListOfRooms() == null) {
             Call<List<Locations>> roomCall = BuildConfig.DEBUG ?
-                    MachineService.getService().getLocations_DEBUG() :
-                    MachineService.getService().getLocations();
+                    MachineRepository.getService().getLocations_DEBUG() :
+                    MachineRepository.getService().getLocations();
             roomCall.enqueue(new Callback<List<Locations>>() {
                 @Override
                 public void onResponse(Call<List<Locations>> call, Response<List<Locations>> response) {

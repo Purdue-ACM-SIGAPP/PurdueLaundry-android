@@ -17,8 +17,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import xyz.jhughes.laundry.LaundryParser.MachineList;
 import xyz.jhughes.laundry.LaundryParser.MachineListDeserializer;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
-import xyz.jhughes.laundry.apiclient.MachineAPI;
 import xyz.jhughes.laundry.apiclient.MachineService;
+import xyz.jhughes.laundry.apiclient.MachineRepository;
 
 public class AppModule {
 
@@ -50,15 +50,21 @@ public class AppModule {
 
     @Provides
     @Singleton
-    MachineAPI providesMachineService(OkHttpClient okHttpClient) {
+    MachineService providesMachineService(OkHttpClient okHttpClient) {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(MachineList.class, new MachineListDeserializer())
                 .create();
         return new Retrofit.Builder()
                 .client(okHttpClient)
-                .baseUrl(MachineService.API_ROOT)
+                .baseUrl(MachineRepository.API_ROOT)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build()
-                .create(MachineAPI.class);
+                .create(MachineService.class);
+    }
+
+    @Provides
+    @Singleton
+    MachineRepository providesMachineRepository(MachineService machineService) {
+        return new MachineRepository(machineService);
     }
 }

@@ -29,7 +29,7 @@ import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.LaundryParser.MachineStates;
 import xyz.jhughes.laundry.LaundryParser.MachineTypes;
 
-import xyz.jhughes.laundry.apiclient.MachineService;
+import xyz.jhughes.laundry.apiclient.MachineRepository;
 import xyz.jhughes.laundry.notificationhelpers.ScreenOrientationLockToggleListener;
 import xyz.jhughes.laundry.notificationhelpers.OnMachineChangedToInUse;
 import xyz.jhughes.laundry.R;
@@ -248,8 +248,8 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                 AnalyticsHelper.sendEventHit("Automatic Timer", "Click", "Refresh");
                 String apiLocationFormat = Constants.getApiLocation(MachineAdapter.this.roomName);
                 Call<ArrayList<Machine>> call = BuildConfig.DEBUG ?
-                        MachineService.getService().getMachineStatus_DEBUG(apiLocationFormat) :
-                        MachineService.getService().getMachineStatus(apiLocationFormat);
+                        MachineRepository.getService().getMachineStatus_DEBUG(apiLocationFormat) :
+                        MachineRepository.getService().getMachineStatus(apiLocationFormat);
                 call.enqueue(new Callback<ArrayList<Machine>>() {
                     @Override
                     public void onResponse(Call<ArrayList<Machine>> call, Response<ArrayList<Machine>> response) {

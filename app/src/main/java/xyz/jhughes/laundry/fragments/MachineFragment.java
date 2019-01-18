@@ -40,7 +40,7 @@ import xyz.jhughes.laundry.activities.LocationActivity;
 import xyz.jhughes.laundry.adapters.MachineAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.analytics.ScreenTrackedFragment;
-import xyz.jhughes.laundry.apiclient.MachineService;
+import xyz.jhughes.laundry.apiclient.MachineRepository;
 import xyz.jhughes.laundry.notificationhelpers.ScreenOrientationLockToggleListener;
 
 /**
@@ -132,8 +132,8 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
         if (isNetworkAvailable()) {
             String apiLocationFormat = Constants.getApiLocation(mRoomName);
             call = BuildConfig.DEBUG ?
-                    MachineService.getService().getMachineStatus_DEBUG(apiLocationFormat) :
-                    MachineService.getService().getMachineStatus(apiLocationFormat);
+                    MachineRepository.getService().getMachineStatus_DEBUG(apiLocationFormat) :
+                    MachineRepository.getService().getMachineStatus(apiLocationFormat);
 
             call.enqueue(new Callback<ArrayList<Machine>>() {
                 @Override
