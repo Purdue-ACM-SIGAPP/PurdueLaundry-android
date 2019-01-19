@@ -3,6 +3,7 @@ package xyz.jhughes.laundry.runnables;
 import android.os.Handler;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -32,7 +33,7 @@ public class MachineCheckerRunnable implements Runnable {
     public static final int TIME = 60000; //How long between server pings
                                     //note that the first post delayed time is pulled from here
     @Inject
-    MachineService machineService;
+    MachineAPI machineAPI;
 
     public MachineCheckerRunnable(Machine m, String roomName, Handler handler, OnMachineChangedToInUse listener){
         this.listener = listener;
@@ -43,14 +44,12 @@ public class MachineCheckerRunnable implements Runnable {
 
     @Override
     public void run() {
-        String apiLocationFormat = Constants.getApiLocation(this.roomName);
-        Call<ArrayList<Machine>> call = BuildConfig.DEBUG ?
-                machineService.getMachineStatus_DEBUG(apiLocationFormat) :
-                machineService.getMachineStatus(apiLocationFormat);
-        call.enqueue(new Callback<ArrayList<Machine>>() {
+        String location = Constants.getApiLocation(this.roomName);
+        Call<List<Machine>> call = machineAPI.getMachineStatus(location);
+        call.enqueue(new Callback<List<Machine>>() {
             @Override
-            public void onResponse(Call<ArrayList<Machine>> call, Response<ArrayList<Machine>> response) {
-                ArrayList<Machine> body = response.body();
+            public void onResponse(Call<List<Machine>> call, Response<List<Machine>> response) {
+                List<Machine> body = response.body();
                 if (body.contains(m)){
                     Machine m2 = body.get(body.indexOf(m));
                     if (m2.getStatus().equals(MachineStates.IN_USE)){
@@ -68,7 +67,7 @@ public class MachineCheckerRunnable implements Runnable {
             }
 
             @Override
-            public void onFailure(Call<ArrayList<Machine>> call, Throwable t) {
+            public void onFailure(Call<List<Machine>> call, Throwable t) {
                 //continue trying with next ping in background
                 timeout--;
                 if (timeout > 0) {

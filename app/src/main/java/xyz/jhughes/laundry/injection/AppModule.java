@@ -66,7 +66,7 @@ public class AppModule {
 
     @Provides
     @Singleton
-    MachineAPI providesMachineRepository(MachineService machineService) {
+    MachineAPI providesMachineAPI(MachineService machineService) {
         return new MachineAPI(machineService);
     }
 }

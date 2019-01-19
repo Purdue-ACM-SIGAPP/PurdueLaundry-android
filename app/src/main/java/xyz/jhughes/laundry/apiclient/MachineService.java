@@ -7,7 +7,7 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
-import xyz.jhughes.laundry.LaundryParser.Locations;
+import xyz.jhughes.laundry.LaundryParser.LocationResponse;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.LaundryParser.MachineList;
 
@@ -16,24 +16,24 @@ import xyz.jhughes.laundry.LaundryParser.MachineList;
  */
 public interface MachineService {
     @GET("/v2/location/{location}")
-    Call<ArrayList<Machine>> getMachineStatus(
+    Call<List<Machine>> getMachineStatus(
+            @Path("location") String location
+    );
+
+    @GET("/v2-debug/location/{location}")
+    Call<List<Machine>> getMachineStatus_DEBUG(
             @Path("location") String location
     );
 
     @GET("/v2/location/all")
     Call<Map<String,MachineList>> getAllMachines();
 
-    @GET("/v2/locations")
-    Call<List<Locations>> getLocations();
-
-    @GET("/v2-debug/location/{location}")
-    Call<ArrayList<Machine>> getMachineStatus_DEBUG(
-            @Path("location") String location
-    );
-
     @GET("/v2-debug/location/all")
     Call<Map<String,MachineList>> getAllMachines_DEBUG();
 
+    @GET("/v2/locations")
+    Call<List<LocationResponse>> getLocations();
+
     @GET("/v2-debug/locations")
-    Call<List<Locations>> getLocations_DEBUG();
+    Call<List<LocationResponse>> getLocations_DEBUG();
 }

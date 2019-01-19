@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -44,7 +45,6 @@ import xyz.jhughes.laundry.adapters.MachineAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.analytics.ScreenTrackedFragment;
 import xyz.jhughes.laundry.apiclient.MachineAPI;
-import xyz.jhughes.laundry.apiclient.MachineService;
 import xyz.jhughes.laundry.notificationhelpers.ScreenOrientationLockToggleListener;
 
 /**
@@ -52,7 +52,7 @@ import xyz.jhughes.laundry.notificationhelpers.ScreenOrientationLockToggleListen
  */
 public class MachineFragment extends ScreenTrackedFragment implements SwipeRefreshLayout.OnRefreshListener, SnackbarPostListener, ScreenOrientationLockToggleListener {
 
-    private ArrayList<Machine> classMachines;
+    private List<Machine> classMachines;
 
     private MachineAdapter currentAdapter;
 
@@ -66,7 +66,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     Button notifyButton;
 
     @Inject
-    MachineService machineService;
+    MachineAPI machineAPI;
 
     private Unbinder unbinder;
 
@@ -78,7 +78,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
 
     private String mRoomName;
 
-    private Call<ArrayList<Machine>> call = null;
+    private Call<List<Machine>> call = null;
 
     public MachineFragment() {
         // Required empty public constructor
@@ -138,14 +138,12 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
 
     public void refreshList() {
         if (isNetworkAvailable()) {
-            String apiLocationFormat = Constants.getApiLocation(mRoomName);
-            call = BuildConfig.DEBUG ?
-                    machineService.getMachineStatus_DEBUG(apiLocationFormat) :
-                    machineService.getMachineStatus(apiLocationFormat);
+            String location = Constants.getApiLocation(mRoomName);
+            call = machineAPI.getMachineStatus(location);
 
-            call.enqueue(new Callback<ArrayList<Machine>>() {
+            call.enqueue(new Callback<List<Machine>>() {
                 @Override
-                public void onResponse(Call<ArrayList<Machine>> call, Response<ArrayList<Machine>> response) {
+                public void onResponse(Call<List<Machine>> call, Response<List<Machine>> response) {
                     if (progressDialog.isShowing()) {
                         progressDialog.dismiss();
                     }
@@ -175,7 +173,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                 }
 
                 @Override
-                public void onFailure(Call<ArrayList<Machine>> call, Throwable t) {
+                public void onFailure(Call<List<Machine>> call, Throwable t) {
 
                     if (call.isCanceled()) {
                         return;
