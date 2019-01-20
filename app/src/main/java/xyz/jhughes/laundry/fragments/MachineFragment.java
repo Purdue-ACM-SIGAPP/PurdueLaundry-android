@@ -174,7 +174,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     }
 
     public void updateRecyclerView() {
-        MachineAdapter adapter = new MachineAdapter(classMachines, getContext().getApplicationContext(), isDryers, mRoomName, MachineFragment.this, MachineFragment.this);
+        MachineAdapter adapter = new MachineAdapter(classMachines, getContext(), isDryers, mRoomName, MachineFragment.this, MachineFragment.this);
         binding.dryerMachinesRecyclerView.setAdapter(adapter);
         currentAdapter = adapter;
 

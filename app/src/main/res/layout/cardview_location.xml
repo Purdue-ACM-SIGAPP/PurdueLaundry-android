@@ -96,7 +96,7 @@
                         android:layout_toRightOf="@id/text_view_washer_count"
                         android:textColor="@android:color/holo_blue_dark"
                         android:textSize="18sp"
-                        android:text="@{String.valueOf(location.getTotalWasherCount())}"/>
+                        android:text="@{'/' + String.valueOf(location.getTotalWasherCount())}"/>
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -145,7 +145,7 @@
                         android:layout_toRightOf="@id/text_view_dryer_count"
                         android:textColor="@android:color/holo_blue_dark"
                         android:textSize="18sp"
-                        android:text="@{String.valueOf(location.getTotalDryerCount())}"/>
+                        android:text="@{'/' + String.valueOf(location.getTotalDryerCount())}"/>
 
                     <ImageView
                         android:layout_width="wrap_content"
