@@ -3,29 +3,25 @@ package xyz.jhughes.laundry.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.BaseTransientBottomBar;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.NavUtils;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Switch;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.AppSectionsPagerAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.analytics.ScreenTrackedActivity;
+import xyz.jhughes.laundry.databinding.ActivityMachineBinding;
 import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
 /**
@@ -40,18 +36,10 @@ public class MachineActivity extends ScreenTrackedActivity {
      */
     private static final int ONBOARDING_COUNTDOWN = 5;
 
+    private ActivityMachineBinding binding;
+
     private String currentRoom;
     private AppSectionsPagerAdapter appSectionsPagerAdapter;
-
-    @BindView(R.id.viewpager)
-    ViewPager viewPager;
-    @BindView(R.id.sliding_tabs)
-    TabLayout tabLayout;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-
-    @BindView(R.id.main_content)
-    CoordinatorLayout mMainContent;
 
     Snackbar filterWarningBar;
 
@@ -68,8 +56,7 @@ public class MachineActivity extends ScreenTrackedActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_machine);
-        ButterKnife.bind(this);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_machine);
 
         if (getIntent().getExtras() == null ||
                 getIntent().getExtras().get("locationName") == null) {
@@ -104,7 +91,7 @@ public class MachineActivity extends ScreenTrackedActivity {
         if (numberOfTimesToShowOnboarding > 0) {
             //show onboarding snackbar.
             mOnboardingSnackbar = Snackbar
-                    .make(mMainContent,
+                    .make(binding.mainContent,
                             "Tap a running machine to be notified when it finishes.",
                             Snackbar.LENGTH_INDEFINITE)
                     .addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
@@ -165,7 +152,7 @@ public class MachineActivity extends ScreenTrackedActivity {
         }
 
         if (filterWarningBar == null) {
-            filterWarningBar = Snackbar.make(mMainContent, "Only showing available machines.", Snackbar.LENGTH_INDEFINITE)
+            filterWarningBar = Snackbar.make(binding.mainContent, "Only showing available machines.", Snackbar.LENGTH_INDEFINITE)
                     .setAction("Show all", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -190,13 +177,13 @@ public class MachineActivity extends ScreenTrackedActivity {
 
     private void setUpViewPager() {
         appSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager(), currentRoom);
-        viewPager.setAdapter(appSectionsPagerAdapter);
-        tabLayout.setupWithViewPager(viewPager);
+        binding.viewpager.setAdapter(appSectionsPagerAdapter);
+        binding.slidingTabs.setupWithViewPager(binding.viewpager);
     }
 
     private void initToolbar() {
-        toolbar.setTitle(currentRoom);
-        setSupportActionBar(toolbar);
+        binding.toolbar.setTitle(currentRoom);
+        setSupportActionBar(binding.toolbar);
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);

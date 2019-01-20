@@ -24,7 +24,6 @@ import android.view.View;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -65,7 +64,6 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding =  DataBindingUtil.setContentView(this, R.layout.activity_location);
-        ButterKnife.bind(this);
 
         String msg;
         if ((msg = getIntent().getStringExtra("error")) != null) {
