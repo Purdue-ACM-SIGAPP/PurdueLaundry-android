@@ -12,6 +12,7 @@ import xyz.jhughes.laundry.injection.DaggerAppComponent;
  * Base activity for the app.
  * <p>
  * It handles initializing the Analytics tracker.
+ * </p>
  */
 public class AnalyticsApplication extends Application {
     private AppComponent appComponent;
