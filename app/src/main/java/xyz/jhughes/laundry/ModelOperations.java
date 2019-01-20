@@ -6,11 +6,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-import xyz.jhughes.laundry.LaundryParser.Location;
-import xyz.jhughes.laundry.LaundryParser.Machine;
-import xyz.jhughes.laundry.LaundryParser.MachineList;
-import xyz.jhughes.laundry.LaundryParser.MachineStates;
-import xyz.jhughes.laundry.LaundryParser.MachineTypes;
+import xyz.jhughes.laundry.laundryparser.Location;
+import xyz.jhughes.laundry.laundryparser.Machine;
+import xyz.jhughes.laundry.laundryparser.MachineList;
+import xyz.jhughes.laundry.laundryparser.MachineStates;
+import xyz.jhughes.laundry.laundryparser.MachineTypes;
 
 public class ModelOperations {
     public static boolean machinesOffline(List<Machine> machines) {

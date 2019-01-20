@@ -16,7 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Switch;
 
-import xyz.jhughes.laundry.LaundryParser.Constants;
+import xyz.jhughes.laundry.laundryparser.Constants;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.AppSectionsPagerAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;

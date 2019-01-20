@@ -1,4 +1,4 @@
-package xyz.jhughes.laundry.LaundryParser;
+package xyz.jhughes.laundry.laundryparser;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -10,7 +10,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
@@ -20,19 +19,15 @@ import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
 
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import xyz.jhughes.laundry.BuildConfig;
-import xyz.jhughes.laundry.LaundryParser.Constants;
-import xyz.jhughes.laundry.LaundryParser.Machine;
+import xyz.jhughes.laundry.laundryparser.Constants;
+import xyz.jhughes.laundry.laundryparser.Machine;
 import xyz.jhughes.laundry.ModelOperations;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.SnackbarPostListener;
@@ -44,9 +39,6 @@ import xyz.jhughes.laundry.apiclient.MachineService;
 import xyz.jhughes.laundry.databinding.FragmentMachineBinding;
 import xyz.jhughes.laundry.notificationhelpers.ScreenOrientationLockToggleListener;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class MachineFragment extends ScreenTrackedFragment implements SwipeRefreshLayout.OnRefreshListener, SnackbarPostListener, ScreenOrientationLockToggleListener {
 
     private FragmentMachineBinding binding;

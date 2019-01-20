@@ -24,10 +24,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import xyz.jhughes.laundry.BuildConfig;
-import xyz.jhughes.laundry.LaundryParser.Constants;
-import xyz.jhughes.laundry.LaundryParser.Machine;
-import xyz.jhughes.laundry.LaundryParser.MachineStates;
-import xyz.jhughes.laundry.LaundryParser.MachineTypes;
+import xyz.jhughes.laundry.laundryparser.Constants;
+import xyz.jhughes.laundry.laundryparser.Machine;
+import xyz.jhughes.laundry.laundryparser.MachineStates;
+import xyz.jhughes.laundry.laundryparser.MachineTypes;
 
 import xyz.jhughes.laundry.apiclient.MachineService;
 import xyz.jhughes.laundry.notificationhelpers.ScreenOrientationLockToggleListener;

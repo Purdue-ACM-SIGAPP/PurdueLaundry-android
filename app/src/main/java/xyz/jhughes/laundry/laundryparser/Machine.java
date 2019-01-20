@@ -1,4 +1,4 @@
-package xyz.jhughes.laundry.LaundryParser;
+package xyz.jhughes.laundry.laundryparser;
 
 import com.google.gson.Gson;
 

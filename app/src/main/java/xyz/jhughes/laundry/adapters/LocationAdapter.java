@@ -1,27 +1,20 @@
 package xyz.jhughes.laundry.adapters;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v7.widget.CardView;
+import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import xyz.jhughes.laundry.LaundryParser.Constants;
-import xyz.jhughes.laundry.LaundryParser.Location;
-import xyz.jhughes.laundry.ModelOperations;
+import xyz.jhughes.laundry.laundryparser.Constants;
+import xyz.jhughes.laundry.laundryparser.Location;
 import xyz.jhughes.laundry.R;
-import xyz.jhughes.laundry.activities.MachineActivity;
+import xyz.jhughes.laundry.databinding.CardviewLocationBinding;
 
 public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHolder> {
 
@@ -37,10 +30,9 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // create a new view
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_location, parent, false);
+        CardviewLocationBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.cardview_location, parent, false);
         // set the view's size, margins, paddings and layout parameters
-        return new ViewHolder(v);
+        return new ViewHolder(binding);
     }
 
     @Override
@@ -50,7 +42,8 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         final Location location = mDataset.get(position);
         final String locationName = Constants.getLocationName(location.getLocationName());
         boolean isOffline = location.getMachineList().isOffline();
-        holder.textViewOffline.setVisibility(View.GONE);
+        holder.binding.setLocation(location);
+        /*holder.textViewOffline.setVisibility(View.GONE);
         if (isOffline) {
             holder.cardView.setAlpha((float) 0.6);
             holder.washerAvailableCount.setVisibility(View.GONE);
@@ -78,7 +71,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(intent);
             }
-        });
+        });*/
     }
 
     @Override
@@ -87,31 +80,11 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
-        @BindView(R.id.card_view)
-        CardView cardView;
-        @BindView(R.id.image_view_location)
-        ImageView imageView;
-        @BindView(R.id.text_view_location_name)
-        TextView location;
-        @BindView(R.id.text_view_washer_count)
-        TextView washerAvailableCount;
-        @BindView(R.id.text_view_washer_total)
-        TextView washerTotalCount;
-        @BindView(R.id.text_view_dryer_count)
-        TextView dryerAvailableCount;
-        @BindView(R.id.text_view_dryer_total)
-        TextView dryerTotalCount;
-        @BindView(R.id.text_view_washer)
-        TextView textViewWasher;
-        @BindView(R.id.text_view_dryer)
-        TextView textViewDryer;
-        @BindView(R.id.text_view_offline)
-        TextView textViewOffline;
+        CardviewLocationBinding binding;
 
-        private ViewHolder(View v) {
-            super(v);
-            ButterKnife.bind(this, v);
+        private ViewHolder(CardviewLocationBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
     }
 
