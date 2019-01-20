@@ -26,20 +26,17 @@ import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import xyz.jhughes.laundry.BuildConfig;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.LaundryParser.MachineStates;
 import xyz.jhughes.laundry.LaundryParser.MachineTypes;
-
-import xyz.jhughes.laundry.apiclient.MachineAPI;
-import xyz.jhughes.laundry.apiclient.MachineService;
-import xyz.jhughes.laundry.notificationhelpers.ScreenOrientationLockToggleListener;
-import xyz.jhughes.laundry.notificationhelpers.OnMachineChangedToInUse;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.SnackbarPostListener;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
+import xyz.jhughes.laundry.apiclient.MachineAPI;
 import xyz.jhughes.laundry.notificationhelpers.NotificationCreator;
+import xyz.jhughes.laundry.notificationhelpers.OnMachineChangedToInUse;
+import xyz.jhughes.laundry.notificationhelpers.ScreenOrientationLockToggleListener;
 import xyz.jhughes.laundry.runnables.MachineCheckerRunnable;
 import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
