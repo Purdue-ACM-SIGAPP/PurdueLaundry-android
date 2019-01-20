@@ -11,6 +11,9 @@ repositories {
 android {
     compileSdkVersion 27
     buildToolsVersion '27.0.3'
+    dataBinding {
+        enabled = true
+    }
     defaultConfig {
         applicationId "xyz.jhughes.laundry"
         minSdkVersion 19
