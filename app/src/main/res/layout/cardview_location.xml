@@ -83,6 +83,7 @@
                         android:layout_above="@id/text_view_washer"
                         android:textColor="@android:color/holo_blue_dark"
                         android:textSize="30sp"
+                        android:text="@{String.valueOf(location.getAvailableWasherCount())}"
                         android:typeface="normal" />
 
                     <TextView
@@ -94,7 +95,8 @@
                         android:layout_toEndOf="@id/text_view_washer_count"
                         android:layout_toRightOf="@id/text_view_washer_count"
                         android:textColor="@android:color/holo_blue_dark"
-                        android:textSize="18sp" />
+                        android:textSize="18sp"
+                        android:text="@{String.valueOf(location.getTotalWasherCount())}"/>
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -130,6 +132,7 @@
                         android:layout_above="@id/text_view_dryer"
                         android:textColor="@android:color/holo_blue_dark"
                         android:textSize="30sp"
+                        android:text="@{String.valueOf(location.getAvailableDryerCount())}"
                         android:typeface="normal" />
 
                     <TextView
@@ -141,7 +144,8 @@
                         android:layout_toEndOf="@id/text_view_dryer_count"
                         android:layout_toRightOf="@id/text_view_dryer_count"
                         android:textColor="@android:color/holo_blue_dark"
-                        android:textSize="18sp" />
+                        android:textSize="18sp"
+                        android:text="@{String.valueOf(location.getTotalDryerCount())}"/>
 
                     <ImageView
                         android:layout_width="wrap_content"

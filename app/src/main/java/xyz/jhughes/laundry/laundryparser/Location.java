@@ -1,6 +1,8 @@
 package xyz.jhughes.laundry.laundryparser;
 
 
+import java.util.List;
+
 public class Location {
 
     private String locationName;
@@ -25,5 +27,41 @@ public class Location {
     public Location(String locationName, MachineList machineList){
         this.locationName = locationName;
         this.machineList = machineList;
+    }
+
+    public int getTotalWasherCount() {
+        return getTotalMachineCount(MachineTypes.WASHER);
+    }
+
+    public int getAvailableWasherCount() {
+        return getAvailableMachineCount(MachineTypes.WASHER);
+    }
+
+    public int getTotalDryerCount() {
+        return getTotalMachineCount(MachineTypes.DRYER);
+    }
+
+    public int getAvailableDryerCount() {
+        return getAvailableMachineCount(MachineTypes.DRYER);
+    }
+
+    private int getTotalMachineCount(String machineType) {
+        int dryers = 0;
+        for (Machine machine: this.machineList.getMachines()) {
+            if (machine.getType().equals(machineType)) {
+                dryers++;
+            }
+        }
+        return dryers;
+    }
+
+    private int getAvailableMachineCount(String machineType) {
+        int availableDryers = 0;
+        for (Machine machine: this.machineList.getMachines()) {
+            if (machine.getType().equals(machineType) && machine.getStatus().equals(MachineStates.AVAILABLE)) {
+                availableDryers++;
+            }
+        }
+        return availableDryers;
     }
 }

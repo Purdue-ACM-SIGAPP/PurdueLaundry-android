@@ -49,31 +49,4 @@ public class ModelOperations {
         });
         return locations;
     }
-
-    public static Integer[] getAvailableCounts(List<Machine> machines){
-        final Integer[] countArray = new Integer[4];
-        for (int i = 0; i < 4; i++) {
-            countArray[i] = 0;
-        }
-        for (Machine machine : machines) {
-            if (machine.getType().equals(MachineTypes.DRYER)) {
-                //Increments Total Dryer Count For Specific Place
-                countArray[0] = countArray[0] + 1;
-                if (machine.getStatus().equals(MachineStates.AVAILABLE)) {
-                    //Increments Available Dryer Count For Specific Place
-                    countArray[1] = countArray[1] + 1;
-                }
-            } else {
-                //Increments Total Washer Count For Specific Place
-                countArray[2] = countArray[2] + 1;
-                if (machine.getStatus().equals(MachineStates.AVAILABLE)) {
-                    //Increments Available Washer Count For Specific Place
-                    countArray[3] = countArray[3] + 1;
-                }
-            }
-        }
-        return countArray;
-    }
-
-
 }
