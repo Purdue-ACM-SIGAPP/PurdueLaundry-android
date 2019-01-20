@@ -7,9 +7,9 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
-import xyz.jhughes.laundry.LaundryParser.Locations;
-import xyz.jhughes.laundry.LaundryParser.Machine;
-import xyz.jhughes.laundry.LaundryParser.MachineList;
+import xyz.jhughes.laundry.laundryparser.Locations;
+import xyz.jhughes.laundry.laundryparser.Machine;
+import xyz.jhughes.laundry.laundryparser.MachineList;
 
 /**
  * Retrofit interface for the Machine API.

@@ -1,46 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_margin="1dp"
-    android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/card_view"
+    <data>
+        <variable
+            name="machine"
+            type="xyz.jhughes.laundry.laundryparser.Machine"/>
+    </data>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card_view:cardBackgroundColor="@color/bgGray"
-        card_view:cardCornerRadius="3dp"
-        card_view:cardPreventCornerOverlap="false"
-        card_view:cardUseCompatPadding="true">
+        android:layout_margin="1dp"
+        android:orientation="vertical">
 
-        <RelativeLayout
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="16dp">
+            android:layout_height="wrap_content"
+            card_view:cardBackgroundColor="@color/bgGray"
+            card_view:cardCornerRadius="3dp"
+            card_view:cardPreventCornerOverlap="false"
+            card_view:cardUseCompatPadding="true">
 
-            <TextView
-                android:id="@+id/machine_name_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                tools:text="Dryer 014"
-                android:textColor="@color/transparentWhite"
-                android:textSize="12sp" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="16dp">
 
-            <TextView
-                android:id="@+id/machine_status_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/machine_name_text_view"
-                android:layout_marginTop="-2dp"
-                android:maxLines="1"
-                tools:text="In use"
-                android:textColor="@color/white"
-                android:textSize="20dp" />
-        </RelativeLayout>
-    </android.support.v7.widget.CardView>
-</LinearLayout>
+                <TextView
+                    android:id="@+id/machine_name_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:textColor="@color/transparentWhite"
+                    android:textSize="12sp"
+                    android:text="@{machine.name}"
+                    tools:text="Dryer 014" />
+
+                <TextView
+                    android:id="@+id/machine_status_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/machine_name_text_view"
+                    android:layout_marginTop="-2dp"
+                    android:maxLines="1"
+                    android:textColor="@color/white"
+                    android:textSize="20dp"
+                    tools:text="In use" />
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+</layout>

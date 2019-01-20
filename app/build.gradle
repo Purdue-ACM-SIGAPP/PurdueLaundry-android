@@ -10,6 +10,9 @@ repositories {
 
 android {
     compileSdkVersion 28
+    dataBinding {
+        enabled = true
+    }
     defaultConfig {
         applicationId "xyz.jhughes.laundry"
         minSdkVersion 19
@@ -48,9 +51,6 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     // Image rendering.
     implementation 'com.squareup.picasso:picasso:2.5.2'
-    // Butterknife for view binding
-    implementation 'com.jakewharton:butterknife:8.8.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     // Additional dependencies
     implementation 'com.google.code.gson:gson:2.8.2'
 }

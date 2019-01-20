@@ -1,4 +1,4 @@
-package xyz.jhughes.laundry.LaundryParser;
+package xyz.jhughes.laundry.laundryparser;
 
 /*
  * Created by tylorgarrett on 8/24/15.
