@@ -1,6 +1,6 @@
 package xyz.jhughes.laundry.analytics;
 
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 /**
  * A way to cleanly track the screen view of a fragment.

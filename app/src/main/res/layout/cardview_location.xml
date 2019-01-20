@@ -7,7 +7,7 @@
             type="xyz.jhughes.laundry.laundryparser.Location"/>
     </data>
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -157,5 +157,5 @@
                 </RelativeLayout>
             </RelativeLayout>
         </LinearLayout>
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 </layout>
