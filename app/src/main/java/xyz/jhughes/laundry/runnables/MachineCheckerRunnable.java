@@ -2,18 +2,19 @@ package xyz.jhughes.laundry.runnables;
 
 import android.os.Handler;
 
-import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import xyz.jhughes.laundry.BuildConfig;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.LaundryParser.MachineStates;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
+import xyz.jhughes.laundry.apiclient.MachineAPI;
 import xyz.jhughes.laundry.notificationhelpers.OnMachineChangedToInUse;
-import xyz.jhughes.laundry.apiclient.MachineService;
 
 /**
  * Created by Slang on 3/2/2017.
@@ -28,6 +29,8 @@ public class MachineCheckerRunnable implements Runnable {
     private int timeout = 5;
     public static final int TIME = 60000; //How long between server pings
                                     //note that the first post delayed time is pulled from here
+    @Inject
+    MachineAPI machineAPI;
 
     public MachineCheckerRunnable(Machine m, String roomName, Handler handler, OnMachineChangedToInUse listener){
         this.listener = listener;
@@ -38,14 +41,12 @@ public class MachineCheckerRunnable implements Runnable {
 
     @Override
     public void run() {
-        String apiLocationFormat = Constants.getApiLocation(this.roomName);
-        Call<ArrayList<Machine>> call = BuildConfig.DEBUG ?
-                MachineService.getService().getMachineStatus_DEBUG(apiLocationFormat) :
-                MachineService.getService().getMachineStatus(apiLocationFormat);
-        call.enqueue(new Callback<ArrayList<Machine>>() {
+        String location = Constants.getApiLocation(this.roomName);
+        Call<List<Machine>> call = machineAPI.getMachineStatus(location);
+        call.enqueue(new Callback<List<Machine>>() {
             @Override
-            public void onResponse(Call<ArrayList<Machine>> call, Response<ArrayList<Machine>> response) {
-                ArrayList<Machine> body = response.body();
+            public void onResponse(Call<List<Machine>> call, Response<List<Machine>> response) {
+                List<Machine> body = response.body();
                 if (body.contains(m)){
                     Machine m2 = body.get(body.indexOf(m));
                     if (m2.getStatus().equals(MachineStates.IN_USE)){
@@ -63,7 +64,7 @@ public class MachineCheckerRunnable implements Runnable {
             }
 
             @Override
-            public void onFailure(Call<ArrayList<Machine>> call, Throwable t) {
+            public void onFailure(Call<List<Machine>> call, Throwable t) {
                 //continue trying with next ping in background
                 timeout--;
                 if (timeout > 0) {

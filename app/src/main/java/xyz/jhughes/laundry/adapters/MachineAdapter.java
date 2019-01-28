@@ -17,25 +17,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import xyz.jhughes.laundry.BuildConfig;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.LaundryParser.MachineStates;
 import xyz.jhughes.laundry.LaundryParser.MachineTypes;
-
-import xyz.jhughes.laundry.apiclient.MachineService;
-import xyz.jhughes.laundry.notificationhelpers.ScreenOrientationLockToggleListener;
-import xyz.jhughes.laundry.notificationhelpers.OnMachineChangedToInUse;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.SnackbarPostListener;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
+import xyz.jhughes.laundry.apiclient.MachineAPI;
 import xyz.jhughes.laundry.notificationhelpers.NotificationCreator;
+import xyz.jhughes.laundry.notificationhelpers.OnMachineChangedToInUse;
+import xyz.jhughes.laundry.notificationhelpers.ScreenOrientationLockToggleListener;
 import xyz.jhughes.laundry.runnables.MachineCheckerRunnable;
 import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
@@ -44,11 +45,14 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
     private final String roomName;
     private final SnackbarPostListener listener;
     private final ScreenOrientationLockToggleListener mOnOrientationlockListener;
-    private ArrayList<Machine> currentMachines, allMachines;
+    private List<Machine> currentMachines, allMachines;
     private Context mContext;
 
+    @Inject
+    MachineAPI machineAPI;
+
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MachineAdapter(ArrayList<Machine> machines, Context context, Boolean dryers, String roomName, SnackbarPostListener listener, ScreenOrientationLockToggleListener mOnOrientationlockListener) {
+    public MachineAdapter(List<Machine> machines, Context context, Boolean dryers, String roomName, SnackbarPostListener listener, ScreenOrientationLockToggleListener mOnOrientationlockListener) {
         this.mContext = context;
         this.roomName = roomName;
         this.listener = listener;
@@ -68,7 +72,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         filter(dryers, filterByAvailable, machines);
     }
 
-    private void filter(boolean dryers, boolean available, ArrayList<Machine> machines) {
+    private void filter(boolean dryers, boolean available, List<Machine> machines) {
         for (Machine m : machines) {
             if (dryers != m.getType().equals(MachineTypes.DRYER)) continue;
             allMachines.add(m);
@@ -247,13 +251,11 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
             public void onClick(View v) {
                 AnalyticsHelper.sendEventHit("Automatic Timer", "Click", "Refresh");
                 String apiLocationFormat = Constants.getApiLocation(MachineAdapter.this.roomName);
-                Call<ArrayList<Machine>> call = BuildConfig.DEBUG ?
-                        MachineService.getService().getMachineStatus_DEBUG(apiLocationFormat) :
-                        MachineService.getService().getMachineStatus(apiLocationFormat);
-                call.enqueue(new Callback<ArrayList<Machine>>() {
+                Call<List<Machine>> call = machineAPI.getMachineStatus(apiLocationFormat);
+                call.enqueue(new Callback<List<Machine>>() {
                     @Override
-                    public void onResponse(Call<ArrayList<Machine>> call, Response<ArrayList<Machine>> response) {
-                        ArrayList<Machine> body = response.body();
+                    public void onResponse(Call<List<Machine>> call, Response<List<Machine>> response) {
+                        List<Machine> body = response.body();
                         if (body.contains(m)) {
                             Machine m3 = body.get(body.indexOf(m));
                             if (m3.getStatus().equals(MachineStates.IN_USE)) { //
@@ -264,7 +266,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
                     }
 
                     @Override
-                    public void onFailure(Call<ArrayList<Machine>> call, Throwable t) {
+                    public void onFailure(Call<List<Machine>> call, Throwable t) {
                         //User presses refresh but call fails
                         AnalyticsHelper.sendErrorHit(t, false);
                     }
@@ -287,11 +289,11 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
         }), MachineCheckerRunnable.TIME);
     }
 
-    public ArrayList<Machine> getCurrentMachines() {
+    public List<Machine> getCurrentMachines() {
         return currentMachines;
     }
 
-    public ArrayList<Machine> getAllMachines() {
+    public List<Machine> getAllMachines() {
         return allMachines;
     }
 

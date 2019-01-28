@@ -1,39 +1,45 @@
 package xyz.jhughes.laundry.apiclient;
 
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
-import xyz.jhughes.laundry.LaundryParser.Locations;
+import xyz.jhughes.laundry.BuildConfig;
+import xyz.jhughes.laundry.LaundryParser.LocationResponse;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.LaundryParser.MachineList;
 
-/**
- * Retrofit interface for the Machine API.
- */
-public interface MachineAPI {
-    @GET("/v2/location/{location}")
-    Call<ArrayList<Machine>> getMachineStatus(
-            @Path("location") String location
-    );
+public class MachineAPI {
+    public static final String API_ROOT = "http://laundry-api.sigapp.club";
+    private final boolean DEBUG = BuildConfig.DEBUG;
+    private MachineService machineService;
 
-    @GET("/v2/location/all")
-    Call<Map<String,MachineList>> getAllMachines();
+    public MachineAPI(MachineService machineService) {
+        this.machineService = machineService;
+    }
 
-    @GET("/v2/locations")
-    Call<List<Locations>> getLocations();
+    public Call<List<LocationResponse>> getLocations() {
+        if (DEBUG) {
+            return machineService.getLocations_DEBUG();
+        } else {
+            return machineService.getLocations();
+        }
+    }
 
-    @GET("/v2-debug/location/{location}")
-    Call<ArrayList<Machine>> getMachineStatus_DEBUG(
-            @Path("location") String location
-    );
+    public Call<Map<String,MachineList>> getAllMachines() {
+        if (DEBUG) {
+           return machineService.getAllMachines_DEBUG();
+        } else {
+            return machineService.getAllMachines();
+        }
+    }
 
-    @GET("/v2-debug/location/all")
-    Call<Map<String,MachineList>> getAllMachines_DEBUG();
-
-    @GET("/v2-debug/locations")
-    Call<List<Locations>> getLocations_DEBUG();
+    public Call<List<Machine>> getMachineStatus(String location) {
+        if (DEBUG) {
+            return machineService.getMachineStatus_DEBUG(location);
+        } else {
+            return machineService.getMachineStatus(location);
+        }
+    }
 }

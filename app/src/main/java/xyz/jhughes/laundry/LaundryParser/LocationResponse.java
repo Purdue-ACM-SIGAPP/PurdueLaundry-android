@@ -1,5 +1,5 @@
 package xyz.jhughes.laundry.LaundryParser;
 
-public class Locations {
+public class LocationResponse {
     public String name;
 }

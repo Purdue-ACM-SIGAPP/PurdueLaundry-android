@@ -21,6 +21,7 @@ import android.widget.Switch;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import xyz.jhughes.laundry.AnalyticsApplication;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.AppSectionsPagerAdapter;
@@ -68,6 +69,7 @@ public class MachineActivity extends ScreenTrackedActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((AnalyticsApplication)getApplication()).getAppComponent().inject(MachineActivity.this);
         setContentView(R.layout.activity_machine);
         ButterKnife.bind(this);
 

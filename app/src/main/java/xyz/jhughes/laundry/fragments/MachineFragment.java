@@ -23,6 +23,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,7 +33,7 @@ import butterknife.Unbinder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import xyz.jhughes.laundry.BuildConfig;
+import xyz.jhughes.laundry.AnalyticsApplication;
 import xyz.jhughes.laundry.LaundryParser.Constants;
 import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.ModelOperations;
@@ -40,7 +43,7 @@ import xyz.jhughes.laundry.activities.LocationActivity;
 import xyz.jhughes.laundry.adapters.MachineAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.analytics.ScreenTrackedFragment;
-import xyz.jhughes.laundry.apiclient.MachineService;
+import xyz.jhughes.laundry.apiclient.MachineAPI;
 import xyz.jhughes.laundry.notificationhelpers.ScreenOrientationLockToggleListener;
 
 /**
@@ -48,7 +51,7 @@ import xyz.jhughes.laundry.notificationhelpers.ScreenOrientationLockToggleListen
  */
 public class MachineFragment extends ScreenTrackedFragment implements SwipeRefreshLayout.OnRefreshListener, SnackbarPostListener, ScreenOrientationLockToggleListener {
 
-    private ArrayList<Machine> classMachines;
+    private List<Machine> classMachines;
 
     private MachineAdapter currentAdapter;
 
@@ -61,6 +64,9 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     @BindView(R.id.machine_fragment_notify_button)
     Button notifyButton;
 
+    @Inject
+    MachineAPI machineAPI;
+
     private Unbinder unbinder;
 
     private boolean isRefreshing;
@@ -71,7 +77,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
 
     private String mRoomName;
 
-    private Call<ArrayList<Machine>> call = null;
+    private Call<List<Machine>> call = null;
 
     public MachineFragment() {
         // Required empty public constructor
@@ -80,6 +86,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((AnalyticsApplication)getContext().getApplicationContext()).getAppComponent().inject(MachineFragment.this);
         progressDialog = new ProgressDialog(this.getContext());
         {
             if (!isRefreshing) {
@@ -130,14 +137,12 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
 
     public void refreshList() {
         if (isNetworkAvailable()) {
-            String apiLocationFormat = Constants.getApiLocation(mRoomName);
-            call = BuildConfig.DEBUG ?
-                    MachineService.getService().getMachineStatus_DEBUG(apiLocationFormat) :
-                    MachineService.getService().getMachineStatus(apiLocationFormat);
+            String location = Constants.getApiLocation(mRoomName);
+            call = machineAPI.getMachineStatus(location);
 
-            call.enqueue(new Callback<ArrayList<Machine>>() {
+            call.enqueue(new Callback<List<Machine>>() {
                 @Override
-                public void onResponse(Call<ArrayList<Machine>> call, Response<ArrayList<Machine>> response) {
+                public void onResponse(Call<List<Machine>> call, Response<List<Machine>> response) {
                     if (progressDialog.isShowing()) {
                         progressDialog.dismiss();
                     }
@@ -167,7 +172,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                 }
 
                 @Override
-                public void onFailure(Call<ArrayList<Machine>> call, Throwable t) {
+                public void onFailure(Call<List<Machine>> call, Throwable t) {
 
                     if (call.isCanceled()) {
                         return;
