@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Switch;
 
 import xyz.jhughes.laundry.laundryparser.Constants;
+import xyz.jhughes.laundry.AnalyticsApplication;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.AppSectionsPagerAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
@@ -56,6 +57,8 @@ public class MachineActivity extends ScreenTrackedActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((AnalyticsApplication)getApplication()).getAppComponent().inject(MachineActivity.this);
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_machine);
 
         if (getIntent().getExtras() == null ||

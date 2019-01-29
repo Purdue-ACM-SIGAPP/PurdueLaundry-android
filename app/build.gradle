@@ -13,6 +13,7 @@ android {
     dataBinding {
         enabled = true
     }
+    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "xyz.jhughes.laundry"
         minSdkVersion 19
@@ -53,6 +54,10 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.5.2'
     // Additional dependencies
     implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.google.dagger:dagger:2.20'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.21'
+    testImplementation 'org.mockito:mockito-core:2.23.4'
+    testImplementation 'junit:junit:4.12'
 }
 
 apply plugin: 'com.google.gms.google-services'
