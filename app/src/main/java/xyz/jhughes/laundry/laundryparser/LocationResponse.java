@@ -1,4 +1,4 @@
-package xyz.jhughes.laundry.LaundryParser;
+package xyz.jhughes.laundry.laundryparser;
 
 public class LocationResponse {
     public String name;

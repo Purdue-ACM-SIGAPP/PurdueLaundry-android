@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
+import xyz.jhughes.laundry.laundryparser.Machine;
+import xyz.jhughes.laundry.laundryparser.MachineList;
 import xyz.jhughes.laundry.BuildConfig;
-import xyz.jhughes.laundry.LaundryParser.LocationResponse;
-import xyz.jhughes.laundry.LaundryParser.Machine;
-import xyz.jhughes.laundry.LaundryParser.MachineList;
+import xyz.jhughes.laundry.laundryparser.LocationResponse;
 
 public class MachineAPI {
     public static final String API_ROOT = "http://laundry-api.sigapp.club";

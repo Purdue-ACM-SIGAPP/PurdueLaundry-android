@@ -5,11 +5,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.databinding.DataBindingUtil;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
@@ -19,23 +19,19 @@ import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import xyz.jhughes.laundry.BuildConfig;
+import xyz.jhughes.laundry.laundryparser.Constants;
+import xyz.jhughes.laundry.laundryparser.Machine;
 import xyz.jhughes.laundry.AnalyticsApplication;
-import xyz.jhughes.laundry.LaundryParser.Constants;
-import xyz.jhughes.laundry.LaundryParser.Machine;
 import xyz.jhughes.laundry.ModelOperations;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.SnackbarPostListener;
@@ -43,37 +39,25 @@ import xyz.jhughes.laundry.activities.LocationActivity;
 import xyz.jhughes.laundry.adapters.MachineAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.analytics.ScreenTrackedFragment;
+import xyz.jhughes.laundry.databinding.FragmentMachineBinding;
 import xyz.jhughes.laundry.apiclient.MachineAPI;
 import xyz.jhughes.laundry.notificationhelpers.ScreenOrientationLockToggleListener;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class MachineFragment extends ScreenTrackedFragment implements SwipeRefreshLayout.OnRefreshListener, SnackbarPostListener, ScreenOrientationLockToggleListener {
+
+    private FragmentMachineBinding binding;
 
     private List<Machine> classMachines;
 
     private MachineAdapter currentAdapter;
-
-    @BindView(R.id.dryer_machines_recycler_view)
-    RecyclerView recyclerView;
-    @BindView(R.id.dryer_list_layout)
-    SwipeRefreshLayout mSwipeRefreshLayout;
-    @BindView(R.id.machine_fragment_too_filtered)
-    TextView mTooFilteredTextView;
-    @BindView(R.id.machine_fragment_notify_button)
-    Button notifyButton;
-
     @Inject
     MachineAPI machineAPI;
 
-    private Unbinder unbinder;
+    //private Unbinder unbinder;
 
     private boolean isRefreshing;
     private boolean isDryers;
     private ProgressDialog progressDialog;
-
-    private View rootView;
 
     private String mRoomName;
 
@@ -107,19 +91,18 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
 
         isDryers = getArguments().getBoolean("isDryers");
 
-        rootView = inflater.inflate(R.layout.fragment_machine, container, false);
-        unbinder = ButterKnife.bind(this, rootView);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_machine, container, false);
 
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this.getContext(), 2);
-        recyclerView.setLayoutManager(layoutManager);
+        binding.dryerMachinesRecyclerView.setLayoutManager(layoutManager);
 
         classMachines = new ArrayList<>();
 
         initializeNotifyOnAvaiableButton();
         refreshList();
-        mSwipeRefreshLayout.setOnRefreshListener(this);
+        binding.dryerListLayout.setOnRefreshListener(this);
 
-        return rootView;
+        return binding.getRoot();
     }
 
     @Override
@@ -147,7 +130,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                         progressDialog.dismiss();
                     }
                     if (response.isSuccessful()) {
-                        mSwipeRefreshLayout.setRefreshing(false);
+                        binding.dryerListLayout.setRefreshing(false);
                         isRefreshing = false;
                         classMachines = response.body();
 
@@ -182,7 +165,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
                     if (isAdded() && getActivity() != null) {
                         showErrorDialog(getString(R.string.error_server_message));
 
-                        mSwipeRefreshLayout.setRefreshing(false);
+                        binding.dryerListLayout.setRefreshing(false);
                         isRefreshing = false;
                         alertNetworkError();
                     } else {
@@ -198,8 +181,8 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     }
 
     public void updateRecyclerView() {
-        MachineAdapter adapter = new MachineAdapter(classMachines, rootView.getContext(), isDryers, mRoomName, MachineFragment.this, MachineFragment.this);
-        recyclerView.setAdapter(adapter);
+        MachineAdapter adapter = new MachineAdapter(classMachines, getContext(), isDryers, mRoomName, MachineFragment.this, MachineFragment.this);
+        binding.dryerMachinesRecyclerView.setAdapter(adapter);
         currentAdapter = adapter;
 
         //Check if the view is being filtered and causing the
@@ -207,12 +190,12 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
         // This is not shown if the list is empty for any other reason.
         if (currentAdapter.getCurrentMachines().isEmpty()) {
             //Filters are too restrictive.
-            mTooFilteredTextView.setVisibility(View.VISIBLE);
+            binding.machineFragmentTooFiltered.setVisibility(View.VISIBLE);
         } else {
-            mTooFilteredTextView.setVisibility(View.GONE);
+            binding.machineFragmentTooFiltered.setVisibility(View.GONE);
         }
 
-        boolean addNotifyButton = notifyButton.getVisibility() != View.VISIBLE;
+        boolean addNotifyButton = binding.machineFragmentNotifyButton.getVisibility() != View.VISIBLE;
         if (addNotifyButton) {
             for (Machine m : adapter.getAllMachines()) {
                 if (m.getStatus().equalsIgnoreCase("Available")) {
@@ -228,7 +211,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
         if (progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
-        mSwipeRefreshLayout.setRefreshing(false);
+        binding.dryerListLayout.setRefreshing(false);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setTitle("Connection Error");
         alertDialogBuilder.setMessage(message);
@@ -249,17 +232,17 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     }
 
     private void removeNotifyOnAvailableButton() {
-        notifyButton.setVisibility(View.GONE);
+        binding.machineFragmentNotifyButton.setVisibility(View.GONE);
     }
 
     private void addNotifyOnAvailableButton() {
-        notifyButton.setVisibility(View.VISIBLE);
+        binding.machineFragmentNotifyButton.setVisibility(View.VISIBLE);
     }
 
     private void initializeNotifyOnAvaiableButton() {
         final String text = isDryers ? getString(R.string.notify_on_dryer_available) : getString(R.string.notify_on_washer_available);
-        notifyButton.setText(text);
-        notifyButton.setOnClickListener(new View.OnClickListener() {
+        binding.machineFragmentNotifyButton.setText(text);
+        binding.machineFragmentNotifyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Machine m = null;
@@ -289,7 +272,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     }
 
     private void showOfflineDialogIfNecessary() {
-        if (!rootView.getContext().getSharedPreferences("alerts", Context.MODE_PRIVATE).getBoolean("offline_alert_thrown", false)) {
+        if (!getContext().getSharedPreferences("alerts", Context.MODE_PRIVATE).getBoolean("offline_alert_thrown", false)) {
             // 1. Instantiate an AlertDialog.Builder with its constructor
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -306,7 +289,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
             AlertDialog dialog = builder.create();
 
             dialog.show();
-            rootView.getContext().getSharedPreferences("alerts", Context.MODE_PRIVATE).edit().putBoolean("offline_alert_thrown", true).apply();
+            getContext().getSharedPreferences("alerts", Context.MODE_PRIVATE).edit().putBoolean("offline_alert_thrown", true).apply();
         }
     }
 
@@ -327,12 +310,6 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
-
-    @Override
     public void onDetach() {
         if (call != null) {
             call.cancel();
@@ -343,7 +320,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
 
     @Override
     public void postSnackbar(String status, int length) {
-        Snackbar snackbar = Snackbar.make(rootView, status, length);
+        Snackbar snackbar = Snackbar.make(binding.getRoot(), status, length);
         snackbar.show();
     }
 

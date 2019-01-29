@@ -1,14 +1,16 @@
 package xyz.jhughes.laundry.apiclient;
 
+
+import xyz.jhughes.laundry.laundryparser.Machine;
+import xyz.jhughes.laundry.laundryparser.MachineList;
+
 import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
-import xyz.jhughes.laundry.LaundryParser.LocationResponse;
-import xyz.jhughes.laundry.LaundryParser.Machine;
-import xyz.jhughes.laundry.LaundryParser.MachineList;
+import xyz.jhughes.laundry.laundryparser.LocationResponse;
 
 /**
  * Retrofit interface for the Machine API.

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.databinding.DataBindingUtil;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -16,35 +17,29 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import xyz.jhughes.laundry.laundryparser.Location;
+import xyz.jhughes.laundry.laundryparser.MachineList;
+import xyz.jhughes.laundry.laundryparser.Rooms;
+import javax.inject.Inject;
+
 import xyz.jhughes.laundry.AnalyticsApplication;
-import xyz.jhughes.laundry.LaundryParser.Location;
-import xyz.jhughes.laundry.LaundryParser.LocationResponse;
-import xyz.jhughes.laundry.LaundryParser.MachineList;
-import xyz.jhughes.laundry.LaundryParser.Rooms;
+import xyz.jhughes.laundry.laundryparser.LocationResponse;
 import xyz.jhughes.laundry.ModelOperations;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.LocationAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.analytics.ScreenTrackedActivity;
+import xyz.jhughes.laundry.databinding.ActivityLocationBinding;
 import xyz.jhughes.laundry.apiclient.MachineAPI;
 import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
@@ -54,19 +49,7 @@ import xyz.jhughes.laundry.storage.SharedPrefsHelper;
  */
 public class LocationActivity extends ScreenTrackedActivity implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
-    @BindView(R.id.recycler_view)
-    RecyclerView recyclerView;
-    @BindView(R.id.location_activity_toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.progressBar)
-    ProgressBar mLoadingProgressBar;
-    @BindView(R.id.location_list_puller)
-    SwipeRefreshLayout mSwipeRefreshLayout;
-    @BindView((R.id.location_error_text))
-    TextView errorTextView;
-    @BindView(R.id.location_error_button)
-    Button errorButton;
-
+    private ActivityLocationBinding binding;
     @Inject
     MachineAPI machineAPI;
 
@@ -86,8 +69,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((AnalyticsApplication)getApplication()).getAppComponent().inject(LocationActivity.this);
-        setContentView(R.layout.activity_location);
-        ButterKnife.bind(this);
+        binding =  DataBindingUtil.setContentView(this, R.layout.activity_location);
 
         String msg;
         if ((msg = getIntent().getStringExtra("error")) != null) {
@@ -107,31 +89,31 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
         initRecyclerView();
         initToolbar();
 
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        errorButton.setOnClickListener(this);
+        binding.locationListPuller.setOnRefreshListener(this);
+        binding.locationErrorButton.setOnClickListener(this);
     }
 
     private void initToolbar() {
-        setSupportActionBar(toolbar);
+        setSupportActionBar(binding.toolbar);
     }
 
     private void initRecyclerView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
+        binding.recyclerView.setLayoutManager(layoutManager);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        recyclerView.setAdapter(null);
+        binding.recyclerView.setAdapter(null);
         //We only want to clear the adapter/show the loading
         // if there are no items in the list already.
-        if (recyclerView.getAdapter() == null || recyclerView.getAdapter().getItemCount() <= 0) {
-            recyclerView.setAdapter(null);
+        if (binding.recyclerView.getAdapter() == null || binding.recyclerView.getAdapter().getItemCount() <= 0) {
+            binding.recyclerView.setAdapter(null);
         }
         if (!error) {
             getRoomsCall(false, null);
-            mLoadingProgressBar.setVisibility(View.VISIBLE);
+            binding.progressBar.setVisibility(View.VISIBLE);
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -168,10 +150,10 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
                     //We conditionally make the progress bar visible,
                     // but its cheap to always dismiss it without checking
                     // if its already gone.
-                    mLoadingProgressBar.setVisibility(View.GONE);
-                    recyclerView.setHasFixedSize(true);
-                    recyclerView.setAdapter(adapter);
-                    mSwipeRefreshLayout.setRefreshing(false);
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.recyclerView.setHasFixedSize(true);
+                    binding.recyclerView.setAdapter(adapter);
+                    binding.locationListPuller.setRefreshing(false);
                 } else {
                     int httpCode = response.code();
                     if (httpCode < 500) {
@@ -195,7 +177,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
 
                 AnalyticsHelper.sendErrorHit(t, false);
 
-                mSwipeRefreshLayout.setRefreshing(false);
+                binding.locationListPuller.setRefreshing(false);
             }
         });
     }
@@ -204,7 +186,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     protected void getRoomsCall(final boolean goingToMachineActivity, final String lastRoom) {
 
         if (!isNetworkAvailable()) {
-            mSwipeRefreshLayout.setRefreshing(false);
+            binding.locationListPuller.setRefreshing(false);
             if (error) showErrorMessage("You have no internet connection.");
             else showNoInternetDialog();
             return;
@@ -256,7 +238,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
 
                     AnalyticsHelper.sendErrorHit(t, false);
 
-                    mSwipeRefreshLayout.setRefreshing(false);
+                    binding.locationListPuller.setRefreshing(false);
                 }
             });
         } else {
@@ -274,18 +256,18 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
 
     public void showErrorMessage(String message) {
         error = true;
-        errorTextView.setText(message);
-        recyclerView.setAdapter(null);
-        mLoadingProgressBar.setVisibility(View.GONE);
-        mSwipeRefreshLayout.setRefreshing(false);
-        errorTextView.setVisibility(View.VISIBLE);
-        errorButton.setVisibility(View.VISIBLE);
+        binding.locationErrorText.setText(message);
+        binding.recyclerView.setAdapter(null);
+        binding.progressBar.setVisibility(View.GONE);
+        binding.locationListPuller.setRefreshing(false);
+        binding.locationErrorText.setVisibility(View.VISIBLE);
+        binding.locationErrorButton.setVisibility(View.VISIBLE);
     }
 
     public void hideErrorMessage() {
         error = false;
-        errorTextView.setVisibility(View.GONE);
-        errorButton.setVisibility(View.GONE);
+        binding.locationErrorText.setVisibility(View.GONE);
+        binding.locationErrorButton.setVisibility(View.GONE);
     }
 
     @Override
@@ -297,7 +279,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     @Override
     public void onRefresh() {
         getRoomsCall(false, null);
-        mSwipeRefreshLayout.setRefreshing(true);
+        binding.locationListPuller.setRefreshing(true);
     }
 
     private void showNoInternetDialog() {
@@ -324,8 +306,8 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
 
     @Override
     public void onClick(View v) {
-        if (v.equals(errorButton)) {
-            mLoadingProgressBar.setVisibility(View.VISIBLE);
+        if (v.equals(binding.locationErrorButton)) {
+            binding.progressBar.setVisibility(View.VISIBLE);
             getRoomsCall(false, null);
         }
     }
