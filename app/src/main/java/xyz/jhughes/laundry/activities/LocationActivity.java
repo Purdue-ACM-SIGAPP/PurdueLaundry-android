@@ -27,18 +27,20 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import xyz.jhughes.laundry.BuildConfig;
 import xyz.jhughes.laundry.laundryparser.Location;
-import xyz.jhughes.laundry.laundryparser.Locations;
 import xyz.jhughes.laundry.laundryparser.MachineList;
 import xyz.jhughes.laundry.laundryparser.Rooms;
+import javax.inject.Inject;
+
+import xyz.jhughes.laundry.AnalyticsApplication;
+import xyz.jhughes.laundry.laundryparser.LocationResponse;
 import xyz.jhughes.laundry.ModelOperations;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.LocationAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.analytics.ScreenTrackedActivity;
-import xyz.jhughes.laundry.apiclient.MachineService;
 import xyz.jhughes.laundry.databinding.ActivityLocationBinding;
+import xyz.jhughes.laundry.apiclient.MachineAPI;
 import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
 /**
@@ -48,6 +50,9 @@ import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 public class LocationActivity extends ScreenTrackedActivity implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     private ActivityLocationBinding binding;
+    @Inject
+    MachineAPI machineAPI;
+
     private LocationAdapter adapter;
 
     private boolean error = false;
@@ -63,6 +68,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((AnalyticsApplication)getApplication()).getAppComponent().inject(LocationActivity.this);
         binding =  DataBindingUtil.setContentView(this, R.layout.activity_location);
 
         String msg;
@@ -132,9 +138,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
 
     protected void getLaundryCall() {
 
-        Call<Map<String, MachineList>> allMachineCall = BuildConfig.DEBUG ?
-                MachineService.getService().getAllMachines_DEBUG() :
-                MachineService.getService().getAllMachines();
+        Call<Map<String, MachineList>> allMachineCall = machineAPI.getAllMachines();
         allMachineCall.enqueue(new Callback<Map<String, MachineList>>() {
             @Override
             public void onResponse(Call<Map<String, MachineList>> call, Response<Map<String, MachineList>> response) {
@@ -189,15 +193,13 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
         }
         hideErrorMessage();
         if (Rooms.getRoomsConstantsInstance().getListOfRooms() == null) {
-            Call<List<Locations>> roomCall = BuildConfig.DEBUG ?
-                    MachineService.getService().getLocations_DEBUG() :
-                    MachineService.getService().getLocations();
-            roomCall.enqueue(new Callback<List<Locations>>() {
+            Call<List<LocationResponse>> roomCall = machineAPI.getLocations();
+            roomCall.enqueue(new Callback<List<LocationResponse>>() {
                 @Override
-                public void onResponse(Call<List<Locations>> call, Response<List<Locations>> response) {
+                public void onResponse(Call<List<LocationResponse>> call, Response<List<LocationResponse>> response) {
                     if (response.isSuccessful()) {
                         //set rooms
-                        List<Locations> roomList = response.body();
+                        List<LocationResponse> roomList = response.body();
                         String[] rooms = new String[roomList.size()];
                         for (int i = 0; i < roomList.size(); i++) {
                             rooms[i] = roomList.get(i).name;
@@ -229,7 +231,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
                 }
 
                 @Override
-                public void onFailure(Call<List<Locations>> call, Throwable t) {
+                public void onFailure(Call<List<LocationResponse>> call, Throwable t) {
                     Log.e("LocationActivity", "API ERROR - " + t.getMessage());
                     //likely a timeout -- network is available due to prev. check
                     showErrorMessage(getString(R.string.error_server_message));
