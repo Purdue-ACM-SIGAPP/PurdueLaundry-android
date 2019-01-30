@@ -1,6 +1,6 @@
 package xyz.jhughes.laundry.analytics;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * A way to cleanly track the screen view of an Activity.

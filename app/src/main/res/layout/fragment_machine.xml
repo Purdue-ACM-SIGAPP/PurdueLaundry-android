@@ -6,7 +6,7 @@
         android:layout_height="match_parent"
         tools:context="xyz.jhughes.laundry.fragments.MachineFragment">
 
-        <android.support.v4.widget.SwipeRefreshLayout
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/dryer_list_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -24,7 +24,7 @@
                     android:layout_height="wrap_content"
                     android:visibility="gone" />
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/dryer_machines_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
@@ -33,7 +33,7 @@
 
             </LinearLayout>
 
-        </android.support.v4.widget.SwipeRefreshLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <TextView
             android:id="@+id/machine_fragment_too_filtered"

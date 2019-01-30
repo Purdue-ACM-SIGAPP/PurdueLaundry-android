@@ -7,10 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -80,7 +80,7 @@ public class NotificationCreator extends Service {
         cancelIntent.putExtra("machine", machine);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, cancelIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+        androidx.core.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setContentTitle(machine)
                 .setContentText(countDown)
                 .setSmallIcon(R.drawable.ic_machine_notification)
