@@ -1,45 +1,48 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="xyz.jhughes.laundry.fragments.MachineFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/dryer_list_layout"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/bgGray">
+        tools:context="xyz.jhughes.laundry.fragments.MachineFragment">
 
-        <LinearLayout
-            android:id="@+id/machine_list_wrapper"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/dryer_list_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:background="@color/bgGray">
 
-            <Button
+            <LinearLayout
+                android:id="@+id/machine_list_wrapper"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:id="@+id/machine_fragment_notify_button" />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/dryer_machines_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:scrollbars="vertical" />
+                <Button
+                    android:id="@+id/machine_fragment_notify_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
 
-        </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/dryer_machines_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:scrollbars="vertical" />
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+            </LinearLayout>
 
-    <TextView
-        android:visibility="gone"
-        android:gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:id="@+id/machine_fragment_too_filtered"
-        android:text="No machines match the provided filter."/>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/machine_fragment_too_filtered"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="No machines match the provided filter."
+            android:visibility="gone" />
+
+    </RelativeLayout>
+</layout>

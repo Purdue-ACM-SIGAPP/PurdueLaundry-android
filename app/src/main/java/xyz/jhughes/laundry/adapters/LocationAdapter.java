@@ -2,112 +2,94 @@ package xyz.jhughes.laundry.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import xyz.jhughes.laundry.LaundryParser.Constants;
-import xyz.jhughes.laundry.LaundryParser.Location;
-import xyz.jhughes.laundry.ModelOperations;
-import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.activities.MachineActivity;
+import xyz.jhughes.laundry.laundryparser.Constants;
+import xyz.jhughes.laundry.laundryparser.Location;
+import xyz.jhughes.laundry.R;
+import xyz.jhughes.laundry.databinding.CardviewLocationBinding;
 
 public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHolder> {
 
-    private Context mContext;
+    private Context context;
 
-    private List<Location> mDataset;
+    private List<Location> locations;
 
-    // Provide a suitable constructor (depends on the kind of dataset)
-    public LocationAdapter(List<Location> mDataset, Context mContext) {
-        this.mContext = mContext;
-        this.mDataset = mDataset;
+    public LocationAdapter(List<Location> locations, Context context) {
+        this.locations = locations;
+        this.context = context;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // create a new view
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_location, parent, false);
-        // set the view's size, margins, paddings and layout parameters
-        return new ViewHolder(v);
+        CardviewLocationBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.cardview_location, parent, false);
+        return new ViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.setIsRecyclable(false);
 
-        final Location location = mDataset.get(position);
+        final Location location = locations.get(position);
         final String locationName = Constants.getLocationName(location.getLocationName());
         boolean isOffline = location.getMachineList().isOffline();
-        holder.textViewOffline.setVisibility(View.GONE);
-        if(isOffline){
-            holder.cardView.setAlpha((float)0.6);
-            holder.washerAvailableCount.setVisibility(View.GONE);
-            holder.washerTotalCount.setVisibility(View.GONE);
-            holder.dryerAvailableCount.setVisibility(View.GONE);
-            holder.dryerTotalCount.setVisibility(View.GONE);
-            holder.textViewDryer.setVisibility(View.GONE);
-            holder.textViewWasher.setVisibility(View.GONE);
-            holder.textViewOffline.setVisibility(View.VISIBLE);
+
+        CardviewLocationBinding binding = holder.binding;
+        binding.setLocation(location);
+        binding.textViewOffline.setVisibility(View.GONE);
+        if (isOffline) {
+            binding.cardView.setAlpha((float) 0.6);
+            binding.textViewWasherCount.setVisibility(View.GONE);
+            binding.textViewWasherTotal.setVisibility(View.GONE);
+            binding.textViewDryerCount.setVisibility(View.GONE);
+            binding.textViewDryerTotal.setVisibility(View.GONE);
+            binding.textViewDryer.setVisibility(View.GONE);
+            binding.textViewWasher.setVisibility(View.GONE);
+            binding.textViewOffline.setVisibility(View.VISIBLE);
         }
-        Integer[] count = ModelOperations.getAvailableCounts(location.getMachineList().getMachines());
-        holder.location.setText(locationName);
-        holder.washerAvailableCount.setText(count[3].toString());
-        holder.washerTotalCount.setText("/" + count[2].toString());
-        holder.dryerAvailableCount.setText(count[1].toString());
-        holder.dryerTotalCount.setText("/" + count[0].toString());
-        setImage(holder.imageView, position,Constants.getLocationName(location.getLocationName()));
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
+        binding.textViewLocationName.setText(locationName.split("Laundry")[0]);
+        setImage(binding.imageViewLocation, Constants.getLocationName(location.getLocationName()));
+        binding.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, MachineActivity.class);
+                Intent intent = new Intent(context, MachineActivity.class);
                 Bundle b = new Bundle();
                 b.putString("locationName", locationName);
                 intent.putExtras(b);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                mContext.startActivity(intent);
+                context.startActivity(intent);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return mDataset.size();
+        return locations.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
-        @Bind(R.id.card_view)  CardView cardView;
-        @Bind(R.id.image_view_location) ImageView imageView;
-        @Bind(R.id.text_view_location_name) TextView location;
-        @Bind(R.id.text_view_washer_count)  TextView washerAvailableCount;
-        @Bind(R.id.text_view_washer_total)  TextView washerTotalCount;
-        @Bind(R.id.text_view_dryer_count)   TextView dryerAvailableCount;
-        @Bind(R.id.text_view_dryer_total)   TextView dryerTotalCount;
-        @Bind(R.id.text_view_washer)        TextView textViewWasher;
-        @Bind(R.id.text_view_dryer)         TextView textViewDryer;
-        @Bind(R.id.text_view_offline)       TextView textViewOffline;
+        CardviewLocationBinding binding;
 
-        private ViewHolder(View v) {
-            super(v);
-            ButterKnife.bind(this, v);
+        private ViewHolder(CardviewLocationBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
     }
 
-    public void setImage(ImageView image, int position, String hall) {
+    public void setImage(ImageView image, String hall) {
         int imgId = Constants.getLocationImageResource(hall);
-        Picasso.with(mContext).load(imgId).fit().centerCrop().into(image);
+        Picasso.with(context).load(imgId).fit().centerCrop().into(image);
     }
 
 }

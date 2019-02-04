@@ -1,83 +1,40 @@
 package xyz.jhughes.laundry.apiclient;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
+import xyz.jhughes.laundry.laundryparser.Machine;
+import xyz.jhughes.laundry.laundryparser.MachineList;
 
-import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import xyz.jhughes.laundry.LaundryParser.MachineList;
-import xyz.jhughes.laundry.LaundryParser.MachineListDeserializer;
-import xyz.jhughes.laundry.analytics.AnalyticsHelper;
-
-import static xyz.jhughes.laundry.apiclient.MachineConstants.API_ROOT;
-
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
+import xyz.jhughes.laundry.laundryparser.LocationResponse;
 
 /**
- * Singleton impl for the Machine API.
+ * Retrofit interface for the Machine API.
  */
-public class MachineService {
-    private static MachineAPI REST_CLIENT;
-    private static MockLaundryApiService MOCK_CLIENT;
+public interface MachineService {
+    @GET("/v2/location/{location}")
+    Call<List<Machine>> getMachineStatus(
+            @Path("location") String location
+    );
 
-    static {
-        setupRestClient();
-    }
+    @GET("/v2-debug/location/{location}")
+    Call<List<Machine>> getMachineStatus_DEBUG(
+            @Path("location") String location
+    );
 
-    public static MachineAPI getService() {
-        /*if (BuildConfig.DEBUG){
-            return getMockService();
-        }*/
-        return REST_CLIENT;
-    }
+    @GET("/v2/location/all")
+    Call<Map<String,MachineList>> getAllMachines();
 
-    public static MachineAPI getMockService(){
-        if (MOCK_CLIENT == null){
-            MOCK_CLIENT = new MockLaundryApiService();
-        }
-        return MOCK_CLIENT;
-    }
+    @GET("/v2-debug/location/all")
+    Call<Map<String,MachineList>> getAllMachines_DEBUG();
 
-    private static void setupRestClient() {
+    @GET("/v2/locations")
+    Call<List<LocationResponse>> getLocations();
 
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(MachineList.class, new MachineListDeserializer())
-                .create();
-
-        OkHttpClient okClient =
-                new OkHttpClient
-                        .Builder()
-                        .addInterceptor(new Interceptor() {
-                            @Override
-                            public Response intercept(Chain chain) throws IOException {
-                                Request request = chain.request();
-
-                                long t1 = System.currentTimeMillis();
-                                Response response = chain.proceed(request);
-                                long t2 = System.currentTimeMillis();
-
-                                AnalyticsHelper.sendTimedEvent(
-                                        "api",
-                                        "requestTimeMillis",
-                                        response.request().url().encodedPath(),
-                                        t2-t1);
-
-                                return response;
-                            }
-                        })
-                        .build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .client(okClient)
-                .baseUrl(API_ROOT)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-        REST_CLIENT = retrofit.create(MachineAPI.class);
-    }
+    @GET("/v2-debug/locations")
+    Call<List<LocationResponse>> getLocations_DEBUG();
 }

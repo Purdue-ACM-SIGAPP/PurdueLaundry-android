@@ -6,13 +6,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-import xyz.jhughes.laundry.LaundryParser.Location;
-import xyz.jhughes.laundry.LaundryParser.Machine;
-import xyz.jhughes.laundry.LaundryParser.MachineList;
-import xyz.jhughes.laundry.LaundryParser.MachineStates;
-import xyz.jhughes.laundry.LaundryParser.MachineTypes;
+import xyz.jhughes.laundry.laundryparser.Location;
+import xyz.jhughes.laundry.laundryparser.Machine;
+import xyz.jhughes.laundry.laundryparser.MachineList;
 
-import static xyz.jhughes.laundry.LaundryParser.MachineStates.NOT_ONLINE;
+import static xyz.jhughes.laundry.laundryparser.MachineStates.NOT_ONLINE;
 
 public class ModelOperations {
     public static boolean machinesOffline(List<Machine> machines) {
@@ -51,31 +49,4 @@ public class ModelOperations {
         });
         return locations;
     }
-
-    public static Integer[] getAvailableCounts(List<Machine> machines){
-        final Integer[] countArray = new Integer[4];
-        for (int i = 0; i < 4; i++) {
-            countArray[i] = 0;
-        }
-        for (Machine machine : machines) {
-            if (machine.getType().equals(MachineTypes.DRYER)) {
-                //Increments Total Dryer Count For Specific Place
-                countArray[0] = countArray[0] + 1;
-                if (machine.getStatus().equals(MachineStates.AVAILABLE)) {
-                    //Increments Available Dryer Count For Specific Place
-                    countArray[1] = countArray[1] + 1;
-                }
-            } else {
-                //Increments Total Washer Count For Specific Place
-                countArray[2] = countArray[2] + 1;
-                if (machine.getStatus().equals(MachineStates.AVAILABLE)) {
-                    //Increments Available Washer Count For Specific Place
-                    countArray[3] = countArray[3] + 1;
-                }
-            }
-        }
-        return countArray;
-    }
-
-
 }

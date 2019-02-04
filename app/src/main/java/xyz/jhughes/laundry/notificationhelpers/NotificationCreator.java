@@ -7,11 +7,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.NotificationCompat;
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -22,12 +23,16 @@ import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 public class NotificationCreator extends Service {
 
     private final static String GROUP_KEY_EMAILS = "laundry_notif_group_key";
+    private final static String CHANNEL_ID = "Laundry Timer Alert";
     private static HashMap<String, Integer> notifcationIds = new HashMap<>();
     private static HashMap<Integer, CountDownTimer> timers = new HashMap<>();
     private static int id = 0;
+    private static WeakReference<NotificationCreator> self;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        self = new WeakReference<>(this);
+
         NotificationManagerCompat.from(this).cancelAll();
 
         final String machine = (String) intent.getExtras().get("machine");
@@ -42,6 +47,7 @@ public class NotificationCreator extends Service {
 
             public void onFinish() {
                 updateTimeNotification(machine, NotificationCreator.this, 0);
+                stopTimer(id, machine);
             }
         }.start();
 
@@ -53,9 +59,13 @@ public class NotificationCreator extends Service {
     }
 
     private static void updateTimeNotification(String machine, Context context, long timeLeft) {
+        if (notifcationIds == null || self == null) {
+            AnalyticsHelper.sendErrorHit(new NullPointerException("notificationIds or service null"), false);
+            return;
+        }
+
         int id = notifcationIds.get(machine);
         String countDown;
-        System.out.println(timeLeft);
         if (timeLeft > 0) {
             countDown = String.format("%01d minutes left", TimeUnit.MILLISECONDS.toMinutes(timeLeft));
         } else {
@@ -70,7 +80,7 @@ public class NotificationCreator extends Service {
         cancelIntent.putExtra("machine", machine);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, cancelIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+        androidx.core.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setContentTitle(machine)
                 .setContentText(countDown)
                 .setSmallIcon(R.drawable.ic_machine_notification)
@@ -78,7 +88,8 @@ public class NotificationCreator extends Service {
                 .setGroup(GROUP_KEY_EMAILS)
                 .addAction(R.drawable.ic_action_content_clear, "Cancel", pendingIntent)
                 .setOngoing(true)
-                .setPriority(id);
+                .setPriority(id)
+                .setChannelId(CHANNEL_ID);
 
         if (timeLeft == 0) {
             builder.setOngoing(false);
@@ -87,7 +98,7 @@ public class NotificationCreator extends Service {
         // if time up or at 5 minutes
         if (timeLeft == 0 || (countDown.equals("5:00"))) {
             AnalyticsHelper.sendEventHit("Reminders", "Passive", "Timer Finished");
-            builder.setVibrate(new long[]{1000, 1000, 1000});
+            builder.setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
         }
 
         notificationManager.notify(id, builder.build());
@@ -95,9 +106,14 @@ public class NotificationCreator extends Service {
 
     static void stopTimer(int id, String machine) {
         notifcationIds.remove(machine);
-        if (timers.get(id) != null) //This could be called when the app has been cleared.
+        if (timers.get(id) != null) { //This could be called when the app has been cleared.
             timers.get(id).cancel();
-        timers.remove(id);
+            timers.remove(id);
+        }
+
+        if (timers.isEmpty() && self != null && self.get() != null) {
+            self.get().stopSelf();
+        }
     }
 
     public static boolean notificationExists(String machine) {

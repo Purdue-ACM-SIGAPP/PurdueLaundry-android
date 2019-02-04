@@ -2,31 +2,27 @@ package xyz.jhughes.laundry.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.design.widget.BaseTransientBottomBar;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.NavUtils;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.core.app.NavUtils;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Switch;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import xyz.jhughes.laundry.LaundryParser.Constants;
+import xyz.jhughes.laundry.laundryparser.Constants;
+import xyz.jhughes.laundry.AnalyticsApplication;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.adapters.AppSectionsPagerAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.analytics.ScreenTrackedActivity;
+import xyz.jhughes.laundry.databinding.ActivityMachineBinding;
 import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
 /**
@@ -41,18 +37,10 @@ public class MachineActivity extends ScreenTrackedActivity {
      */
     private static final int ONBOARDING_COUNTDOWN = 5;
 
+    private ActivityMachineBinding binding;
+
     private String currentRoom;
     private AppSectionsPagerAdapter appSectionsPagerAdapter;
-
-    @Bind(R.id.viewpager)
-    ViewPager viewPager;
-    @Bind(R.id.sliding_tabs)
-    TabLayout tabLayout;
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
-
-    @Bind(R.id.main_content)
-    CoordinatorLayout mMainContent;
 
     Snackbar filterWarningBar;
 
@@ -69,8 +57,9 @@ public class MachineActivity extends ScreenTrackedActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_machine);
-        ButterKnife.bind(this);
+        ((AnalyticsApplication)getApplication()).getAppComponent().inject(MachineActivity.this);
+
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_machine);
 
         if (getIntent().getExtras() == null ||
                 getIntent().getExtras().get("locationName") == null) {
@@ -89,7 +78,6 @@ public class MachineActivity extends ScreenTrackedActivity {
         showOnboardingIfNecessary();
     }
 
-
     /**
      * When the user first accesses the Machines Activity, we should show
      * a snackbar telling them how to create a timer. We hope this will increase
@@ -99,14 +87,14 @@ public class MachineActivity extends ScreenTrackedActivity {
         int numberOfTimesToShowOnboarding =
                 SharedPrefsHelper.getSharedPrefs(this).getInt(SHOW_ONBOARDING_COUNTDOWN, ONBOARDING_COUNTDOWN);
 
-        if((mOnboardingSnackbar != null && !mOnboardingSnackbar.isShown()))
+        if ((mOnboardingSnackbar != null && !mOnboardingSnackbar.isShown()))
             return;
 
         //add BuildConfig.DEBUG to this statement to make it display always for testing.
-        if(numberOfTimesToShowOnboarding > 0) {
+        if (numberOfTimesToShowOnboarding > 0) {
             //show onboarding snackbar.
             mOnboardingSnackbar = Snackbar
-                    .make(mMainContent,
+                    .make(binding.mainContent,
                             "Tap a running machine to be notified when it finishes.",
                             Snackbar.LENGTH_INDEFINITE)
                     .addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
@@ -118,7 +106,7 @@ public class MachineActivity extends ScreenTrackedActivity {
                         @Override
                         public void onDismissed(Snackbar transientBottomBar, int event) {
                             super.onDismissed(transientBottomBar, event);
-                            if(event == DISMISS_EVENT_SWIPE) {
+                            if (event == DISMISS_EVENT_SWIPE) {
                                 SharedPrefsHelper
                                         .getSharedPrefs(MachineActivity.this)
                                         .edit()
@@ -159,10 +147,15 @@ public class MachineActivity extends ScreenTrackedActivity {
 
     private void updateFilteringWarning() {
         final SharedPreferences p = SharedPrefsHelper.getSharedPrefs(MachineActivity.this);
-        boolean filtering = p.getBoolean("filter", false);
+        boolean filtering = false;
+        try {
+            filtering = p.getBoolean("filter", false);
+        } catch (ClassCastException e) {
+            filtering = false;
+        }
 
-        if(filterWarningBar == null) {
-            filterWarningBar = Snackbar.make(mMainContent, "Only showing available machines.", Snackbar.LENGTH_INDEFINITE)
+        if (filterWarningBar == null) {
+            filterWarningBar = Snackbar.make(binding.mainContent, "Only showing available machines.", Snackbar.LENGTH_INDEFINITE)
                     .setAction("Show all", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -178,25 +171,22 @@ public class MachineActivity extends ScreenTrackedActivity {
                     });
         }
 
-        if(filtering) {
+        if (filtering) {
             filterWarningBar.show();
-        }
-        else {
+        } else {
             filterWarningBar.dismiss();
         }
-//        findViewById(R.id.machine_activity_filtering_textview).setVisibility(
-//                filtering ? View.VISIBLE : View.GONE);
     }
 
     private void setUpViewPager() {
         appSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager(), currentRoom);
-        viewPager.setAdapter(appSectionsPagerAdapter);
-        tabLayout.setupWithViewPager(viewPager);
+        binding.viewpager.setAdapter(appSectionsPagerAdapter);
+        binding.slidingTabs.setupWithViewPager(binding.viewpager);
     }
 
     private void initToolbar() {
-        toolbar.setTitle(currentRoom);
-        setSupportActionBar(toolbar);
+        binding.toolbar.setTitle(currentRoom);
+        setSupportActionBar(binding.toolbar);
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -216,7 +206,12 @@ public class MachineActivity extends ScreenTrackedActivity {
 
     public void createDialog() {
         final SharedPreferences p = SharedPrefsHelper.getSharedPrefs(MachineActivity.this);
-        boolean filtering = p.getBoolean("filter", false);
+        boolean filtering = false;
+        try {
+            filtering = p.getBoolean("filter", false);
+        } catch (ClassCastException e) {
+            filtering = false;
+        }
         View layout = LayoutInflater.from(this).inflate(R.layout.dialog_filter, null);
         final Switch sw = ((Switch) layout.findViewById(R.id.filter_dialog_switch));
         sw.setChecked(filtering);
