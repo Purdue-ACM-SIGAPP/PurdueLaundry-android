@@ -1,14 +1,13 @@
 package xyz.jhughes.laundry.Matchers;
 
-import android.support.test.espresso.NoMatchingViewException;
-import android.support.test.espresso.ViewAssertion;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.test.espresso.NoMatchingViewException;
+import androidx.test.espresso.ViewAssertion;
+
+import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
 
 public class RecyclerViewItemCountAssertion implements ViewAssertion {
         private final int expectedCount;

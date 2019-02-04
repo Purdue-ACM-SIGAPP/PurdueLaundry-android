@@ -7,10 +7,6 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
-/**
- * Created by mvieck on 4/24/17.
- */
-
 public class ViewChild {
     public static Matcher<View> firstChildOf(final Matcher<View> parentMatcher) {
         return new TypeSafeMatcher<View>() {

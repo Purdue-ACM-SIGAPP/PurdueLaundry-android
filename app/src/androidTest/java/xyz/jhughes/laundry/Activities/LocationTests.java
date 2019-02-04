@@ -3,16 +3,7 @@ package xyz.jhughes.laundry.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.ViewInteraction;
-import android.support.test.espresso.intent.Intents;
-import android.support.test.espresso.matcher.ViewMatchers;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
 import android.widget.TextView;
-
-import com.squareup.okhttp.mockwebserver.MockResponse;
-import com.squareup.okhttp.mockwebserver.MockWebServer;
 
 import org.junit.After;
 import org.junit.Before;
@@ -22,8 +13,14 @@ import org.junit.runner.RunWith;
 
 import java.net.HttpURLConnection;
 
+import androidx.test.InstrumentationRegistry;
+import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.intent.Intents;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.runner.AndroidJUnit4;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
 import xyz.jhughes.laundry.FileExtracter;
-import xyz.jhughes.laundry.LaundryParser.Rooms;
 import xyz.jhughes.laundry.Matchers.RecyclerViewAdapterNotNullAssertion;
 import xyz.jhughes.laundry.Matchers.RecyclerViewAdapterNullAssertion;
 import xyz.jhughes.laundry.Matchers.RecyclerViewItemCountAssertion;
@@ -32,16 +29,17 @@ import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.activities.LocationActivity;
 import xyz.jhughes.laundry.activities.MachineActivity;
 import xyz.jhughes.laundry.apiclient.MachineConstants;
+import xyz.jhughes.laundry.laundryparser.Rooms;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.intent.Intents.intended;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withParent;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withParent;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.not;
@@ -53,7 +51,7 @@ import static org.hamcrest.Matchers.not;
 
 public class LocationTests {
     @Rule
-    public ActivityTestRule<LocationActivity> mLocationActivityRule = new ActivityTestRule<LocationActivity>(LocationActivity.class, true, false);
+    public ActivityTestRule<LocationActivity> locationActivityRule = new ActivityTestRule<LocationActivity>(LocationActivity.class, true, false);
 
     private MockWebServer mockWebServer;
 
@@ -81,8 +79,8 @@ public class LocationTests {
     }
 
     private void checkLocationActivity() {
-        onView(allOf(ViewMatchers.withId(R.id.location_activity_toolbar))).check(matches(isDisplayed()));
-        onView(allOf(instanceOf(TextView.class), withParent(withId(R.id.location_activity_toolbar))))
+        onView(allOf(withId(R.id.toolbar))).check(matches(isDisplayed()));
+        onView(allOf(instanceOf(TextView.class), withParent(withId(R.id.toolbar))))
                 .check(matches(withText(R.string.title_activity_main)));
     }
 
@@ -90,7 +88,7 @@ public class LocationTests {
     @Test
     public void verifyLocationActivityLoads() {
         Intent intent = new Intent();
-        mLocationActivityRule.launchActivity(intent);
+        locationActivityRule.launchActivity(intent);
         checkLocationActivity();
         onView(allOf(withId(R.id.location_list_puller))).check(matches(isDisplayed()));
         onView(allOf(withId(R.id.recycler_view))).check(matches(isDisplayed()));
@@ -108,7 +106,7 @@ public class LocationTests {
                 .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
 
         Intent intent = new Intent();
-        mLocationActivityRule.launchActivity(intent);
+        locationActivityRule.launchActivity(intent);
 
         checkLocationActivity();
         ViewInteraction locationRecyclerView = onView(allOf(withId(R.id.recycler_view),isDisplayed()));
@@ -127,7 +125,7 @@ public class LocationTests {
                 .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
 
         Intent intent = new Intent();
-        mLocationActivityRule.launchActivity(intent);
+        locationActivityRule.launchActivity(intent);
 
         checkLocationActivity();
         ViewInteraction locationRecyclerView = onView(allOf(withId(R.id.recycler_view),isDisplayed()));
@@ -145,7 +143,7 @@ public class LocationTests {
                 .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
 
         Intent intent = new Intent();
-        mLocationActivityRule.launchActivity(intent);
+        locationActivityRule.launchActivity(intent);
         checkLocationActivity();
         onView(withId(R.id.location_error_text)).check(matches(isDisplayed()));
         onView(withId(R.id.location_error_button)).check(matches(isDisplayed()));
@@ -162,7 +160,7 @@ public class LocationTests {
                 .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
 
         Intent intent = new Intent();
-        mLocationActivityRule.launchActivity(intent);
+        locationActivityRule.launchActivity(intent);
         checkLocationActivity();
         onView(withId(R.id.location_error_text)).check(matches(isDisplayed()));
         onView(withId(R.id.location_error_button)).check(matches(isDisplayed()));
@@ -185,7 +183,7 @@ public class LocationTests {
                 .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
 
         Intent intent = new Intent();
-        mLocationActivityRule.launchActivity(intent);
+        locationActivityRule.launchActivity(intent);
         checkLocationActivity();
 
         RecyclerViewMatcher recyclerViewMatcher = withRecyclerView(R.id.recycler_view);
@@ -214,7 +212,7 @@ public class LocationTests {
                 .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
 
         Intent intent = new Intent();
-        mLocationActivityRule.launchActivity(intent);
+        locationActivityRule.launchActivity(intent);
         checkLocationActivity();
 
         RecyclerViewMatcher recyclerViewMatcher = withRecyclerView(R.id.recycler_view);
@@ -243,7 +241,7 @@ public class LocationTests {
                 .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
 
         Intent intent = new Intent();
-        mLocationActivityRule.launchActivity(intent);
+        locationActivityRule.launchActivity(intent);
         checkLocationActivity();
 
         RecyclerViewMatcher recyclerViewMatcher = withRecyclerView(R.id.recycler_view);

@@ -3,16 +3,7 @@ package xyz.jhughes.laundry.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.ViewInteraction;
-import android.support.test.espresso.intent.Intents;
-import android.support.test.espresso.matcher.ViewMatchers;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
 import android.widget.TextView;
-
-import com.squareup.okhttp.mockwebserver.MockResponse;
-import com.squareup.okhttp.mockwebserver.MockWebServer;
 
 import org.junit.After;
 import org.junit.Before;
@@ -22,27 +13,34 @@ import org.junit.runner.RunWith;
 
 import java.net.HttpURLConnection;
 
+import androidx.test.InstrumentationRegistry;
+import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.intent.Intents;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.runner.AndroidJUnit4;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
 import xyz.jhughes.laundry.FileExtracter;
-import xyz.jhughes.laundry.LaundryParser.MachineStates;
-import xyz.jhughes.laundry.LaundryParser.Rooms;
 import xyz.jhughes.laundry.Matchers.RecyclerViewAdapterNotNullAssertion;
 import xyz.jhughes.laundry.Matchers.RecyclerViewItemCountAssertion;
 import xyz.jhughes.laundry.Matchers.RecyclerViewMatcher;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.activities.MachineActivity;
 import xyz.jhughes.laundry.apiclient.MachineConstants;
+import xyz.jhughes.laundry.laundryparser.MachineStates;
+import xyz.jhughes.laundry.laundryparser.Rooms;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.pressBack;
-import static android.support.test.espresso.action.ViewActions.swipeLeft;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
-import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withParent;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.pressBack;
+import static androidx.test.espresso.action.ViewActions.swipeLeft;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withParent;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.not;
@@ -57,7 +55,7 @@ public class MachineTests {
     String location = "Earhart Hall";
 
     @Rule
-    public ActivityTestRule<MachineActivity> mMachineActivityRule = new ActivityTestRule<MachineActivity>(MachineActivity.class, true, false);
+    public ActivityTestRule<MachineActivity> machineActivityRule = new ActivityTestRule<MachineActivity>(MachineActivity.class, true, false);
 
     private MockWebServer mockWebServer;
 
@@ -85,13 +83,13 @@ public class MachineTests {
     }
 
     private void checkLocationActivity() {
-        onView(allOf(ViewMatchers.withId(R.id.location_activity_toolbar))).check(matches(isDisplayed()));
-        onView(allOf(instanceOf(TextView.class), withParent(withId(R.id.location_activity_toolbar))))
+        onView(allOf(withId(R.id.toolbar))).check(matches(isDisplayed()));
+        onView(allOf(instanceOf(TextView.class), withParent(withId(R.id.toolbar))))
                 .check(matches(withText(R.string.title_activity_main)));
     }
 
     private void checkMachineActivity(String roomName) {
-        onView(allOf(ViewMatchers.withId(R.id.toolbar))).check(matches(isDisplayed()));
+        onView(allOf(withId(R.id.toolbar))).check(matches(isDisplayed()));
         onView(allOf(instanceOf(TextView.class), withParent(withId(R.id.toolbar))))
                 .check(matches(withText(roomName)));
     }
@@ -106,7 +104,7 @@ public class MachineTests {
                 .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
         Intent intent = new Intent();
         intent.putExtra("locationName", location);
-        mMachineActivityRule.launchActivity(intent);
+        machineActivityRule.launchActivity(intent);
 
         onView(withText(R.string.loading_machines)).perform(pressBack());
 
@@ -151,8 +149,8 @@ public class MachineTests {
         onView(allOf(withId(R.id.machine_activity_filtering_textview), withText("Only showing available machines.")))
                 .check(matches(not(isDisplayed())));
 
-        /* Check if the first time snackbar is shown */
-        onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("Tap a running machine to be notified when it finishes."))).check(matches(isDisplayed()));
+        /*TODO: Check if the first time snackbar is shown */
+        //onView(allOf(withId(android.supportR.id.snackbar_text), withText("Tap a running machine to be notified when it finishes."))).check(matches(isDisplayed()));
     }
 
     @Test
@@ -165,7 +163,7 @@ public class MachineTests {
                 .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
         Intent intent = new Intent();
         intent.putExtra("locationName", location);
-        mMachineActivityRule.launchActivity(intent);
+        machineActivityRule.launchActivity(intent);
 
         onView(withText(R.string.loading_machines)).perform(pressBack());
 
@@ -206,7 +204,7 @@ public class MachineTests {
 
         Intent intent = new Intent();
         intent.putExtra("locationName", location);
-        mMachineActivityRule.launchActivity(intent);
+        machineActivityRule.launchActivity(intent);
         onView(allOf(withText(R.string.error_client_message), isDisplayed()));
 
     }
@@ -223,7 +221,7 @@ public class MachineTests {
 
         Intent intent = new Intent();
         intent.putExtra("locationName", location);
-        mMachineActivityRule.launchActivity(intent);
+        machineActivityRule.launchActivity(intent);
         onView(allOf(withText(R.string.error_server_message), isDisplayed()));
     }
 
@@ -239,7 +237,7 @@ public class MachineTests {
 
         Intent intent = new Intent();
         intent.putExtra("locationName", location);
-        mMachineActivityRule.launchActivity(intent);
+        machineActivityRule.launchActivity(intent);
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(200)
                 .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
@@ -285,7 +283,7 @@ public class MachineTests {
                 .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
         Intent intent = new Intent();
         intent.putExtra("locationName", location);
-        mMachineActivityRule.launchActivity(intent);
+        machineActivityRule.launchActivity(intent);
 
         onView(withText(R.string.loading_machines)).perform(pressBack());
 
@@ -342,7 +340,7 @@ public class MachineTests {
                 .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
         Intent intent = new Intent();
         intent.putExtra("locationName", location);
-        mMachineActivityRule.launchActivity(intent);
+        machineActivityRule.launchActivity(intent);
 
         onView(withText(R.string.loading_machines)).perform(pressBack());
 
@@ -382,7 +380,7 @@ public class MachineTests {
                 .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
         Intent intent = new Intent();
         intent.putExtra("locationName", location);
-        mMachineActivityRule.launchActivity(intent);
+        machineActivityRule.launchActivity(intent);
 
         onView(withText(R.string.loading_machines)).perform(pressBack());
 
@@ -428,7 +426,7 @@ public class MachineTests {
                 .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
         Intent intent = new Intent();
         intent.putExtra("locationName", location);
-        mMachineActivityRule.launchActivity(intent);
+        machineActivityRule.launchActivity(intent);
 
         onView(withText(R.string.loading_machines)).perform(pressBack());
 
