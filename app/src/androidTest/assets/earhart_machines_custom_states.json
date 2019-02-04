@@ -1,0 +1,86 @@
+[
+  {
+    "name": "Dryer 017",
+    "type": "Dryer",
+    "status": "Available",
+    "time": " "
+  },
+  {
+    "name": "Dryer 018",
+    "type": "Dryer",
+    "status": "In use",
+    "time": " "
+  },
+  {
+    "name": "Dryer 019",
+    "type": "Dryer",
+    "status": "Almost done",
+    "time": " "
+  },
+  {
+    "name": "Dryer 020",
+    "type": "Dryer",
+    "status": "End of cycle",
+    "time": " "
+  },
+  {
+    "name": "Dryer 021",
+    "type": "Dryer",
+    "status": "Ready to start",
+    "time": " "
+  },
+  {
+    "name": "Dryer 022",
+    "type": "Dryer",
+    "status": "not online",
+    "time": " "
+  },
+  {
+    "name": "Dryer 023",
+    "type": "Dryer",
+    "status": "Out of order",
+    "time": " "
+  },
+  {
+    "name": "Washer 001",
+    "type": "Washer",
+    "status": "Available",
+    "time": " "
+  },
+  {
+    "name": "Washer 002",
+    "type": "Washer",
+    "status": "In use",
+    "time": " "
+  },
+  {
+    "name": "Washer 003",
+    "type": "Washer",
+    "status": "Almost done",
+    "time": " "
+  },
+  {
+    "name": "Washer 004",
+    "type": "Washer",
+    "status": "End of cycle",
+    "time": " "
+  },
+  {
+    "name": "Washer 005",
+    "type": "Washer",
+    "status": "Ready to start",
+    "time": " "
+  },
+  {
+    "name": "Washer 006",
+    "type": "Washer",
+    "status": "not online",
+    "time": " "
+  },
+  {
+    "name": "Washer 007",
+    "type": "Washer",
+    "status": "Out of order",
+    "time": " "
+  }
+]

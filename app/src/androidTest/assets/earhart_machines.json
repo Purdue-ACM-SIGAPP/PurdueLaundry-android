@@ -1,0 +1,194 @@
+[
+  {
+    "name": "Dryer 017",
+    "type": "Dryer",
+    "status": "End of cycle",
+    "time": " "
+  },
+  {
+    "name": "Dryer 018",
+    "type": "Dryer",
+    "status": "End of cycle",
+    "time": " "
+  },
+  {
+    "name": "Dryer 019",
+    "type": "Dryer",
+    "status": "Available",
+    "time": " "
+  },
+  {
+    "name": "Dryer 020",
+    "type": "Dryer",
+    "status": "Available",
+    "time": " "
+  },
+  {
+    "name": "Dryer 021",
+    "type": "Dryer",
+    "status": "Available",
+    "time": " "
+  },
+  {
+    "name": "Dryer 022",
+    "type": "Dryer",
+    "status": "Available",
+    "time": " "
+  },
+  {
+    "name": "Dryer 023",
+    "type": "Dryer",
+    "status": "End of cycle",
+    "time": " "
+  },
+  {
+    "name": "Dryer 024",
+    "type": "Dryer",
+    "status": "Available",
+    "time": " "
+  },
+  {
+    "name": "Dryer 025",
+    "type": "Dryer",
+    "status": "End of cycle",
+    "time": " "
+  },
+  {
+    "name": "Dryer 026",
+    "type": "Dryer",
+    "status": "Available",
+    "time": " "
+  },
+  {
+    "name": "Dryer 027",
+    "type": "Dryer",
+    "status": "Available",
+    "time": " "
+  },
+  {
+    "name": "Dryer 028",
+    "type": "Dryer",
+    "status": "Not online",
+    "time": " "
+  },
+  {
+    "name": "Dryer 029",
+    "type": "Dryer",
+    "status": "In use",
+    "time": "56 minutes left"
+  },
+  {
+    "name": "Dryer 030",
+    "type": "Dryer",
+    "status": "End of cycle",
+    "time": " "
+  },
+  {
+    "name": "Dryer 031",
+    "type": "Dryer",
+    "status": "Available",
+    "time": " "
+  },
+  {
+    "name": "Dryer 032",
+    "type": "Dryer",
+    "status": "In use",
+    "time": "56 minutes left"
+  },
+  {
+    "name": "Washer 001",
+    "type": "Washer",
+    "status": "End of cycle",
+    "time": " "
+  },
+  {
+    "name": "Washer 002",
+    "type": "Washer",
+    "status": "Available",
+    "time": " "
+  },
+  {
+    "name": "Washer 003",
+    "type": "Washer",
+    "status": "Available",
+    "time": " "
+  },
+  {
+    "name": "Washer 004",
+    "type": "Washer",
+    "status": "Available",
+    "time": " "
+  },
+  {
+    "name": "Washer 005",
+    "type": "Washer",
+    "status": "Available",
+    "time": " "
+  },
+  {
+    "name": "Washer 006",
+    "type": "Washer",
+    "status": "In Use",
+    "time": "56 minutes left"
+  },
+  {
+    "name": "Washer 007",
+    "type": "Washer",
+    "status": "Available",
+    "time": " "
+  },
+  {
+    "name": "Washer 008",
+    "type": "Washer",
+    "status": "Available",
+    "time": " "
+  },
+  {
+    "name": "Washer 009",
+    "type": "Washer",
+    "status": "Available",
+    "time": " "
+  },
+  {
+    "name": "Washer 010",
+    "type": "Washer",
+    "status": "Available",
+    "time": " "
+  },
+  {
+    "name": "Washer 011",
+    "type": "Washer",
+    "status": "Available",
+    "time": " "
+  },
+  {
+    "name": "Washer 012",
+    "type": "Washer",
+    "status": "Available",
+    "time": " "
+  },
+  {
+    "name": "Washer 013",
+    "type": "Washer",
+    "status": "Available",
+    "time": " "
+  },
+  {
+    "name": "Washer 014",
+    "type": "Washer",
+    "status": "Available",
+    "time": " "
+  },
+  {
+    "name": "Washer 015",
+    "type": "Washer",
+    "status": "Available",
+    "time": " "
+  },
+  {
+    "name": "Washer 016",
+    "type": "Washer",
+    "status": "Available",
+    "time": " "
+  }
+]

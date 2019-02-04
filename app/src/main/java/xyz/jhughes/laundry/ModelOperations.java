@@ -9,13 +9,13 @@ import java.util.Map;
 import xyz.jhughes.laundry.laundryparser.Location;
 import xyz.jhughes.laundry.laundryparser.Machine;
 import xyz.jhughes.laundry.laundryparser.MachineList;
-import xyz.jhughes.laundry.laundryparser.MachineStates;
-import xyz.jhughes.laundry.laundryparser.MachineTypes;
+
+import static xyz.jhughes.laundry.laundryparser.MachineStates.NOT_ONLINE;
 
 public class ModelOperations {
     public static boolean machinesOffline(List<Machine> machines) {
         for (Machine m : machines) {
-            if (!(m.getStatus().equals("Not online"))) {
+            if (!(m.getStatus().equals(NOT_ONLINE))) {
                 return false;
             }
         }

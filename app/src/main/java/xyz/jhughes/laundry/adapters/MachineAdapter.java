@@ -41,6 +41,8 @@ import xyz.jhughes.laundry.notificationhelpers.ScreenOrientationLockToggleListen
 import xyz.jhughes.laundry.runnables.MachineCheckerRunnable;
 import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 
+import static xyz.jhughes.laundry.laundryparser.MachineStates.AVAILABLE;
+
 public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHolder> {
 
     private final String roomName;
@@ -76,8 +78,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
             if (dryers != m.getType().equals(MachineTypes.DRYER)) continue;
             allMachines.add(m);
             if (!available) currentMachines.add(m);
-            else if (m.getStatus().equals(MachineStates.AVAILABLE)) currentMachines.add(m);
-
+            else if (m.getStatus().equals(AVAILABLE)) currentMachines.add(m);
         }
     }
 
@@ -158,7 +159,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.ViewHold
 
     public void registerNotification(Machine m) {
         //For available (green) machines
-        if (m.getStatus().equals("Available")) {
+        if (m.getStatus().equals(AVAILABLE)) {
             waitForMachine(m);
         } else {
             try {
