@@ -48,7 +48,6 @@ import static org.hamcrest.Matchers.not;
  * Espresso Test Case For The Location Activity
  */
 @RunWith(AndroidJUnit4.class)
-
 public class LocationTests {
     @Rule
     public ActivityTestRule<LocationActivity> locationActivityRule = new ActivityTestRule<LocationActivity>(LocationActivity.class, true, false);

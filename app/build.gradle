@@ -43,20 +43,18 @@ dependencies {
     // Google Analytics
     implementation 'com.google.android.gms:play-services-analytics:12.0.1'
     // Android Support libraries
-    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     // Retrofit and related libraries for REST client.
-    implementation('com.squareup.retrofit2:retrofit:2.3.0') {
-        exclude group: 'com.squareup.okhttp3'
-    }
-    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
     // Image rendering.
-    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.squareup.picasso:picasso:2.71828'
     // Additional dependencies
     implementation 'com.google.code.gson:gson:2.8.2'
-    implementation 'com.google.dagger:dagger:2.20'
+    implementation 'com.google.dagger:dagger:2.21'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.21'
     testImplementation 'org.mockito:mockito-core:2.23.4'
     testImplementation 'junit:junit:4.12'
@@ -65,7 +63,9 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.1'
-    androidTestImplementation 'com.squareup.okhttp3:mockwebserver:3.12.1'
+    androidTestImplementation('com.squareup.okhttp3:mockwebserver:3.12.1') {
+        exclude group: 'com.squareup.okhttp3'
+    }
 }
 
 apply plugin: 'com.google.gms.google-services'

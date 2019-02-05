@@ -50,7 +50,6 @@ import static xyz.jhughes.laundry.Matchers.ViewChild.nthChildOf;
  * Espresso Test Case For The Location Activity
  */
 @RunWith(AndroidJUnit4.class)
-
 public class MachineTests {
     String location = "Earhart Hall";
 

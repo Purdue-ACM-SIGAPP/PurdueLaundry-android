@@ -89,7 +89,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
 
     public void setImage(ImageView image, String hall) {
         int imgId = Constants.getLocationImageResource(hall);
-        Picasso.with(context).load(imgId).fit().centerCrop().into(image);
+        Picasso.get().load(imgId).fit().centerCrop().into(image);
     }
 
 }
