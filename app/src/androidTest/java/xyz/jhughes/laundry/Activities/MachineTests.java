@@ -16,6 +16,7 @@ import java.net.HttpURLConnection;
 import androidx.test.InstrumentationRegistry;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.intent.Intents;
+import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 import okhttp3.mockwebserver.MockResponse;
@@ -46,10 +47,8 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.not;
 import static xyz.jhughes.laundry.Matchers.ViewChild.nthChildOf;
 
-/**
- * Espresso Test Case For The Location Activity
- */
 @RunWith(AndroidJUnit4.class)
+@LargeTest
 public class MachineTests {
     String location = "Earhart Hall";
 
