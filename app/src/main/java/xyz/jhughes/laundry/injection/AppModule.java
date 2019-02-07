@@ -16,8 +16,8 @@ import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
-import xyz.jhughes.laundry.apiclient.MachineAPI;
-import xyz.jhughes.laundry.apiclient.MachineService;
+import xyz.jhughes.laundry.data.MachineAPI;
+import xyz.jhughes.laundry.data.MachineService;
 import xyz.jhughes.laundry.laundryparser.MachineList;
 import xyz.jhughes.laundry.laundryparser.MachineListDeserializer;
 

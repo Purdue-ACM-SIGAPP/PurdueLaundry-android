@@ -1,4 +1,4 @@
-package xyz.jhughes.laundry.apiclient;
+package xyz.jhughes.laundry.data;
 
 
 import java.util.List;

@@ -5,8 +5,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import xyz.jhughes.laundry.apiclient.MachineAPI;
-import xyz.jhughes.laundry.apiclient.MachineService;
+import xyz.jhughes.laundry.data.MachineAPI;
+import xyz.jhughes.laundry.data.MachineService;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;

@@ -1,4 +1,4 @@
-package xyz.jhughes.laundry.apiclient;
+package xyz.jhughes.laundry.data;
 
 
 import xyz.jhughes.laundry.laundryparser.Machine;

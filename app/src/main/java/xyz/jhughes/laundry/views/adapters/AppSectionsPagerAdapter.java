@@ -1,4 +1,4 @@
-package xyz.jhughes.laundry.adapters;
+package xyz.jhughes.laundry.views.adapters;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
-import xyz.jhughes.laundry.fragments.MachineFragment;
+import xyz.jhughes.laundry.views.fragments.MachineFragment;
 
 public class AppSectionsPagerAdapter extends FragmentPagerAdapter {
     private String mRoomName;

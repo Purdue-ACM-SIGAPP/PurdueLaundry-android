@@ -4,7 +4,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="xyz.jhughes.laundry.fragments.MachineFragment">
+        tools:context=".views.fragments.MachineFragment">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/dryer_list_layout"

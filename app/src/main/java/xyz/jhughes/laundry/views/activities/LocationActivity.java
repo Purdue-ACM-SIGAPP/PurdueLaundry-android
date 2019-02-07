@@ -1,4 +1,4 @@
-package xyz.jhughes.laundry.activities;
+package xyz.jhughes.laundry.views.activities;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -36,12 +36,12 @@ import xyz.jhughes.laundry.AnalyticsApplication;
 import xyz.jhughes.laundry.laundryparser.LocationResponse;
 import xyz.jhughes.laundry.ModelOperations;
 import xyz.jhughes.laundry.R;
-import xyz.jhughes.laundry.adapters.LocationAdapter;
+import xyz.jhughes.laundry.views.adapters.LocationAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.analytics.ScreenTrackedActivity;
 import xyz.jhughes.laundry.databinding.ActivityLocationBinding;
-import xyz.jhughes.laundry.apiclient.MachineAPI;
-import xyz.jhughes.laundry.storage.SharedPrefsHelper;
+import xyz.jhughes.laundry.data.MachineAPI;
+import xyz.jhughes.laundry.views.storage.SharedPrefsHelper;
 
 /**
  * The main activity of the app. Lists the locations of

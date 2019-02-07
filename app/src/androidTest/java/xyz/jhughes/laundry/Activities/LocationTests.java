@@ -26,9 +26,9 @@ import xyz.jhughes.laundry.Matchers.RecyclerViewAdapterNullAssertion;
 import xyz.jhughes.laundry.Matchers.RecyclerViewItemCountAssertion;
 import xyz.jhughes.laundry.Matchers.RecyclerViewMatcher;
 import xyz.jhughes.laundry.R;
-import xyz.jhughes.laundry.activities.LocationActivity;
-import xyz.jhughes.laundry.activities.MachineActivity;
-import xyz.jhughes.laundry.apiclient.MachineConstants;
+import xyz.jhughes.laundry.views.activities.LocationActivity;
+import xyz.jhughes.laundry.views.activities.MachineActivity;
+import xyz.jhughes.laundry.data.MachineConstants;
 import xyz.jhughes.laundry.laundryparser.Rooms;
 
 import static androidx.test.espresso.Espresso.onView;

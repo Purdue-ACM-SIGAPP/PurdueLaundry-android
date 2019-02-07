@@ -1,4 +1,4 @@
-package xyz.jhughes.laundry.fragments;
+package xyz.jhughes.laundry.views.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -28,19 +28,18 @@ import javax.inject.Inject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import xyz.jhughes.laundry.BuildConfig;
 import xyz.jhughes.laundry.laundryparser.Constants;
 import xyz.jhughes.laundry.laundryparser.Machine;
 import xyz.jhughes.laundry.AnalyticsApplication;
 import xyz.jhughes.laundry.ModelOperations;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.SnackbarPostListener;
-import xyz.jhughes.laundry.activities.LocationActivity;
-import xyz.jhughes.laundry.adapters.MachineAdapter;
+import xyz.jhughes.laundry.views.activities.LocationActivity;
+import xyz.jhughes.laundry.views.adapters.MachineAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.analytics.ScreenTrackedFragment;
 import xyz.jhughes.laundry.databinding.FragmentMachineBinding;
-import xyz.jhughes.laundry.apiclient.MachineAPI;
+import xyz.jhughes.laundry.data.MachineAPI;
 import xyz.jhughes.laundry.notificationhelpers.ScreenOrientationLockToggleListener;
 
 import static xyz.jhughes.laundry.laundryparser.MachineStates.AVAILABLE;

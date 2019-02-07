@@ -25,8 +25,8 @@ import xyz.jhughes.laundry.Matchers.RecyclerViewAdapterNotNullAssertion;
 import xyz.jhughes.laundry.Matchers.RecyclerViewItemCountAssertion;
 import xyz.jhughes.laundry.Matchers.RecyclerViewMatcher;
 import xyz.jhughes.laundry.R;
-import xyz.jhughes.laundry.activities.MachineActivity;
-import xyz.jhughes.laundry.apiclient.MachineConstants;
+import xyz.jhughes.laundry.views.activities.MachineActivity;
+import xyz.jhughes.laundry.data.MachineConstants;
 import xyz.jhughes.laundry.laundryparser.MachineStates;
 import xyz.jhughes.laundry.laundryparser.Rooms;
 

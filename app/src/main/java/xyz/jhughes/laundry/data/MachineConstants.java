@@ -1,4 +1,4 @@
-package xyz.jhughes.laundry.apiclient;
+package xyz.jhughes.laundry.data;
 
 /**
  * API_ROOT holder for the tests under the AndroidTest folder

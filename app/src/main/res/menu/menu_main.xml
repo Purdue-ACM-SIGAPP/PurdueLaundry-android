@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
-      tools:context=".activities.MachineActivity">
+      tools:context=".views.activities.MachineActivity">
     <item
             android:title="@string/display_parameters"
             app:showAsAction="always"
