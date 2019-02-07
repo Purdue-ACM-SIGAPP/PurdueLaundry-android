@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.RequiresApi;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -36,6 +37,7 @@ import xyz.jhughes.laundry.AnalyticsApplication;
 import xyz.jhughes.laundry.laundryparser.LocationResponse;
 import xyz.jhughes.laundry.ModelOperations;
 import xyz.jhughes.laundry.R;
+import xyz.jhughes.laundry.viewmodels.LocationsViewModel;
 import xyz.jhughes.laundry.views.adapters.LocationAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.analytics.ScreenTrackedActivity;
@@ -50,6 +52,8 @@ import xyz.jhughes.laundry.views.storage.SharedPrefsHelper;
 public class LocationActivity extends ScreenTrackedActivity implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     private ActivityLocationBinding binding;
+
+    private LocationsViewModel locationsViewModel;
     @Inject
     MachineAPI machineAPI;
 
@@ -70,6 +74,8 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
         super.onCreate(savedInstanceState);
         ((AnalyticsApplication)getApplication()).getAppComponent().inject(LocationActivity.this);
         binding =  DataBindingUtil.setContentView(this, R.layout.activity_location);
+        locationsViewModel = ViewModelProviders.of(this).get(LocationsViewModel.class);
+
 
         String msg;
         if ((msg = getIntent().getStringExtra("error")) != null) {
