@@ -76,13 +76,6 @@ public class LocationTests {
         Intents.release();
     }
 
-    private void checkLocationActivity() {
-        onView(allOf(withId(R.id.toolbar))).check(matches(isDisplayed()));
-        onView(allOf(instanceOf(TextView.class), withParent(withId(R.id.toolbar))))
-                .check(matches(withText(R.string.title_activity_main)));
-    }
-
-    /* Sanitary Test That The Location Activity Exists */
     @Test
     public void verifyLocationActivityLoads() {
         Intent intent = new Intent();
@@ -95,13 +88,13 @@ public class LocationTests {
     }
 
     @Test
-    public void verifyLocationRecyclerViewItems() throws Exception{
+    public void verifyLocationRecyclerViewItems() throws Exception {
 
-        String fileName = "all_machines_valid.json";
+        String locationsFile = "locations.json";
 
         mockWebServer.enqueue(new MockResponse()
-                .setResponseCode(200)
-                .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
+                .setResponseCode(HttpURLConnection.HTTP_OK)
+                .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), locationsFile)));
 
         Intent intent = new Intent();
         locationActivityRule.launchActivity(intent);
@@ -114,13 +107,10 @@ public class LocationTests {
     }
 
     @Test
-    public void verifyNoResponseLocationRecyclerViewItems() throws Exception{
-
-        String fileName = "404_response.json";
+    public void verifyNoResponseLocationRecyclerViewItems() {
 
         mockWebServer.enqueue(new MockResponse()
-                .setResponseCode(404)
-                .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
+                .setResponseCode(HttpURLConnection.HTTP_NOT_FOUND));
 
         Intent intent = new Intent();
         locationActivityRule.launchActivity(intent);
@@ -130,54 +120,14 @@ public class LocationTests {
         locationRecyclerView.check(new RecyclerViewAdapterNullAssertion());
     }
 
-    /* Test to check expected offline behavoir */
-    @Test
-    public void testNetworkOff() throws Exception{
-
-        String fileName = "all_machines_valid.json";
-
-        mockWebServer.enqueue(new MockResponse()
-                .setResponseCode(HttpURLConnection.HTTP_INTERNAL_ERROR)
-                .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
-
-        Intent intent = new Intent();
-        locationActivityRule.launchActivity(intent);
-        checkLocationActivity();
-        onView(withId(R.id.location_error_text)).check(matches(isDisplayed()));
-        onView(withId(R.id.location_error_button)).check(matches(isDisplayed()));
-    }
-
-    /* Test to check if offline then online works */
-    @Test
-    public void testNetworkOffThenOn() throws Exception{
-
-        String fileName = "all_machines_valid.json";
-
-        mockWebServer.enqueue(new MockResponse()
-                .setResponseCode(HttpURLConnection.HTTP_INTERNAL_ERROR)
-                .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
-
-        Intent intent = new Intent();
-        locationActivityRule.launchActivity(intent);
-        checkLocationActivity();
-        onView(withId(R.id.location_error_text)).check(matches(isDisplayed()));
-        onView(withId(R.id.location_error_button)).check(matches(isDisplayed()));
-
-        mockWebServer.enqueue(new MockResponse()
-                .setResponseCode(200)
-                .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
-
-        onView(withId(R.id.location_error_button)).perform(click());
-        ViewInteraction locationRecyclerView = onView(allOf(withId(R.id.recycler_view),isDisplayed()));
-        locationRecyclerView.check(new RecyclerViewAdapterNotNullAssertion());
-    }
-
     /* Test to check if all locations loaded */
     @Test
     public void verifyLocationsLoaded() throws Exception {
+
         String fileName = "all_machines_valid.json";
+
         mockWebServer.enqueue(new MockResponse()
-                .setResponseCode(200)
+                .setResponseCode(HttpURLConnection.HTTP_OK)
                 .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
 
         Intent intent = new Intent();
@@ -201,39 +151,11 @@ public class LocationTests {
         }
     }
 
-    /* Test to check if all locations are offline */
-    @Test
-    public void verifyOfflineLocationsLoaded() throws Exception {
-        String fileName = "all_machines_offline.json";
-        mockWebServer.enqueue(new MockResponse()
-                .setResponseCode(200)
-                .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
-
-        Intent intent = new Intent();
-        locationActivityRule.launchActivity(intent);
-        checkLocationActivity();
-
-        RecyclerViewMatcher recyclerViewMatcher = withRecyclerView(R.id.recycler_view);
-
-        String[] locations = Rooms.getRoomsConstantsInstance().getListOfRooms();
-
-        for (int i = 0; i < locations.length; i++) {
-            recyclerViewMatcher.atPositionOnView(i, R.id.image_view_location).matches(isDisplayed());
-            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_location_name).matches(allOf(isDisplayed(), withText(locations[i])));
-            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_offline).matches(isDisplayed());
-            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_washer).matches(not(isDisplayed()));
-            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_washer_count).matches(not(isDisplayed()));
-            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_washer_total).matches(not(isDisplayed()));
-            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_dryer).matches(not(isDisplayed()));
-            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_dryer_count).matches(not(isDisplayed()));
-            recyclerViewMatcher.atPositionOnView(i, R.id.text_view_dryer_total).matches(not(isDisplayed()));
-        }
-    }
-
     /* Test to see if launching a machine activity works */
     @Test
     public void verifyLaunchMachineActivity() throws Exception {
         String fileName = "all_machines_valid.json";
+
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(200)
                 .setBody(FileExtracter.getStringFromFile(InstrumentationRegistry.getContext(), fileName)));
@@ -245,5 +167,11 @@ public class LocationTests {
         RecyclerViewMatcher recyclerViewMatcher = withRecyclerView(R.id.recycler_view);
         onView(recyclerViewMatcher.atPosition(0)).perform(click());
         intended(hasComponent(MachineActivity.class.getName()));
+    }
+
+    private void checkLocationActivity() {
+        onView(allOf(withId(R.id.toolbar))).check(matches(isDisplayed()));
+        onView(allOf(instanceOf(TextView.class), withParent(withId(R.id.toolbar))))
+                .check(matches(withText(R.string.title_activity_main)));
     }
 }

@@ -1,0 +1,3016 @@
+{
+  "Cary Quad East Laundry": [
+    {
+      "name": "Dryer 015",
+      "displayName": "Dryer 15",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 016",
+      "displayName": "Dryer 16",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 017",
+      "displayName": "Dryer 17",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 019",
+      "displayName": "Dryer 19",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 020",
+      "displayName": "Dryer 20",
+      "type": "Dryer",
+      "status": "Out of order",
+      "time": " "
+    },
+    {
+      "name": "Dryer 021",
+      "displayName": "Dryer 21",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 022",
+      "displayName": "Dryer 22",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 023",
+      "displayName": "Dryer 23",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "46 minutes left"
+    },
+    {
+      "name": "Dryer 024",
+      "displayName": "Dryer 24",
+      "type": "Dryer",
+      "status": "Almost done",
+      "time": " "
+    },
+    {
+      "name": "Dryer 025",
+      "displayName": "Dryer 25",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 026",
+      "displayName": "Dryer 26",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 027",
+      "displayName": "Dryer 27",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 028 ADA",
+      "displayName": "Dryer 28 ADA",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 001",
+      "displayName": "Washer 1",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 002",
+      "displayName": "Washer 2",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 003",
+      "displayName": "Washer 3",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 004",
+      "displayName": "Washer 4",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 005",
+      "displayName": "Washer 5",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 006",
+      "displayName": "Washer 6",
+      "type": "Washer",
+      "status": "In use",
+      "time": "16 minutes left"
+    },
+    {
+      "name": "Washer 007",
+      "displayName": "Washer 7",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 008",
+      "displayName": "Washer 8",
+      "type": "Washer",
+      "status": "Ready to start",
+      "time": " "
+    },
+    {
+      "name": "Washer 009",
+      "displayName": "Washer 9",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 010",
+      "displayName": "Washer 10",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 011",
+      "displayName": "Washer 11",
+      "type": "Washer",
+      "status": "Ready to start",
+      "time": " "
+    },
+    {
+      "name": "Washer 012 ADA",
+      "displayName": "Washer 12 ADA",
+      "type": "Washer",
+      "status": "Ready to start",
+      "time": " "
+    }
+  ],
+  "Cary Quad West Laundry": [
+    {
+      "name": "Dryer 013",
+      "displayName": "Dryer 13",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 014",
+      "displayName": "Dryer 14",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "34 minutes left"
+    },
+    {
+      "name": "Dryer 015",
+      "displayName": "Dryer 15",
+      "type": "Dryer",
+      "status": "Not online",
+      "time": " "
+    },
+    {
+      "name": "Dryer 016",
+      "displayName": "Dryer 16",
+      "type": "Dryer",
+      "status": "Out of order",
+      "time": " "
+    },
+    {
+      "name": "Dryer 017",
+      "displayName": "Dryer 17",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "7 minutes left"
+    },
+    {
+      "name": "Dryer 018",
+      "displayName": "Dryer 18",
+      "type": "Dryer",
+      "status": "Not online",
+      "time": " "
+    },
+    {
+      "name": "Dryer 019",
+      "displayName": "Dryer 19",
+      "type": "Dryer",
+      "status": "Out of order",
+      "time": " "
+    },
+    {
+      "name": "Dryer 020",
+      "displayName": "Dryer 20",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "6 minutes left"
+    },
+    {
+      "name": "Dryer 021",
+      "displayName": "Dryer 21",
+      "type": "Dryer",
+      "status": "Out of order",
+      "time": " "
+    },
+    {
+      "name": "Dryer 022",
+      "displayName": "Dryer 22",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 023",
+      "displayName": "Dryer 23",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 024",
+      "displayName": "Dryer 24",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 025",
+      "displayName": "Dryer 25",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 026 ADA",
+      "displayName": "Dryer 26 ADA",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 001",
+      "displayName": "Washer 1",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 002",
+      "displayName": "Washer 2",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 003",
+      "displayName": "Washer 3",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 004",
+      "displayName": "Washer 4",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 005",
+      "displayName": "Washer 5",
+      "type": "Washer",
+      "status": "In use",
+      "time": "36 minutes left"
+    },
+    {
+      "name": "Washer 006",
+      "displayName": "Washer 6",
+      "type": "Washer",
+      "status": "In use",
+      "time": "15 minutes left"
+    },
+    {
+      "name": "Washer 007",
+      "displayName": "Washer 7",
+      "type": "Washer",
+      "status": "In use",
+      "time": "15 minutes left"
+    },
+    {
+      "name": "Washer 008 ADA",
+      "displayName": "Washer 8 ADA",
+      "type": "Washer",
+      "status": "In use",
+      "time": "39 minutes left"
+    },
+    {
+      "name": "Washer 009",
+      "displayName": "Washer 9",
+      "type": "Washer",
+      "status": "In use",
+      "time": "22 minutes left"
+    },
+    {
+      "name": "Washer 010",
+      "displayName": "Washer 10",
+      "type": "Washer",
+      "status": "In use",
+      "time": "21 minutes left"
+    },
+    {
+      "name": "Washer 011",
+      "displayName": "Washer 11",
+      "type": "Washer",
+      "status": "Not online",
+      "time": " "
+    },
+    {
+      "name": "Washer 012",
+      "displayName": "Washer 12",
+      "type": "Washer",
+      "status": "In use",
+      "time": "8 minutes left"
+    }
+  ],
+  "Earhart Laundry Room": [
+    {
+      "name": "Dryer 017",
+      "displayName": "Dryer 17",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 018",
+      "displayName": "Dryer 18",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 019",
+      "displayName": "Dryer 19",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 020",
+      "displayName": "Dryer 20",
+      "type": "Dryer",
+      "status": "Not online",
+      "time": " "
+    },
+    {
+      "name": "Dryer 021",
+      "displayName": "Dryer 21",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 022",
+      "displayName": "Dryer 22",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 023",
+      "displayName": "Dryer 23",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "14 minutes left"
+    },
+    {
+      "name": "Dryer 024",
+      "displayName": "Dryer 24",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 025",
+      "displayName": "Dryer 25",
+      "type": "Dryer",
+      "status": "Out of order",
+      "time": " "
+    },
+    {
+      "name": "Dryer 026",
+      "displayName": "Dryer 26",
+      "type": "Dryer",
+      "status": "Payment in progress",
+      "time": " "
+    },
+    {
+      "name": "Dryer 027",
+      "displayName": "Dryer 27",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 028",
+      "displayName": "Dryer 28",
+      "type": "Dryer",
+      "status": "Not online",
+      "time": " "
+    },
+    {
+      "name": "Dryer 029",
+      "displayName": "Dryer 29",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 030",
+      "displayName": "Dryer 30",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 031",
+      "displayName": "Dryer 31",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 032",
+      "displayName": "Dryer 32",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Washer 001",
+      "displayName": "Washer 1",
+      "type": "Washer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Washer 002",
+      "displayName": "Washer 2",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 003",
+      "displayName": "Washer 3",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 004",
+      "displayName": "Washer 4",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 005",
+      "displayName": "Washer 5",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 006",
+      "displayName": "Washer 6",
+      "type": "Washer",
+      "status": "In use",
+      "time": "14 minutes left"
+    },
+    {
+      "name": "Washer 007",
+      "displayName": "Washer 7",
+      "type": "Washer",
+      "status": "In use",
+      "time": "19 minutes left"
+    },
+    {
+      "name": "Washer 008",
+      "displayName": "Washer 8",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 009",
+      "displayName": "Washer 9",
+      "type": "Washer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Washer 010",
+      "displayName": "Washer 10",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 011",
+      "displayName": "Washer 11",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 012",
+      "displayName": "Washer 12",
+      "type": "Washer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Washer 013",
+      "displayName": "Washer 13",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 014",
+      "displayName": "Washer 14",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 015",
+      "displayName": "Washer 15",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 016",
+      "displayName": "Washer 16",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    }
+  ],
+  "Harrison Laundry Room": [
+    {
+      "name": "Dryer 015",
+      "displayName": "Dryer 15",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "29 minutes left"
+    },
+    {
+      "name": "Dryer 016",
+      "displayName": "Dryer 16",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "29 minutes left"
+    },
+    {
+      "name": "Dryer 017",
+      "displayName": "Dryer 17",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "8 minutes left"
+    },
+    {
+      "name": "Dryer 018",
+      "displayName": "Dryer 18",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 019",
+      "displayName": "Dryer 19",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 020",
+      "displayName": "Dryer 20",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "9 minutes left"
+    },
+    {
+      "name": "Dryer 021",
+      "displayName": "Dryer 21",
+      "type": "Dryer",
+      "status": "Not online",
+      "time": " "
+    },
+    {
+      "name": "Dryer 022 ADA",
+      "displayName": "Dryer 22 ADA",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "5 minutes left"
+    },
+    {
+      "name": "Dryer 023",
+      "displayName": "Dryer 23",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 024",
+      "displayName": "Dryer 24",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 025",
+      "displayName": "Dryer 25",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "30 minutes left"
+    },
+    {
+      "name": "Dryer 026",
+      "displayName": "Dryer 26",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 027",
+      "displayName": "Dryer 27",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "39 minutes left"
+    },
+    {
+      "name": "Dryer 028",
+      "displayName": "Dryer 28",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 029",
+      "displayName": "Dryer 29",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 030",
+      "displayName": "Dryer 30",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 001",
+      "displayName": "Washer 1",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 002",
+      "displayName": "Washer 2",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 003",
+      "displayName": "Washer 3",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 004",
+      "displayName": "Washer 4",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 005",
+      "displayName": "Washer 5",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 006",
+      "displayName": "Washer 6",
+      "type": "Washer",
+      "status": "Ready to start",
+      "time": " "
+    },
+    {
+      "name": "Washer 007",
+      "displayName": "Washer 7",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 008",
+      "displayName": "Washer 8",
+      "type": "Washer",
+      "status": "In use",
+      "time": "37 minutes left"
+    },
+    {
+      "name": "Washer 009",
+      "displayName": "Washer 9",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 010 ADA",
+      "displayName": "Washer 10 ADA",
+      "type": "Washer",
+      "status": "In use",
+      "time": "17 minutes left"
+    },
+    {
+      "name": "Washer 011",
+      "displayName": "Washer 11",
+      "type": "Washer",
+      "status": "In use",
+      "time": "17 minutes left"
+    },
+    {
+      "name": "Washer 012",
+      "displayName": "Washer 12",
+      "type": "Washer",
+      "status": "In use",
+      "time": "16 minutes left"
+    },
+    {
+      "name": "Washer 013",
+      "displayName": "Washer 13",
+      "type": "Washer",
+      "status": "In use",
+      "time": "16 minutes left"
+    },
+    {
+      "name": "Washer 014",
+      "displayName": "Washer 14",
+      "type": "Washer",
+      "status": "In use",
+      "time": "16 minutes left"
+    }
+  ],
+  "Hawkins Laundry Room": [
+    {
+      "name": "Dryer 008",
+      "displayName": "Dryer 8",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 009",
+      "displayName": "Dryer 9",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 010",
+      "displayName": "Dryer 10",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 011",
+      "displayName": "Dryer 11",
+      "type": "Dryer",
+      "status": "Ready to start",
+      "time": " "
+    },
+    {
+      "name": "Dryer 012",
+      "displayName": "Dryer 12",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 013",
+      "displayName": "Dryer 13",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "10 minutes left"
+    },
+    {
+      "name": "Dryer 014",
+      "displayName": "Dryer 14",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 015",
+      "displayName": "Dryer 15",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 016 ADA",
+      "displayName": "Dryer 16 ADA",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 017",
+      "displayName": "Dryer 17",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 018",
+      "displayName": "Dryer 18",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 019",
+      "displayName": "Dryer 19",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 020",
+      "displayName": "Dryer 20",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 021",
+      "displayName": "Dryer 21",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 022",
+      "displayName": "Dryer 22",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 023",
+      "displayName": "Dryer 23",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 002",
+      "displayName": "Washer 2",
+      "type": "Washer",
+      "status": "In use",
+      "time": "11 minutes left"
+    },
+    {
+      "name": "Washer 003",
+      "displayName": "Washer 3",
+      "type": "Washer",
+      "status": "In use",
+      "time": "12 minutes left"
+    },
+    {
+      "name": "Washer 004",
+      "displayName": "Washer 4",
+      "type": "Washer",
+      "status": "In use",
+      "time": "13 minutes left"
+    },
+    {
+      "name": "Washer 005",
+      "displayName": "Washer 5",
+      "type": "Washer",
+      "status": "In use",
+      "time": "18 minutes left"
+    },
+    {
+      "name": "Washer 006",
+      "displayName": "Washer 6",
+      "type": "Washer",
+      "status": "In use",
+      "time": "22 minutes left"
+    },
+    {
+      "name": "Washer 007",
+      "displayName": "Washer 7",
+      "type": "Washer",
+      "status": "In use",
+      "time": "23 minutes left"
+    },
+    {
+      "name": "Washer 024",
+      "displayName": "Washer 24",
+      "type": "Washer",
+      "status": "In use",
+      "time": "30 minutes left"
+    },
+    {
+      "name": "Washer 025",
+      "displayName": "Washer 25",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 026",
+      "displayName": "Washer 26",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 027",
+      "displayName": "Washer 27",
+      "type": "Washer",
+      "status": "In use",
+      "time": "18 minutes left"
+    },
+    {
+      "name": "Washer 028",
+      "displayName": "Washer 28",
+      "type": "Washer",
+      "status": "In use",
+      "time": "18 minutes left"
+    },
+    {
+      "name": "Washer 029",
+      "displayName": "Washer 29",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 030 ADA",
+      "displayName": "Washer 30 ADA",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 031",
+      "displayName": "Washer 31",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 032",
+      "displayName": "Washer 32",
+      "type": "Washer",
+      "status": "End of cycle",
+      "time": " "
+    }
+  ],
+  "Hillenbrand Laundry Room": [
+    {
+      "name": "Dryer 021 ADA",
+      "displayName": "Dryer 21 ADA",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 022",
+      "displayName": "Dryer 22",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 023",
+      "displayName": "Dryer 23",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "29 minutes left"
+    },
+    {
+      "name": "Dryer 024",
+      "displayName": "Dryer 24",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 025",
+      "displayName": "Dryer 25",
+      "type": "Dryer",
+      "status": "Almost done",
+      "time": "4 minutes left"
+    },
+    {
+      "name": "Dryer 026",
+      "displayName": "Dryer 26",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "80 minutes left"
+    },
+    {
+      "name": "Dryer 027",
+      "displayName": "Dryer 27",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 028",
+      "displayName": "Dryer 28",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 029",
+      "displayName": "Dryer 29",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 030",
+      "displayName": "Dryer 30",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 031",
+      "displayName": "Dryer 31",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "25 minutes left"
+    },
+    {
+      "name": "Dryer 032",
+      "displayName": "Dryer 32",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 033",
+      "displayName": "Dryer 33",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 034",
+      "displayName": "Dryer 34",
+      "type": "Dryer",
+      "status": "Payment in progress",
+      "time": " "
+    },
+    {
+      "name": "Dryer 035",
+      "displayName": "Dryer 35",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 036",
+      "displayName": "Dryer 36",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 037",
+      "displayName": "Dryer 37",
+      "type": "Dryer",
+      "status": "Out of order",
+      "time": " "
+    },
+    {
+      "name": "Dryer 038",
+      "displayName": "Dryer 38",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "15 minutes left"
+    },
+    {
+      "name": "Dryer 039",
+      "displayName": "Dryer 39",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "15 minutes left"
+    },
+    {
+      "name": "Dryer 040",
+      "displayName": "Dryer 40",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 041",
+      "displayName": "Dryer 41",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 042",
+      "displayName": "Dryer 42",
+      "type": "Dryer",
+      "status": "Not online",
+      "time": " "
+    },
+    {
+      "name": "Dryer 043",
+      "displayName": "Dryer 43",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "6 minutes left"
+    },
+    {
+      "name": "Dryer 044",
+      "displayName": "Dryer 44",
+      "type": "Dryer",
+      "status": "Almost done",
+      "time": "1 minutes left"
+    },
+    {
+      "name": "Washer 001",
+      "displayName": "Washer 1",
+      "type": "Washer",
+      "status": "In use",
+      "time": "8 minutes left"
+    },
+    {
+      "name": "Washer 002",
+      "displayName": "Washer 2",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 003",
+      "displayName": "Washer 3",
+      "type": "Washer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Washer 004",
+      "displayName": "Washer 4",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 005",
+      "displayName": "Washer 5",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 006",
+      "displayName": "Washer 6",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 007",
+      "displayName": "Washer 7",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 008",
+      "displayName": "Washer 8",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 009",
+      "displayName": "Washer 9",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 010",
+      "displayName": "Washer 10",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 011",
+      "displayName": "Washer 11",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 012",
+      "displayName": "Washer 12",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 013",
+      "displayName": "Washer 13",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 014",
+      "displayName": "Washer 14",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 015",
+      "displayName": "Washer 15",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 016 ADA",
+      "displayName": "Washer 16 ADA",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 017",
+      "displayName": "Washer 17",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 018",
+      "displayName": "Washer 18",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 019",
+      "displayName": "Washer 19",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 020",
+      "displayName": "Washer 20",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    }
+  ],
+  "McCutcheon Laundry Room": [
+    {
+      "name": "Dryer 001",
+      "displayName": "Dryer 1",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 002",
+      "displayName": "Dryer 2",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 003",
+      "displayName": "Dryer 3",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "41 minutes left"
+    },
+    {
+      "name": "Dryer 004",
+      "displayName": "Dryer 4",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "22 minutes left"
+    },
+    {
+      "name": "Dryer 005",
+      "displayName": "Dryer 5",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 006",
+      "displayName": "Dryer 6",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 007",
+      "displayName": "Dryer 7",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 008",
+      "displayName": "Dryer 8",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "41 minutes left"
+    },
+    {
+      "name": "Dryer 009",
+      "displayName": "Dryer 9",
+      "type": "Dryer",
+      "status": "Not online",
+      "time": " "
+    },
+    {
+      "name": "Dryer 010",
+      "displayName": "Dryer 10",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 011",
+      "displayName": "Dryer 11",
+      "type": "Dryer",
+      "status": "Out of order",
+      "time": " "
+    },
+    {
+      "name": "Dryer 012",
+      "displayName": "Dryer 12",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "10 minutes left"
+    },
+    {
+      "name": "Dryer 013",
+      "displayName": "Dryer 13",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "24 minutes left"
+    },
+    {
+      "name": "Dryer 014",
+      "displayName": "Dryer 14",
+      "type": "Dryer",
+      "status": "Out of order",
+      "time": " "
+    },
+    {
+      "name": "Washer 015",
+      "displayName": "Washer 15",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 016",
+      "displayName": "Washer 16",
+      "type": "Washer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Washer 017",
+      "displayName": "Washer 17",
+      "type": "Washer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Washer 018",
+      "displayName": "Washer 18",
+      "type": "Washer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Washer 019",
+      "displayName": "Washer 19",
+      "type": "Washer",
+      "status": "In use",
+      "time": "34 minutes left"
+    },
+    {
+      "name": "Washer 020",
+      "displayName": "Washer 20",
+      "type": "Washer",
+      "status": "Out of order",
+      "time": " "
+    },
+    {
+      "name": "Washer 021",
+      "displayName": "Washer 21",
+      "type": "Washer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Washer 022",
+      "displayName": "Washer 22",
+      "type": "Washer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Washer 023",
+      "displayName": "Washer 23",
+      "type": "Washer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Washer 024",
+      "displayName": "Washer 24",
+      "type": "Washer",
+      "status": "In use",
+      "time": "10 minutes left"
+    },
+    {
+      "name": "Washer 025",
+      "displayName": "Washer 25",
+      "type": "Washer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Washer 026",
+      "displayName": "Washer 26",
+      "type": "Washer",
+      "status": "In use",
+      "time": "10 minutes left"
+    },
+    {
+      "name": "Washer 027",
+      "displayName": "Washer 27",
+      "type": "Washer",
+      "status": "Out of order",
+      "time": " "
+    }
+  ],
+  "Meredith NW Laundry Room": [
+    {
+      "name": "Dryer 001",
+      "displayName": "Dryer 1",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 002",
+      "displayName": "Dryer 2",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "24 minutes left"
+    },
+    {
+      "name": "Dryer 003",
+      "displayName": "Dryer 3",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "52 minutes left"
+    },
+    {
+      "name": "Dryer 004",
+      "displayName": "Dryer 4",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 005",
+      "displayName": "Dryer 5",
+      "type": "Dryer",
+      "status": "Not online",
+      "time": " "
+    },
+    {
+      "name": "Dryer 006 ADA",
+      "displayName": "Dryer 6 ADA",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "6 minutes left"
+    },
+    {
+      "name": "Washer 007",
+      "displayName": "Washer 7",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 008",
+      "displayName": "Washer 8",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 009",
+      "displayName": "Washer 9",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 010",
+      "displayName": "Washer 10",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 011",
+      "displayName": "Washer 11",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 012",
+      "displayName": "Washer 12",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    }
+  ],
+  "Meredith SE Laundry Room": [
+    {
+      "name": "Dryer 001",
+      "displayName": "Dryer 1",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "6 minutes left"
+    },
+    {
+      "name": "Dryer 002",
+      "displayName": "Dryer 2",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "39 minutes left"
+    },
+    {
+      "name": "Dryer 003",
+      "displayName": "Dryer 3",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "56 minutes left"
+    },
+    {
+      "name": "Dryer 004",
+      "displayName": "Dryer 4",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "9 minutes left"
+    },
+    {
+      "name": "Dryer 005",
+      "displayName": "Dryer 5",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 006",
+      "displayName": "Dryer 6",
+      "type": "Dryer",
+      "status": "Payment in progress",
+      "time": " "
+    },
+    {
+      "name": "Washer 007",
+      "displayName": "Washer 7",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 008",
+      "displayName": "Washer 8",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 009",
+      "displayName": "Washer 9",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 010",
+      "displayName": "Washer 10",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 011",
+      "displayName": "Washer 11",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 012",
+      "displayName": "Washer 12",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    }
+  ],
+  "Owen Laundry Room": [
+    {
+      "name": "Dryer 019",
+      "displayName": "Dryer 19",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "40 minutes left"
+    },
+    {
+      "name": "Dryer 020",
+      "displayName": "Dryer 20",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "14 minutes left"
+    },
+    {
+      "name": "Dryer 021",
+      "displayName": "Dryer 21",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 022",
+      "displayName": "Dryer 22",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 023",
+      "displayName": "Dryer 23",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "55 minutes left"
+    },
+    {
+      "name": "Dryer 024",
+      "displayName": "Dryer 24",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 025",
+      "displayName": "Dryer 25",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 026",
+      "displayName": "Dryer 26",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 027",
+      "displayName": "Dryer 27",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "41 minutes left"
+    },
+    {
+      "name": "Dryer 028",
+      "displayName": "Dryer 28",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 029",
+      "displayName": "Dryer 29",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 030",
+      "displayName": "Dryer 30",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 031",
+      "displayName": "Dryer 31",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "6 minutes left"
+    },
+    {
+      "name": "Dryer 032",
+      "displayName": "Dryer 32",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 033",
+      "displayName": "Dryer 33",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "13 minutes left"
+    },
+    {
+      "name": "Dryer 034",
+      "displayName": "Dryer 34",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 035",
+      "displayName": "Dryer 35",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 036",
+      "displayName": "Dryer 36",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 037",
+      "displayName": "Dryer 37",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 038 ADA",
+      "displayName": "Dryer 38 ADA",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "62 minutes left"
+    },
+    {
+      "name": "Washer 001 ADA",
+      "displayName": "Washer 1 ADA",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 002",
+      "displayName": "Washer 2",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 003",
+      "displayName": "Washer 3",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 004",
+      "displayName": "Washer 4",
+      "type": "Washer",
+      "status": "In use",
+      "time": "8 minutes left"
+    },
+    {
+      "name": "Washer 005",
+      "displayName": "Washer 5",
+      "type": "Washer",
+      "status": "In use",
+      "time": "6 minutes left"
+    },
+    {
+      "name": "Washer 006",
+      "displayName": "Washer 6",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 007",
+      "displayName": "Washer 7",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 008",
+      "displayName": "Washer 8",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 009",
+      "displayName": "Washer 9",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 010",
+      "displayName": "Washer 10",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 011",
+      "displayName": "Washer 11",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 012",
+      "displayName": "Washer 12",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 013",
+      "displayName": "Washer 13",
+      "type": "Washer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Washer 014",
+      "displayName": "Washer 14",
+      "type": "Washer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Washer 015",
+      "displayName": "Washer 15",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 016",
+      "displayName": "Washer 16",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 017",
+      "displayName": "Washer 17",
+      "type": "Washer",
+      "status": "Almost done",
+      "time": "2 minutes left"
+    },
+    {
+      "name": "Washer 018",
+      "displayName": "Washer 18",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    }
+  ],
+  "Shreve Laundry Room": [
+    {
+      "name": "East Dryer 001",
+      "displayName": "East Dryer 1",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "East Dryer 002",
+      "displayName": "East Dryer 2",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "East Dryer 003",
+      "displayName": "East Dryer 3",
+      "type": "Dryer",
+      "status": "Not online",
+      "time": " "
+    },
+    {
+      "name": "East Dryer 004",
+      "displayName": "East Dryer 4",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "East Dryer 005",
+      "displayName": "East Dryer 5",
+      "type": "Dryer",
+      "status": "Ready to start",
+      "time": " "
+    },
+    {
+      "name": "East Dryer 006",
+      "displayName": "East Dryer 6",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "East Dryer 007",
+      "displayName": "East Dryer 7",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "East Dryer 008",
+      "displayName": "East Dryer 8",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "East Washer 009",
+      "displayName": "East Washer 9",
+      "type": "Washer",
+      "status": "Almost done",
+      "time": "1 minutes left"
+    },
+    {
+      "name": "East Washer 010",
+      "displayName": "East Washer 10",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "East Washer 011",
+      "displayName": "East Washer 11",
+      "type": "Washer",
+      "status": "Out of order",
+      "time": " "
+    },
+    {
+      "name": "East Washer 012",
+      "displayName": "East Washer 12",
+      "type": "Washer",
+      "status": "In use",
+      "time": "14 minutes left"
+    },
+    {
+      "name": "East Washer 013",
+      "displayName": "East Washer 13",
+      "type": "Washer",
+      "status": "In use",
+      "time": "13 minutes left"
+    },
+    {
+      "name": "East Washer 014",
+      "displayName": "East Washer 14",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "East Washer 015",
+      "displayName": "East Washer 15",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "West Dryer 001",
+      "displayName": "West Dryer 1",
+      "type": "Dryer",
+      "status": "Not online",
+      "time": " "
+    },
+    {
+      "name": "West Dryer 002",
+      "displayName": "West Dryer 2",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "West Dryer 003",
+      "displayName": "West Dryer 3",
+      "type": "Dryer",
+      "status": "Not online",
+      "time": " "
+    },
+    {
+      "name": "West Dryer 005",
+      "displayName": "West Dryer 5",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "West Dryer 006",
+      "displayName": "West Dryer 6",
+      "type": "Dryer",
+      "status": "Payment in progress",
+      "time": " "
+    },
+    {
+      "name": "West Dryer 007",
+      "displayName": "West Dryer 7",
+      "type": "Dryer",
+      "status": "Ready to start",
+      "time": " "
+    },
+    {
+      "name": "West Dryer 008",
+      "displayName": "West Dryer 8",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "14 minutes left"
+    },
+    {
+      "name": "West Washer 009",
+      "displayName": "West Washer 9",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "West Washer 010",
+      "displayName": "West Washer 10",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "West Washer 011",
+      "displayName": "West Washer 11",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "West Washer 012",
+      "displayName": "West Washer 12",
+      "type": "Washer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "West Washer 013",
+      "displayName": "West Washer 13",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "West Washer 014",
+      "displayName": "West Washer 14",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "West Washer 015",
+      "displayName": "West Washer 15",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    }
+  ],
+  "Tarkington Laundry Room": [
+    {
+      "name": "Dryer 001",
+      "displayName": "Dryer 1",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 002",
+      "displayName": "Dryer 2",
+      "type": "Dryer",
+      "status": "Not online",
+      "time": " "
+    },
+    {
+      "name": "Dryer 003",
+      "displayName": "Dryer 3",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 004",
+      "displayName": "Dryer 4",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 005",
+      "displayName": "Dryer 5",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "24 minutes left"
+    },
+    {
+      "name": "Dryer 006",
+      "displayName": "Dryer 6",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 007 ADA",
+      "displayName": "Dryer 7 ADA",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 008",
+      "displayName": "Dryer 8",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 009",
+      "displayName": "Dryer 9",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 010",
+      "displayName": "Dryer 10",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "52 minutes left"
+    },
+    {
+      "name": "Dryer 011",
+      "displayName": "Dryer 11",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "29 minutes left"
+    },
+    {
+      "name": "Dryer 012",
+      "displayName": "Dryer 12",
+      "type": "Dryer",
+      "status": "Not online",
+      "time": " "
+    },
+    {
+      "name": "Dryer 013",
+      "displayName": "Dryer 13",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 014",
+      "displayName": "Dryer 14",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "19 minutes left"
+    },
+    {
+      "name": "Dryer 015",
+      "displayName": "Dryer 15",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 016",
+      "displayName": "Washer 16",
+      "type": "Washer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Washer 017",
+      "displayName": "Washer 17",
+      "type": "Washer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Washer 018",
+      "displayName": "Washer 18",
+      "type": "Washer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Washer 019",
+      "displayName": "Washer 19",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 020",
+      "displayName": "Washer 20",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 021",
+      "displayName": "Washer 21",
+      "type": "Washer",
+      "status": "In use",
+      "time": "20 minutes left"
+    },
+    {
+      "name": "Washer 022",
+      "displayName": "Washer 22",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 023",
+      "displayName": "Washer 23",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 024 ADA",
+      "displayName": "Washer 24 ADA",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 025",
+      "displayName": "Washer 25",
+      "type": "Washer",
+      "status": "In use",
+      "time": "11 minutes left"
+    },
+    {
+      "name": "Washer 026",
+      "displayName": "Washer 26",
+      "type": "Washer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Washer 027",
+      "displayName": "Washer 27",
+      "type": "Washer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Washer 028",
+      "displayName": "Washer 28",
+      "type": "Washer",
+      "status": "In use",
+      "time": "24 minutes left"
+    },
+    {
+      "name": "Washer 029",
+      "displayName": "Washer 29",
+      "type": "Washer",
+      "status": "In use",
+      "time": "19 minutes left"
+    }
+  ],
+  "Third St. Suites Laundry Room": [
+    {
+      "name": "Dryer 001",
+      "displayName": "Dryer 1",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 002",
+      "displayName": "Dryer 2",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 004",
+      "displayName": "Dryer 4",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "60 minutes left"
+    },
+    {
+      "name": "Dryer 006",
+      "displayName": "Dryer 6",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 008",
+      "displayName": "Dryer 8",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 022",
+      "displayName": "Dryer 22",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 024",
+      "displayName": "Dryer 24",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 026",
+      "displayName": "Dryer 26",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 028",
+      "displayName": "Dryer 28",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 030",
+      "displayName": "Dryer 30",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 032",
+      "displayName": "Dryer 32",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 003",
+      "displayName": "Washer 3",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 005",
+      "displayName": "Washer 5",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 007",
+      "displayName": "Washer 7",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 021",
+      "displayName": "Washer 21",
+      "type": "Washer",
+      "status": "In use",
+      "time": "11 minutes left"
+    },
+    {
+      "name": "Washer 023",
+      "displayName": "Washer 23",
+      "type": "Washer",
+      "status": "In use",
+      "time": "11 minutes left"
+    },
+    {
+      "name": "Washer 025",
+      "displayName": "Washer 25",
+      "type": "Washer",
+      "status": "In use",
+      "time": "11 minutes left"
+    },
+    {
+      "name": "Washer 027",
+      "displayName": "Washer 27",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 029",
+      "displayName": "Washer 29",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 031",
+      "displayName": "Washer 31",
+      "type": "Washer",
+      "status": "In use",
+      "time": "21 minutes left"
+    }
+  ],
+  "Wiley Laundry Room": [
+    {
+      "name": "Dryer 013",
+      "displayName": "Dryer 13",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 014",
+      "displayName": "Dryer 14",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 015",
+      "displayName": "Dryer 15",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "23 minutes left"
+    },
+    {
+      "name": "Dryer 016",
+      "displayName": "Dryer 16",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 017",
+      "displayName": "Dryer 17",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 018",
+      "displayName": "Dryer 18",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 019",
+      "displayName": "Dryer 19",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 020",
+      "displayName": "Dryer 20",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 021",
+      "displayName": "Dryer 21",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 022",
+      "displayName": "Dryer 22",
+      "type": "Dryer",
+      "status": "Ready to start",
+      "time": " "
+    },
+    {
+      "name": "Dryer 023",
+      "displayName": "Dryer 23",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "25 minutes left"
+    },
+    {
+      "name": "Dryer 024",
+      "displayName": "Dryer 24",
+      "type": "Dryer",
+      "status": "Payment in progress",
+      "time": " "
+    },
+    {
+      "name": "Dryer 025",
+      "displayName": "Dryer 25",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 026 ADA",
+      "displayName": "Dryer 26 ADA",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 027",
+      "displayName": "Dryer 27",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 001",
+      "displayName": "Washer 1",
+      "type": "Washer",
+      "status": "In use",
+      "time": "14 minutes left"
+    },
+    {
+      "name": "Washer 002",
+      "displayName": "Washer 2",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 003",
+      "displayName": "Washer 3",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 004 ADA",
+      "displayName": "Washer 4 ADA",
+      "type": "Washer",
+      "status": "In use",
+      "time": "18 minutes left"
+    },
+    {
+      "name": "Washer 005",
+      "displayName": "Washer 5",
+      "type": "Washer",
+      "status": "In use",
+      "time": "8 minutes left"
+    },
+    {
+      "name": "Washer 006",
+      "displayName": "Washer 6",
+      "type": "Washer",
+      "status": "Almost done",
+      "time": "1 minutes left"
+    },
+    {
+      "name": "Washer 007",
+      "displayName": "Washer 7",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 008",
+      "displayName": "Washer 8",
+      "type": "Washer",
+      "status": "In use",
+      "time": "18 minutes left"
+    },
+    {
+      "name": "Washer 009",
+      "displayName": "Washer 9",
+      "type": "Washer",
+      "status": "Almost done",
+      "time": "1 minutes left"
+    },
+    {
+      "name": "Washer 010",
+      "displayName": "Washer 10",
+      "type": "Washer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Washer 011",
+      "displayName": "Washer 11",
+      "type": "Washer",
+      "status": "In use",
+      "time": "5 minutes left"
+    },
+    {
+      "name": "Washer 012",
+      "displayName": "Washer 12",
+      "type": "Washer",
+      "status": "Almost done",
+      "time": "4 minutes left"
+    }
+  ],
+  "Windsor - Duhme Laundry Room": [
+    {
+      "name": "Dryer 001",
+      "displayName": "Dryer 1",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "38 minutes left"
+    },
+    {
+      "name": "Dryer 002",
+      "displayName": "Dryer 2",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 003",
+      "displayName": "Dryer 3",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 004",
+      "displayName": "Dryer 4",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "60 minutes left"
+    },
+    {
+      "name": "Dryer 011",
+      "displayName": "Dryer 11",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "24 minutes left"
+    },
+    {
+      "name": "Dryer 012",
+      "displayName": "Dryer 12",
+      "type": "Dryer",
+      "status": "Almost done",
+      "time": "3 minutes left"
+    },
+    {
+      "name": "Dryer 013",
+      "displayName": "Dryer 13",
+      "type": "Dryer",
+      "status": "Almost done",
+      "time": "3 minutes left"
+    },
+    {
+      "name": "Dryer 014",
+      "displayName": "Dryer 14",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 015",
+      "displayName": "Dryer 15",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 016",
+      "displayName": "Dryer 16",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 023",
+      "displayName": "Dryer 23",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 024",
+      "displayName": "Dryer 24",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 025",
+      "displayName": "Dryer 25",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 026",
+      "displayName": "Dryer 26",
+      "type": "Dryer",
+      "status": "In use",
+      "time": "22 minutes left"
+    },
+    {
+      "name": "Dryer 027",
+      "displayName": "Dryer 27",
+      "type": "Dryer",
+      "status": "Ready to start",
+      "time": " "
+    },
+    {
+      "name": "Washer 005",
+      "displayName": "Washer 5",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 006",
+      "displayName": "Washer 6",
+      "type": "Washer",
+      "status": "In use",
+      "time": "14 minutes left"
+    },
+    {
+      "name": "Washer 007",
+      "displayName": "Washer 7",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 008",
+      "displayName": "Washer 8",
+      "type": "Washer",
+      "status": "Almost done",
+      "time": "3 minutes left"
+    },
+    {
+      "name": "Washer 009",
+      "displayName": "Washer 9",
+      "type": "Washer",
+      "status": "Almost done",
+      "time": "1 minutes left"
+    },
+    {
+      "name": "Washer 010",
+      "displayName": "Washer 10",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 017",
+      "displayName": "Washer 17",
+      "type": "Washer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Washer 018",
+      "displayName": "Washer 18",
+      "type": "Washer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Washer 019",
+      "displayName": "Washer 19",
+      "type": "Washer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Washer 020",
+      "displayName": "Washer 20",
+      "type": "Washer",
+      "status": "In use",
+      "time": "6 minutes left"
+    },
+    {
+      "name": "Washer 021",
+      "displayName": "Washer 21",
+      "type": "Washer",
+      "status": "In use",
+      "time": "28 minutes left"
+    },
+    {
+      "name": "Washer 022",
+      "displayName": "Washer 22",
+      "type": "Washer",
+      "status": "In use",
+      "time": "30 minutes left"
+    }
+  ],
+  "Windsor - Warren Laundry Room": [
+    {
+      "name": "Dryer 001",
+      "displayName": "Dryer 1",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 002",
+      "displayName": "Dryer 2",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 003",
+      "displayName": "Dryer 3",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 007",
+      "displayName": "Dryer 7",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 008",
+      "displayName": "Dryer 8",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 009",
+      "displayName": "Dryer 9",
+      "type": "Dryer",
+      "status": "End of cycle",
+      "time": " "
+    },
+    {
+      "name": "Dryer 013",
+      "displayName": "Dryer 13",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 014",
+      "displayName": "Dryer 14",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Dryer 015",
+      "displayName": "Dryer 15",
+      "type": "Dryer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 004",
+      "displayName": "Washer 4",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 005",
+      "displayName": "Washer 5",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 006",
+      "displayName": "Washer 6",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 010",
+      "displayName": "Washer 10",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 011",
+      "displayName": "Washer 11",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 016",
+      "displayName": "Washer 16",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 017",
+      "displayName": "Washer 17",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    },
+    {
+      "name": "Washer 018",
+      "displayName": "Washer 18",
+      "type": "Washer",
+      "status": "Available",
+      "time": " "
+    }
+  ]
+}

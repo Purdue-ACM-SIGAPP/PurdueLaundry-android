@@ -20,26 +20,14 @@ public class MachineAPI {
     }
 
     public Call<List<LocationResponse>> getLocations() {
-        if (DEBUG) {
-            return machineService.getLocations_DEBUG();
-        } else {
-            return machineService.getLocations();
-        }
+        return machineService.getLocations();
     }
 
-    public Call<Map<String,MachineList>> getAllMachines() {
-        if (DEBUG) {
-           return machineService.getAllMachines_DEBUG();
-        } else {
-            return machineService.getAllMachines();
-        }
+    public Call<Map<String, MachineList>> getAllMachines() {
+        return machineService.getAllMachines();
     }
 
     public Call<List<Machine>> getMachineStatus(String location) {
-        if (DEBUG) {
-            return machineService.getMachineStatus_DEBUG(location);
-        } else {
-            return machineService.getMachineStatus(location);
-        }
+        return machineService.getMachineStatus(location);
     }
 }
