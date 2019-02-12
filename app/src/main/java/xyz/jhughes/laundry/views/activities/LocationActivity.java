@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AlertDialog;
@@ -39,6 +40,7 @@ import xyz.jhughes.laundry.laundryparser.LocationResponse;
 import xyz.jhughes.laundry.ModelOperations;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.viewmodels.LocationsViewModel;
+import xyz.jhughes.laundry.viewmodels.MachineViewModel;
 import xyz.jhughes.laundry.viewmodels.ViewModelFactory;
 import xyz.jhughes.laundry.views.adapters.LocationAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
@@ -56,6 +58,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     private ActivityLocationBinding binding;
 
     private LocationsViewModel locationsViewModel;
+    private MachineViewModel machineViewModel;
     @Inject
     MachineAPI machineAPI;
 
@@ -80,6 +83,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
         ((AnalyticsApplication)getApplication()).getAppComponent().inject(LocationActivity.this);
         binding =  DataBindingUtil.setContentView(this, R.layout.activity_location);
         locationsViewModel = ViewModelProviders.of(this, viewModelFactory).get(LocationsViewModel.class);
+        machineViewModel = ViewModelProviders.of(this, viewModelFactory).get(MachineViewModel.class);
 
         subscribeToErrorMessage();
 
@@ -149,46 +153,17 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     }
 
     protected void getLaundryCall() {
-
-        Call<Map<String, MachineList>> allMachineCall = machineAPI.getAllMachines();
-        allMachineCall.enqueue(new Callback<Map<String, MachineList>>() {
+        machineViewModel.getMachines().observe(this, new Observer<List<Location>>() {
             @Override
-            public void onResponse(Call<Map<String, MachineList>> call, Response<Map<String, MachineList>> response) {
-                if (response.isSuccessful()) {
-                    Map<String, MachineList> machineMap = response.body();
-                    List<Location> locations = ModelOperations.machineMapToLocationList(machineMap);
-                    adapter = new LocationAdapter(locations, LocationActivity.this.getApplicationContext());
+            public void onChanged(List<Location> locations) {
+                adapter = new LocationAdapter(locations, LocationActivity.this.getApplicationContext());
 
-                    //We conditionally make the progress bar visible,
-                    // but its cheap to always dismiss it without checking
-                    // if its already gone.
-                    binding.progressBar.setVisibility(View.GONE);
-                    binding.recyclerView.setHasFixedSize(true);
-                    binding.recyclerView.setAdapter(adapter);
-                    binding.locationListPuller.setRefreshing(false);
-                } else {
-                    int httpCode = response.code();
-                    if (httpCode < 500) {
-                        //client error
-                        showErrorMessage(getString(R.string.error_client_message));
-                        AnalyticsHelper.sendEventHit("api", "apiCodes", "/location/all", httpCode);
-                    } else {
-                        //server error
-                        showErrorMessage(getString(R.string.error_server_message));
-                        AnalyticsHelper.sendEventHit("api", "apiCodes", "/location/all", httpCode);
-                    }
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Map<String, MachineList>> call, Throwable t) {
-                Log.e("LocationActivity", "API ERROR - " + t.getMessage());
-                //likely a timeout -- network is available due to prev. check
-                showErrorMessage(getString(R.string.error_server_message));
-
-                AnalyticsHelper.sendErrorHit(t, false);
-
+                //We conditionally make the progress bar visible,
+                // but its cheap to always dismiss it without checking
+                // if its already gone.
+                binding.progressBar.setVisibility(View.GONE);
+                binding.recyclerView.setHasFixedSize(true);
+                binding.recyclerView.setAdapter(adapter);
                 binding.locationListPuller.setRefreshing(false);
             }
         });
@@ -220,6 +195,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
                             startActivity(intent);
                         }
                     }
+                    binding.locationListPuller.setRefreshing(false);
                 }
             });
         } else {
@@ -233,8 +209,6 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
                 startActivity(intent);
             }
         }
-
-        binding.locationListPuller.setRefreshing(false);
     }
 
     private void subscribeToErrorMessage() {
