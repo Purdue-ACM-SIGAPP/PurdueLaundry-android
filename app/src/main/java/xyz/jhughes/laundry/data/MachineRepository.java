@@ -16,10 +16,9 @@ import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.laundryparser.Location;
 import xyz.jhughes.laundry.laundryparser.LocationResponse;
+import xyz.jhughes.laundry.laundryparser.Machine;
 import xyz.jhughes.laundry.laundryparser.MachineList;
 import xyz.jhughes.laundry.laundryparser.Rooms;
-import xyz.jhughes.laundry.views.activities.LocationActivity;
-import xyz.jhughes.laundry.views.adapters.LocationAdapter;
 
 public class MachineRepository {
     private MachineService machineService;
@@ -71,7 +70,7 @@ public class MachineRepository {
         return locations;
     }
 
-    public LiveData<List<Location>> getMachines() {
+    public LiveData<List<Location>> getMachinesUnderLocation() {
         final MutableLiveData<List<Location>> machines = new MutableLiveData();
 
         Call<Map<String, MachineList>> allMachineCall = machineService.getAllMachines();
@@ -109,7 +108,47 @@ public class MachineRepository {
         return machines;
     }
 
+    public LiveData<List<Machine>> getMachines(String location) {
+
+        final MutableLiveData<List<Machine>> machines = new MutableLiveData<>();
+
+        machineService.getMachineStatus(location).enqueue(new Callback<List<Machine>>() {
+            @Override
+            public void onResponse(Call<List<Machine>> call, Response<List<Machine>> response) {
+                if (response.isSuccessful()) {
+                    List<Machine> machinesResponse = response.body();
+                    machines.setValue(machinesResponse);
+                } else {
+                    int httpCode = response.code();
+                    if (httpCode < 500) {
+                        //client error
+                        error.setValue(R.string.error_client_message);
+                        AnalyticsHelper.sendEventHit("api", "errorCodes", "/location/" + "mRoomName", httpCode);
+                    } else {
+                        //server error
+                        error.setValue(R.string.error_server_message);
+                        AnalyticsHelper.sendEventHit("api", "errorCodes", "/location/" + "mRoomName", httpCode);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Machine>> call, Throwable t) {
+
+                if (call.isCanceled()) {
+                    return;
+                }
+
+                error.setValue(R.string.error_server_message);
+                AnalyticsHelper.sendErrorHit(new RuntimeException("Activity null"), false);
+            }
+        });
+        return machines;
+    }
+
     public LiveData<Integer> getError() {
         return error;
     }
+
+
 }

@@ -15,35 +15,27 @@ import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import android.util.Log;
+
 import android.view.Menu;
 import android.view.View;
 
 import java.util.List;
-import java.util.Map;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import xyz.jhughes.laundry.laundryparser.Location;
-import xyz.jhughes.laundry.laundryparser.MachineList;
 import xyz.jhughes.laundry.laundryparser.Rooms;
 import javax.inject.Inject;
 
 import xyz.jhughes.laundry.AnalyticsApplication;
 import xyz.jhughes.laundry.laundryparser.LocationResponse;
-import xyz.jhughes.laundry.ModelOperations;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.viewmodels.LocationsViewModel;
 import xyz.jhughes.laundry.viewmodels.MachineViewModel;
 import xyz.jhughes.laundry.viewmodels.ViewModelFactory;
 import xyz.jhughes.laundry.views.adapters.LocationAdapter;
-import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.analytics.ScreenTrackedActivity;
 import xyz.jhughes.laundry.databinding.ActivityLocationBinding;
 import xyz.jhughes.laundry.data.MachineAPI;
@@ -153,7 +145,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     }
 
     protected void getLaundryCall() {
-        machineViewModel.getMachines().observe(this, new Observer<List<Location>>() {
+        machineViewModel.getLocations().observe(this, new Observer<List<Location>>() {
             @Override
             public void onChanged(List<Location> locations) {
                 adapter = new LocationAdapter(locations, LocationActivity.this.getApplicationContext());

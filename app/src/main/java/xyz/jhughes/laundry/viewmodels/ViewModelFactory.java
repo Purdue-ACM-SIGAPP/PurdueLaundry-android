@@ -23,6 +23,8 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(LocationsViewModel.class)) {
             return (T) new LocationsViewModel(machineRepository);
+        } else if (modelClass.isAssignableFrom(MachineViewModel.class)) {
+            return (T) new MachineViewModel(machineRepository);
         }
         return null;
     }
