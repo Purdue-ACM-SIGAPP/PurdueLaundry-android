@@ -90,6 +90,8 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
         }
         progressDialog.setCanceledOnTouchOutside(false);
 
+        subscribeToErrorMessage();
+
         mRoomName = getArguments().getString("roomName");
         String machineType = (getArguments().getBoolean("isDryers")) ? "Dryers" : "Washers";
         setScreenName(Constants.getApiLocation(mRoomName) + ": " + machineType);
@@ -179,6 +181,16 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
             if (addNotifyButton) addNotifyOnAvailableButton();
             else removeNotifyOnAvailableButton();
         }
+    }
+
+    private void subscribeToErrorMessage() {
+        this.machineViewModel.getError().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer errorMessageResourceId) {
+                String errorMessage = getString(errorMessageResourceId);
+                showErrorDialog(errorMessage);
+            }
+        });
     }
 
     private void showErrorDialog(final String message) {
