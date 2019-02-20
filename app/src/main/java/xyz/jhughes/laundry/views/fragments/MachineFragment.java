@@ -143,6 +143,7 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
 
                     binding.dryerListLayout.setRefreshing(false);
                     isRefreshing = false;
+                    classMachines = machines;
 
                     if (ModelOperations.machinesOffline(classMachines)) {
                         showOfflineDialogIfNecessary();
