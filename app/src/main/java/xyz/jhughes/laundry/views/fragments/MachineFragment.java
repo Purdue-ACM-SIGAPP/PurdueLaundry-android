@@ -1,4 +1,4 @@
-package xyz.jhughes.laundry.fragments;
+package xyz.jhughes.laundry.views.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -10,6 +10,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import com.google.android.material.snackbar.Snackbar;
+
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -28,19 +31,20 @@ import javax.inject.Inject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import xyz.jhughes.laundry.BuildConfig;
 import xyz.jhughes.laundry.laundryparser.Constants;
 import xyz.jhughes.laundry.laundryparser.Machine;
 import xyz.jhughes.laundry.AnalyticsApplication;
 import xyz.jhughes.laundry.ModelOperations;
 import xyz.jhughes.laundry.R;
 import xyz.jhughes.laundry.SnackbarPostListener;
-import xyz.jhughes.laundry.activities.LocationActivity;
-import xyz.jhughes.laundry.adapters.MachineAdapter;
+import xyz.jhughes.laundry.viewmodels.MachineViewModel;
+import xyz.jhughes.laundry.viewmodels.ViewModelFactory;
+import xyz.jhughes.laundry.views.activities.LocationActivity;
+import xyz.jhughes.laundry.views.adapters.MachineAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.analytics.ScreenTrackedFragment;
 import xyz.jhughes.laundry.databinding.FragmentMachineBinding;
-import xyz.jhughes.laundry.apiclient.MachineAPI;
+import xyz.jhughes.laundry.data.MachineAPI;
 import xyz.jhughes.laundry.notificationhelpers.ScreenOrientationLockToggleListener;
 
 import static xyz.jhughes.laundry.laundryparser.MachineStates.AVAILABLE;
@@ -48,6 +52,8 @@ import static xyz.jhughes.laundry.laundryparser.MachineStates.NOT_ONLINE;
 import static xyz.jhughes.laundry.laundryparser.MachineStates.OUT_OF_ORDER;
 
 public class MachineFragment extends ScreenTrackedFragment implements SwipeRefreshLayout.OnRefreshListener, SnackbarPostListener, ScreenOrientationLockToggleListener {
+
+    private MachineViewModel machineViewModel;
 
     private FragmentMachineBinding binding;
 
@@ -57,7 +63,8 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     @Inject
     MachineAPI machineAPI;
 
-    //private Unbinder unbinder;
+    @Inject
+    ViewModelFactory viewModelFactory;
 
     private boolean isRefreshing;
     private boolean isDryers;
@@ -75,14 +82,15 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((AnalyticsApplication)getContext().getApplicationContext()).getAppComponent().inject(MachineFragment.this);
+        machineViewModel = ViewModelProviders.of(this, viewModelFactory).get(MachineViewModel.class);
         progressDialog = new ProgressDialog(this.getContext());
-        {
-            if (!isRefreshing) {
-                progressDialog.setMessage(getString(R.string.loading_machines));
-                progressDialog.show();
-            }
-            progressDialog.setCanceledOnTouchOutside(false);
+        if (!isRefreshing) {
+            progressDialog.setMessage(getString(R.string.loading_machines));
+            progressDialog.show();
         }
+        progressDialog.setCanceledOnTouchOutside(false);
+
+        subscribeToErrorMessage();
 
         mRoomName = getArguments().getString("roomName");
         String machineType = (getArguments().getBoolean("isDryers")) ? "Dryers" : "Washers";
@@ -125,58 +133,23 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
     public void refreshList() {
         if (isNetworkAvailable()) {
             String location = Constants.getApiLocation(mRoomName);
-            call = machineAPI.getMachineStatus(location);
 
-            call.enqueue(new Callback<List<Machine>>() {
+            machineViewModel.getMachines(location).observe(this, new Observer<List<Machine>>() {
                 @Override
-                public void onResponse(Call<List<Machine>> call, Response<List<Machine>> response) {
+                public void onChanged(List<Machine> machines) {
                     if (progressDialog.isShowing()) {
                         progressDialog.dismiss();
                     }
-                    if (response.isSuccessful()) {
-                        binding.dryerListLayout.setRefreshing(false);
-                        isRefreshing = false;
-                        classMachines = response.body();
 
-                        if (ModelOperations.machinesOffline(classMachines)) {
-                            showOfflineDialogIfNecessary();
-                        }
+                    binding.dryerListLayout.setRefreshing(false);
+                    isRefreshing = false;
+                    classMachines = machines;
 
-                        updateRecyclerView();
-
-                    } else {
-                        int httpCode = response.code();
-                        if (httpCode < 500) {
-                            //client error
-                            showErrorDialog(getString(R.string.error_client_message));
-                            AnalyticsHelper.sendEventHit("api", "errorCodes", "/location/" + mRoomName, httpCode);
-                        } else {
-                            //server error
-                            showErrorDialog(getString(R.string.error_server_message));
-                            AnalyticsHelper.sendEventHit("api", "errorCodes", "/location/" + mRoomName, httpCode);
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<List<Machine>> call, Throwable t) {
-
-                    if (call.isCanceled()) {
-                        return;
+                    if (ModelOperations.machinesOffline(classMachines)) {
+                        showOfflineDialogIfNecessary();
                     }
 
-                    //likely a timeout -- network is available due to prev. check
-                    if (isAdded() && getActivity() != null) {
-                        showErrorDialog(getString(R.string.error_server_message));
-
-                        binding.dryerListLayout.setRefreshing(false);
-                        isRefreshing = false;
-                        alertNetworkError();
-                    } else {
-                        AnalyticsHelper.sendErrorHit(new RuntimeException("Activity null"), false);
-                    }
-
-                    AnalyticsHelper.sendErrorHit(t, false);
+                    updateRecyclerView();
                 }
             });
         } else {
@@ -209,6 +182,16 @@ public class MachineFragment extends ScreenTrackedFragment implements SwipeRefre
             if (addNotifyButton) addNotifyOnAvailableButton();
             else removeNotifyOnAvailableButton();
         }
+    }
+
+    private void subscribeToErrorMessage() {
+        this.machineViewModel.getError().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer errorMessageResourceId) {
+                String errorMessage = getString(errorMessageResourceId);
+                showErrorDialog(errorMessage);
+            }
+        });
     }
 
     private void showErrorDialog(final String message) {

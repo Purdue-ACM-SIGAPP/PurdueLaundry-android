@@ -1,4 +1,4 @@
-package xyz.jhughes.laundry.activities;
+package xyz.jhughes.laundry.views.activities;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -14,34 +14,32 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.RequiresApi;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import android.util.Log;
+
 import android.view.Menu;
 import android.view.View;
 
 import java.util.List;
-import java.util.Map;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import xyz.jhughes.laundry.laundryparser.Location;
-import xyz.jhughes.laundry.laundryparser.MachineList;
 import xyz.jhughes.laundry.laundryparser.Rooms;
 import javax.inject.Inject;
 
 import xyz.jhughes.laundry.AnalyticsApplication;
 import xyz.jhughes.laundry.laundryparser.LocationResponse;
-import xyz.jhughes.laundry.ModelOperations;
 import xyz.jhughes.laundry.R;
-import xyz.jhughes.laundry.adapters.LocationAdapter;
-import xyz.jhughes.laundry.analytics.AnalyticsHelper;
+import xyz.jhughes.laundry.viewmodels.LocationsViewModel;
+import xyz.jhughes.laundry.viewmodels.MachineViewModel;
+import xyz.jhughes.laundry.viewmodels.ViewModelFactory;
+import xyz.jhughes.laundry.views.adapters.LocationAdapter;
 import xyz.jhughes.laundry.analytics.ScreenTrackedActivity;
 import xyz.jhughes.laundry.databinding.ActivityLocationBinding;
-import xyz.jhughes.laundry.apiclient.MachineAPI;
-import xyz.jhughes.laundry.storage.SharedPrefsHelper;
+import xyz.jhughes.laundry.data.MachineAPI;
+import xyz.jhughes.laundry.views.storage.SharedPrefsHelper;
 
 /**
  * The main activity of the app. Lists the locations of
@@ -50,8 +48,14 @@ import xyz.jhughes.laundry.storage.SharedPrefsHelper;
 public class LocationActivity extends ScreenTrackedActivity implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     private ActivityLocationBinding binding;
+
+    private LocationsViewModel locationsViewModel;
+    private MachineViewModel machineViewModel;
     @Inject
     MachineAPI machineAPI;
+
+    @Inject
+    ViewModelFactory viewModelFactory;
 
     private LocationAdapter adapter;
 
@@ -70,6 +74,10 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
         super.onCreate(savedInstanceState);
         ((AnalyticsApplication)getApplication()).getAppComponent().inject(LocationActivity.this);
         binding =  DataBindingUtil.setContentView(this, R.layout.activity_location);
+        locationsViewModel = ViewModelProviders.of(this, viewModelFactory).get(LocationsViewModel.class);
+        machineViewModel = ViewModelProviders.of(this, viewModelFactory).get(MachineViewModel.class);
+
+        subscribeToErrorMessage();
 
         String msg;
         if ((msg = getIntent().getStringExtra("error")) != null) {
@@ -137,46 +145,17 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
     }
 
     protected void getLaundryCall() {
-
-        Call<Map<String, MachineList>> allMachineCall = machineAPI.getAllMachines();
-        allMachineCall.enqueue(new Callback<Map<String, MachineList>>() {
+        machineViewModel.getLocations().observe(this, new Observer<List<Location>>() {
             @Override
-            public void onResponse(Call<Map<String, MachineList>> call, Response<Map<String, MachineList>> response) {
-                if (response.isSuccessful()) {
-                    Map<String, MachineList> machineMap = response.body();
-                    List<Location> locations = ModelOperations.machineMapToLocationList(machineMap);
-                    adapter = new LocationAdapter(locations, LocationActivity.this.getApplicationContext());
+            public void onChanged(List<Location> locations) {
+                adapter = new LocationAdapter(locations, LocationActivity.this.getApplicationContext());
 
-                    //We conditionally make the progress bar visible,
-                    // but its cheap to always dismiss it without checking
-                    // if its already gone.
-                    binding.progressBar.setVisibility(View.GONE);
-                    binding.recyclerView.setHasFixedSize(true);
-                    binding.recyclerView.setAdapter(adapter);
-                    binding.locationListPuller.setRefreshing(false);
-                } else {
-                    int httpCode = response.code();
-                    if (httpCode < 500) {
-                        //client error
-                        showErrorMessage(getString(R.string.error_client_message));
-                        AnalyticsHelper.sendEventHit("api", "apiCodes", "/location/all", httpCode);
-                    } else {
-                        //server error
-                        showErrorMessage(getString(R.string.error_server_message));
-                        AnalyticsHelper.sendEventHit("api", "apiCodes", "/location/all", httpCode);
-                    }
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Map<String, MachineList>> call, Throwable t) {
-                Log.e("LocationActivity", "API ERROR - " + t.getMessage());
-                //likely a timeout -- network is available due to prev. check
-                showErrorMessage(getString(R.string.error_server_message));
-
-                AnalyticsHelper.sendErrorHit(t, false);
-
+                //We conditionally make the progress bar visible,
+                // but its cheap to always dismiss it without checking
+                // if its already gone.
+                binding.progressBar.setVisibility(View.GONE);
+                binding.recyclerView.setHasFixedSize(true);
+                binding.recyclerView.setAdapter(adapter);
                 binding.locationListPuller.setRefreshing(false);
             }
         });
@@ -193,18 +172,10 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
         }
         hideErrorMessage();
         if (Rooms.getRoomsConstantsInstance().getListOfRooms() == null) {
-            Call<List<LocationResponse>> roomCall = machineAPI.getLocations();
-            roomCall.enqueue(new Callback<List<LocationResponse>>() {
+            locationsViewModel.getLocations().observe(this, new Observer<List<LocationResponse>>() {
                 @Override
-                public void onResponse(Call<List<LocationResponse>> call, Response<List<LocationResponse>> response) {
-                    if (response.isSuccessful()) {
-                        //set rooms
-                        List<LocationResponse> roomList = response.body();
-                        String[] rooms = new String[roomList.size()];
-                        for (int i = 0; i < roomList.size(); i++) {
-                            rooms[i] = roomList.get(i).name;
-                        }
-                        Rooms.getRoomsConstantsInstance().setListOfRooms(rooms);
+                public void onChanged(List<LocationResponse> locationResponses) {
+                    if (locationResponses != null) {
                         if (!goingToMachineActivity) {
                             //call laundry
                             getLaundryCall();
@@ -215,29 +186,7 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
                             intent.putExtras(b);
                             startActivity(intent);
                         }
-                    } else {
-                        int httpCode = response.code();
-                        if (httpCode < 500) {
-                            //client error
-                            showErrorMessage(getString(R.string.error_client_message));
-                            AnalyticsHelper.sendEventHit("api", "apiCodes", "/location/all", httpCode);
-                        } else {
-                            //server error
-                            showErrorMessage(getString(R.string.error_server_message));
-                            AnalyticsHelper.sendEventHit("api", "apiCodes", "/location/all", httpCode);
-                        }
-
                     }
-                }
-
-                @Override
-                public void onFailure(Call<List<LocationResponse>> call, Throwable t) {
-                    Log.e("LocationActivity", "API ERROR - " + t.getMessage());
-                    //likely a timeout -- network is available due to prev. check
-                    showErrorMessage(getString(R.string.error_server_message));
-
-                    AnalyticsHelper.sendErrorHit(t, false);
-
                     binding.locationListPuller.setRefreshing(false);
                 }
             });
@@ -252,6 +201,16 @@ public class LocationActivity extends ScreenTrackedActivity implements SwipeRefr
                 startActivity(intent);
             }
         }
+    }
+
+    private void subscribeToErrorMessage() {
+        this.locationsViewModel.getError().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer errorMessageResourceId) {
+                String errorMessage = getString(errorMessageResourceId);
+                showErrorMessage(errorMessage);
+            }
+        });
     }
 
     public void showErrorMessage(String message) {

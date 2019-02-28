@@ -1,4 +1,4 @@
-package xyz.jhughes.laundry.adapters;
+package xyz.jhughes.laundry.views.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +14,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import xyz.jhughes.laundry.activities.MachineActivity;
+import xyz.jhughes.laundry.views.activities.MachineActivity;
 import xyz.jhughes.laundry.laundryparser.Constants;
 import xyz.jhughes.laundry.laundryparser.Location;
 import xyz.jhughes.laundry.R;

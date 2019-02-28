@@ -1,4 +1,4 @@
-package xyz.jhughes.laundry.storage;
+package xyz.jhughes.laundry.views.storage;
 
 import android.content.Context;
 import android.content.SharedPreferences;

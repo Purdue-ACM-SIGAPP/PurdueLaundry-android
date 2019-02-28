@@ -9,12 +9,11 @@ import javax.inject.Inject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import xyz.jhughes.laundry.BuildConfig;
 import xyz.jhughes.laundry.laundryparser.Constants;
 import xyz.jhughes.laundry.laundryparser.Machine;
 import xyz.jhughes.laundry.laundryparser.MachineStates;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
-import xyz.jhughes.laundry.apiclient.MachineAPI;
+import xyz.jhughes.laundry.data.MachineAPI;
 import xyz.jhughes.laundry.notificationhelpers.OnMachineChangedToInUse;
 
 /**

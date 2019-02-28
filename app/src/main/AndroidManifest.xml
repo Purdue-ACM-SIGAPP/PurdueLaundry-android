@@ -13,7 +13,7 @@
             android:name="xyz.jhughes.laundry.AnalyticsApplication"
             android:theme="@style/AppTheme">
         <activity
-                android:name=".activities.LocationActivity"
+                android:name=".views.activities.LocationActivity"
                 android:label="@string/title_activity_main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -22,13 +22,13 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".activities.MachineActivity"
+                android:name=".views.activities.MachineActivity"
                 android:label="@string/app_name"
-                android:parentActivityName=".activities.LocationActivity">
+                android:parentActivityName=".views.activities.LocationActivity">
             <!-- Up Navigation For Android 4.0 and Lower -->
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".activities.LocationActivity"/>
+                    android:value=".views.activities.LocationActivity"/>
         </activity>
         <receiver android:name=".notificationhelpers.NotificationPublisher"/>
         <receiver android:name=".notificationhelpers.NotificationCancelReceiver"/>

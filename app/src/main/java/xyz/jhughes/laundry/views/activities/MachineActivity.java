@@ -1,4 +1,4 @@
-package xyz.jhughes.laundry.activities;
+package xyz.jhughes.laundry.views.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,11 +19,11 @@ import android.widget.Switch;
 import xyz.jhughes.laundry.laundryparser.Constants;
 import xyz.jhughes.laundry.AnalyticsApplication;
 import xyz.jhughes.laundry.R;
-import xyz.jhughes.laundry.adapters.AppSectionsPagerAdapter;
+import xyz.jhughes.laundry.views.adapters.AppSectionsPagerAdapter;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
 import xyz.jhughes.laundry.analytics.ScreenTrackedActivity;
 import xyz.jhughes.laundry.databinding.ActivityMachineBinding;
-import xyz.jhughes.laundry.storage.SharedPrefsHelper;
+import xyz.jhughes.laundry.views.storage.SharedPrefsHelper;
 
 /**
  * This activity tracks screen views. The fragments ALSO track screen views.

@@ -1,5 +1,7 @@
 package xyz.jhughes.laundry.injection;
 
+import android.content.Context;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -16,10 +18,12 @@ import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import xyz.jhughes.laundry.analytics.AnalyticsHelper;
-import xyz.jhughes.laundry.apiclient.MachineAPI;
-import xyz.jhughes.laundry.apiclient.MachineService;
+import xyz.jhughes.laundry.data.MachineAPI;
+import xyz.jhughes.laundry.data.MachineRepository;
+import xyz.jhughes.laundry.data.MachineService;
 import xyz.jhughes.laundry.laundryparser.MachineList;
 import xyz.jhughes.laundry.laundryparser.MachineListDeserializer;
+import xyz.jhughes.laundry.viewmodels.ViewModelFactory;
 
 @Module
 public class AppModule {
@@ -68,5 +72,17 @@ public class AppModule {
     @Singleton
     MachineAPI providesMachineAPI(MachineService machineService) {
         return new MachineAPI(machineService);
+    }
+
+    @Provides
+    @Singleton
+    MachineRepository providesMachineRepository(MachineService machineService) {
+        return new MachineRepository(machineService);
+    }
+
+    @Provides
+    @Singleton
+    ViewModelFactory viewModelFactory(MachineRepository machineRepository) {
+        return new ViewModelFactory(machineRepository);
     }
 }
